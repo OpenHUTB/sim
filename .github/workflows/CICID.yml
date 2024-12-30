@@ -24,3 +24,10 @@ jobs:
         run: python -m pip install --upgrade pip requests gitpython
       - name: Launch Simulation
         run: python launch.py -t ${{ secrets.GITHUB_TOKEN }} # 执行
+
+      - name: Compile LaTeX document
+          uses: xu-cheng/latex-action@v3
+          with:
+            root_file: pedestrian/undergraduate/hutbthesis_main.tex
+            texlive_version: 2023
+            latexmk_use_xelatex: true
