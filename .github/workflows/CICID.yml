@@ -38,6 +38,7 @@ jobs:
           install: true
           driver-opts: network=host
 
+      # 使用Buildx构建和推送容器
       - name: Build the Container
         id: build
         uses: docker/build-push-action@v6
@@ -46,6 +47,7 @@ jobs:
           push: true
           tags: ${{ env.TEST_TAG }}
 
+      # 运行容器
       - name: Run the Container
         id: run
         env:
