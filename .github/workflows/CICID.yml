@@ -25,11 +25,25 @@ jobs:
       - name: Launch Simulation
         run: python launch.py -t ${{ secrets.GITHUB_TOKEN }} # 执行
 
-      # 触发github action
-      - name: Compile LaTeX document
+      # 触发行人论文的 action
+      - name: Compile Pedestrian LaTeX document
         uses: xu-cheng/latex-action@v3
         with:
           working_directory: pedestrian/undergraduate
+          root_file: hutbthesis_main.tex
+          texlive_version: 2023
+          latexmk_use_xelatex: true
+          # 下载安装Times New Roman字体
+          pre_compile: |
+            apk add msttcorefonts-installer fontconfig
+            update-ms-fonts
+            fc-cache -f
+
+      # 触发强化学习论文的 action
+      - name: Compile Reinforment Learning LaTeX document
+        uses: xu-cheng/latex-action@v3
+        with:
+          working_directory: rl/undergraduate
           root_file: hutbthesis_main.tex
           texlive_version: 2023
           latexmk_use_xelatex: true
