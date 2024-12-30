@@ -30,6 +30,6 @@ jobs:
         uses: xu-cheng/latex-action@v3
         with:
           working_directory: pedestrian/undergraduate
-          root_file: pedestrian/undergraduate/hutbthesis_main.tex
+          root_file: hutbthesis_main.tex
           texlive_version: 2023
           latexmk_use_xelatex: true
