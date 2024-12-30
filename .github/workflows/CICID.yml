@@ -27,8 +27,8 @@ jobs:
 
       # 触发github action
       - name: Compile LaTeX document
-          uses: xu-cheng/latex-action@v3
-          with:
-            root_file: pedestrian/undergraduate/hutbthesis_main.tex
-            texlive_version: 2023
-            latexmk_use_xelatex: true
+        uses: xu-cheng/latex-action@v3
+        with:
+          root_file: pedestrian/undergraduate/hutbthesis_main.tex
+          texlive_version: 2023
+          latexmk_use_xelatex: true
