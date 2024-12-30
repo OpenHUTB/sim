@@ -84,17 +84,6 @@ jobs:
           ref: ${{ github.event.pull_request.head.sha }}
           fetch-depth: 0
 
-      # action中运行Docker的示例
-      - name: Run the build process with Docker
-        uses: addnab/docker-run-action@v3
-        with:
-          image: aschmelyun/cleaver:latest
-          options: -v ${{ github.workspace }}:/var/www
-          run: |
-            composer install
-            npm install
-            npm run production
-
       - name: Set up Python
         # 这是设置Python action的版本，不是Python的版本
         uses: actions/setup-python@v5
