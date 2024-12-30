@@ -25,6 +25,7 @@ jobs:
       - name: Launch Simulation
         run: python launch.py -t ${{ secrets.GITHUB_TOKEN }} # 执行
 
+      # 触发github action
       - name: Compile LaTeX document
           uses: xu-cheng/latex-action@v3
           with:
