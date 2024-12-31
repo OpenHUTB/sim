@@ -12,6 +12,14 @@ permissions:
   contents: read
     
 jobs:
+  carla:
+    name: Pull and run carla
+    runs-on: ubuntu-latest
+    uses: docker/build-push-action@v2
+    with:
+      tags: carlasim/carla:0.9.15
+
+
   test-docker:
     name: Docker Tests
     runs-on: ubuntu-latest

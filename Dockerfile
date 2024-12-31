@@ -1,11 +1,11 @@
-# Set the base image to use for subsequent instructions
+# 设置后面指令的基础镜像
 FROM alpine:3.21
 
-# Set the working directory inside the container
+# 设置位于容器内部的工作目录
 WORKDIR /usr/src
 
-# Copy any source file(s) required for the action
+# 拷贝action所需要的源文件
 COPY entrypoint.sh .
 
-# Configure the container to be run as an executable
+# 当docker容器启动时所要执行的代码文件（entrypoint.sh）
 ENTRYPOINT ["/usr/src/entrypoint.sh"]
