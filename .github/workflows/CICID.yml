@@ -66,3 +66,17 @@ jobs:
             apk add msttcorefonts-installer fontconfig
             update-ms-fonts
             fc-cache -f
+
+      # 触发Cornet类脑论文的 action
+      - name: Compile Pedestrian LaTeX document
+        uses: xu-cheng/latex-action@v3
+        with:
+          working_directory: recognition/undergraduate
+          root_file: main.tex
+          texlive_version: 2023
+          latexmk_use_xelatex: true
+          # 下载安装Times New Roman字体
+          pre_compile: |
+            apk add msttcorefonts-installer fontconfig
+            update-ms-fonts
+            fc-cache -f
