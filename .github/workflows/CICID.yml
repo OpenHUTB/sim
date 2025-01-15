@@ -107,4 +107,17 @@ jobs:
             apk add msttcorefonts-installer fontconfig
             update-ms-fonts
             fc-cache -f
-           
+
+      # 智能驾驶危险仿真场景的生成和优化算法论文的 action
+      - name: Compile critical LaTeX document
+        uses: xu-cheng/latex-action@v3
+        with:
+          working_directory: critical/undergraduate
+          root_file: hutbthesis_main.tex
+          texlive_version: 2023
+          latexmk_use_xelatex: true
+          # 下载安装Times New Roman字体
+          pre_compile: |
+            apk add msttcorefonts-installer fontconfig
+            update-ms-fonts
+            fc-cache -f
