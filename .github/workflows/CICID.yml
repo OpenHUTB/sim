@@ -99,7 +99,6 @@ jobs:
         uses: xu-cheng/latex-action@v3
         with:
           working_directory: data/undergraduate
-          working_directory: data/undergraduate
           root_file: hutbthesis_main.tex
           texlive_version: 2024
           latexmk_use_xelatex: true
