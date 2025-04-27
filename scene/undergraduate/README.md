@@ -116,8 +116,8 @@ python retrieve/retrieve.py
  ```bash
     python scripts/evaluate_scene_quality.py
     ```
-
-### 训练和评估场景
+#### 联系方式
 如果你有任何问题或建议，可以通过以下方式联系我：
 
 邮箱：2444819612@qq.com
+
