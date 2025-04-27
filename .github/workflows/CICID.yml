@@ -129,9 +129,9 @@ jobs:
           working_directory: scene/undergraduate
           root_file: hutbthesis_main.tex
           texlive_version: 2024
-        latexmk_use_xelatex: true
-        pre_compile: |
-          apk add msttcorefonts-installer fontconfig
-          update-ms-fonts
-          fc-cache -f
+          latexmk_use_xelatex: true
+          pre_compile: |
+            apk add msttcorefonts-installer fontconfig
+            update-ms-fonts
+            fc-cache -f
 
