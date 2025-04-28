@@ -2,9 +2,8 @@ import os
 import openai
 import torch
 import transformers
-
 # 设置 OpenAI API 密钥
-os.environ["OPENAI_API_KEY"] = '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'  # 请替换为你的实际 API 密钥
+os.environ["OPENAI_API_KEY"] = 'sk-...s0kA'  # 请替换为你的实际 API 密钥
 
 
 class LLMChat:
