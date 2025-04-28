@@ -1,0 +1,30 @@
+\contentsline {chapter}{\numberline {第1章\hspace {.3em}}绪论}{1}{chapter.1}%
+\contentsline {section}{\numberline {1.1}研究背景}{1}{section.1.1}%
+\contentsline {section}{\numberline {1.2}研究意义}{1}{section.1.2}%
+\contentsline {subsection}{\numberline {1.2.1}理论意义}{1}{subsection.1.2.1}%
+\contentsline {subsection}{\numberline {1.2.2}现实意义}{1}{subsection.1.2.2}%
+\contentsline {section}{\numberline {1.3}国内外研究现状}{2}{section.1.3}%
+\contentsline {subsection}{\numberline {1.3.1}目标检测研究现状}{2}{subsection.1.3.1}%
+\contentsline {subsection}{\numberline {1.3.2}目标跟踪研究现状}{3}{subsection.1.3.2}%
+\contentsline {subsection}{\numberline {1.3.3}意图分析研究现状}{5}{subsection.1.3.3}%
+\contentsline {subsection}{\numberline {1.3.4}本文结构框架}{6}{subsection.1.3.4}%
+\contentsline {chapter}{\numberline {第2章\hspace {.3em}}图表示例}{8}{chapter.2}%
+\contentsline {section}{\numberline {2.1}图片与布局}{8}{section.2.1}%
+\contentsline {subsection}{\numberline {2.1.1}插图}{8}{subsection.2.1.1}%
+\contentsline {subsection}{\numberline {2.1.2}横向布局}{8}{subsection.2.1.2}%
+\contentsline {section}{\numberline {2.2}纵向布局}{9}{section.2.2}%
+\contentsline {section}{\numberline {2.3}竖排多图横排布局}{9}{section.2.3}%
+\contentsline {section}{\numberline {2.4}横排多图竖排布局}{9}{section.2.4}%
+\contentsline {chapter}{\numberline {第3章\hspace {.3em}}表格插入示例}{11}{chapter.3}%
+\contentsline {chapter}{\numberline {第4章\hspace {.3em}}公式插入示例}{12}{chapter.4}%
+\contentsline {chapter}{\numberline {第5章\hspace {.3em}}引用文献标注}{13}{chapter.5}%
+\contentsline {section}{\numberline {5.1}顺序编码}{13}{section.5.1}%
+\contentsline {section}{\numberline {5.2}获取BibTeX格式索引}{13}{section.5.2}%
+\contentsline {section}{\numberline {5.3}参考文献插入示例}{13}{section.5.3}%
+\contentsline {chapter}{致谢}{14}{section.5.3}%
+\contentsline {chapter}{\numberline {附录 A\hspace {.3em}}附录代码}{15}{appendix.A}%
+\contentsline {section}{\numberline {A.1}堆溢出检测算法}{15}{section.A.1}%
+\contentsline {section}{\numberline {A.2}KMP算法C++描述}{15}{section.A.2}%
+\contentsline {chapter}{\numberline {附录 B\hspace {.3em}}康托尔辩辞录：数学的自由与制约}{18}{appendix.B}%
+\contentsline {chapter}{参考文献}{15}{chapter*.16}%
+\contentsfinish 
