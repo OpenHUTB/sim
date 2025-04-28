@@ -2,6 +2,7 @@ import os
 import openai
 import torch
 import transformers
+
 # 设置 OpenAI API 密钥
 os.environ["OPENAI_API_KEY"] = 'sk-...s0kA'  # 请替换为你的实际 API 密钥
 
