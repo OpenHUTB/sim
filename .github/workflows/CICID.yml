@@ -5,7 +5,7 @@ on: [push, pull_request]
     
 jobs:
   work:
-    runs-on: ubuntu-20.04
+    runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
         with:
@@ -17,7 +17,7 @@ jobs:
         # 这是设置Python action的版本，不是Python的版本
         uses: actions/setup-python@v5
         with:
-          python-version: '3.7' # 指定python版本
+          python-version: '3.9' # 指定python版本
           # 可选 - x64 or x86 架构，默认为 x64
           architecture: 'x64'
       - name: Install Python dependencies
@@ -121,3 +121,17 @@ jobs:
             apk add msttcorefonts-installer fontconfig
             update-ms-fonts
             fc-cache -f
+
+      # 基于预训练大模型的高保真三维智能驾驶场景生成系统论文的 action
+      - name: Compile Scene LaTeX document
+        uses: xu-cheng/latex-action@v3
+        with:
+          working_directory: scene/undergraduate
+          root_file: hutbthesis_main.tex
+          texlive_version: 2024
+          latexmk_use_xelatex: true
+          pre_compile: |
+            apk add msttcorefonts-installer fontconfig
+            update-ms-fonts
+            fc-cache -f
+
