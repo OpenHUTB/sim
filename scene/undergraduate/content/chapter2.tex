@@ -1,139 +1,47 @@
-%!TEX root = ../../csuthesis_main.tex
-\chapter{图表示例}
+% 第二章 系统架构设计
+\chapter{系统架构设计}
+\section{整体架构}
+在自动驾驶测试场景生成系统中，整体架构的设计是实现从自然语言描述到高保真三维测试场景端到端生成的关键。该架构通过多个紧密协同工作的模块，确保了系统的高效性、准确性和可靠性。系统的输入是自然语言描述的测试场景需求，这种描述方式使得测试工程师能够以直观、简洁的方式表达复杂的场景需求，无需深入技术细节。自然语言输入模块负责接收用户输入的文本描述，并将其传递到后续的处理模块。
 
-\section{图片与布局}
+接下来，自然语言输入被传递到自然语言处理（NLP）解析模块。该模块的核心任务是将自然语言描述转化为结构化的场景要素。NLP解析模块利用先进的自然语言处理技术，包括词法分析、句法分析和语义理解等，提取出描述中的关键信息。这些信息被进一步转化为场景要素的三元组形式，为后续的代码生成和场景合成提供基础。场景要素三元组以结构化的形式表示场景中的关键信息，每个三元组通常包含主体、关系和客体三个部分，这种结构化的表示方式能够清晰地描述场景中的实体及其相互关系。
 
-\subsection{插图}
+随后，场景要素三元组被传递到语法验证器。语法验证器的作用是对NLP解析模块生成的场景要素三元组进行语法检查和验证。该模块通过预定义的语法规则，确保生成的三元组符合场景描述语言的规范。如果发现语法错误，语法验证器将触发修正机制，生成修正后的代码。修正代码模块负责根据语法验证器的反馈，对生成的代码进行修正和优化。该模块通过智能算法，自动识别和修复代码中的语法错误，同时优化代码的结构和性能。修正后的代码将被传递到场景合成引擎，用于生成具体的测试场景。
 
-图片可以通过\cs{includegraphics}指令插入，我们建议模板使用者将文章所需插入的图片源问卷放置在 images 目录中，
-另外，矢量图片应使用PDF格式，位图照片则应使用JPG格式（LaTeX不支持TIFF格式）。具有透明背景的栅格图可以使用PNG格式。
+场景合成引擎是系统的核心模块之一，负责将修正后的代码转化为具体的三维测试场景。该模块结合物理规则和场景生成算法，生成高保真的三维场景。场景合成引擎不仅考虑场景的几何结构，还模拟了物理环境中的光照、天气和交通规则等因素，确保生成的场景具有高度的真实感和物理合理性。生成的三维场景随后被传递到三维可视化模块，该模块通过先进的图形渲染技术，将复杂的三维场景以直观的方式呈现给用户。用户可以通过交互式界面，观察和调整场景中的各种参数，进一步优化场景的生成效果。三维可视化不仅提高了场景的可理解性，还为用户提供了直观的反馈，便于对生成场景进行评估和调整。
 
-下面是一个简单的插图示例。
+最后，评估反馈系统对生成的三维场景进行质量评估和反馈。该模块通过一系列评估指标，包括场景的物理合理性、功能完整性和美学质量等，对生成的场景进行全面评估。评估结果将反馈给用户和系统，为后续的场景优化和系统改进提供依据。评估反馈系统不仅提高了场景生成的质量，还促进了系统的持续优化和改进。
 
-\begin{figure}[hbt]
-    \centering
-    \includegraphics[width=0.3\linewidth]{hutb_building.png}
-    \caption{插图示例}
-    \label{f.example}
-\end{figure}
+整个系统通过各模块的紧密协同工作，实现了从自然语言描述到高保真三维测试场景的高效生成。在设计系统架构时，充分考虑了系统的扩展性和灵活性，使其能够适应不断变化的技术需求。随着自动驾驶技术的发展和测试需求的变化，系统能够方便地引入新的模块和功能，例如扩展NLP解析模块以支持更复杂的自然语言描述，或者在场景合成引擎中引入新的物理规则和算法，以生成更真实的测试场景。这种扩展性和灵活性使得系统能够保持其先进性和实用性。
 
+系统的可靠性和稳定性是确保其在实际应用中有效运行的关键。通过在每个模块中引入错误处理和容错机制，系统能够有效地应对各种异常情况。例如，语法验证器可以识别并处理代码中的语法错误，修正代码模块能够自动修复这些问题，确保系统的稳定运行。此外，评估反馈系统通过持续的评估和反馈，进一步提高了系统的可靠性和稳定性。
 
-如果一个图由多个分图（子图）组成，应通过(a),(b),(c)进行标识并附注在分图（子图下方）。
-目前子图标识不居中问题没有解决，预计下个版本修复。
+为了提高系统的易用性，系统架构还注重用户友好性的设计。通过提供直观的交互界面和详细的用户指南，用户可以方便地输入自然语言描述，观察生成的三维场景，并根据评估反馈进行调整。这种用户友好的设计使得系统不仅适用于专业的测试工程师，还能够为非专业的用户提供支持，扩大了系统的应用范围。
 
-\subsection{横向布局}
+\section{核心组件}
+\subsection{自然语言处理模块}
+自然语言处理（NLP）模块是自动驾驶测试场景生成系统的核心组成部分，其主要功能是将自然语言描述的测试场景需求转化为结构化的场景要素，为后续的代码生成和场景合成提供基础。自然语言处理模块的设计和实现涉及多个关键环节，包括领域专用词典构建方法、基于依存句法分析的三元组提取以及模糊指令的交互式澄清策略。这些环节共同确保了系统的高效性、准确性和可靠性。
 
-模板提供常见的图片布局，比如单图布局\ref{f.example}，另外还有横排布局如下：
+\subsection{领域专用词典构建方法}
+领域专用词典的构建是自然语言处理模块的基础，它为系统提供了与自动驾驶相关的专业术语和词汇，从而提高了系统对领域特定语言的理解能力。构建领域专用词典的过程可以分为语料库收集与预处理、词典构建与优化以及动态更新与扩展三个阶段。
 
-\begin{figure}[!htb]
-    \centering
-    \begin{subfigure}[t]{0.24\linewidth}
-        \begin{minipage}[b]{1\linewidth}
-        \includegraphics[width=1\linewidth]{hutb_building.png}
-        \caption{test}
-        \end{minipage}
-    \end{subfigure}
-    \begin{subfigure}[t]{0.24\linewidth}
-        \begin{minipage}[b]{1\linewidth}
-        \includegraphics[width=1\linewidth]{hutb_eim.png}
-        \caption{test}
-        \end{minipage}
-    \end{subfigure}
-    \begin{subfigure}[t]{0.24\linewidth}
-        \begin{minipage}[b]{1\linewidth}
-        \includegraphics[width=1\linewidth]{hutb_building.png}
-        \caption{test}
-        \end{minipage}
-    \end{subfigure}
-    \begin{subfigure}[t]{0.24\linewidth}
-        \begin{minipage}[b]{1\linewidth}
-        \includegraphics[width=1\linewidth]{hutb_eim.png}
-        \caption{test}
-        \end{minipage}
-    \end{subfigure}
-    \caption{图片横排布局示例}
-    \label{f.row}
-\end{figure}
+语料库的收集与预处理是构建领域专用词典的第一步。这一过程需要收集大量与自动驾驶相关的文本数据，这些数据来源广泛，包括技术文档、用户手册、交通法规以及相关的新闻报道等。收集到的语料库需要经过预处理，包括文本清洗、分词以及标注等步骤。文本清洗的目的是去除无关字符和格式化文本，分词则是将文本分割成单词或短语，标注则是为每个单词或短语标注其词性。这些预处理步骤为后续的词典构建提供了高质量的数据基础。
 
-\section{纵向布局}
+词典的构建与优化是基于预处理后的语料库进行的。通过统计分析和机器学习方法，可以从语料库中提取领域专用词汇。例如，可以使用自然语言处理工具包（如NLTK）中的相关模块来管理和分析语料库。利用词频统计等技术，可以识别高频词汇，并将其纳入词典。为了进一步优化词典，可以采用词干提取和词形还原技术，将不同形式的单词归一化到其基本形式。这些技术有助于提高词典的准确性和一致性。
 
-纵向布局如图\ref{f.col}
+动态更新与扩展是领域专用词典的重要特性。随着自动驾驶技术的不断发展，新的术语和词汇不断涌现。因此，词典需要具备动态更新和扩展的能力，以反映最新的领域知识。可以通过定期收集新的语料库并重新训练词典，或者利用在线学习算法实时更新词典内容，从而确保词典始终处于最新状态。
 
-\begin{figure}[!htb]
-    \centering
-    \begin{subfigure}[t]{0.15\linewidth}
-        \captionsetup{justification=centering} %ugly hacks
-        \begin{minipage}[b]{1\linewidth}
-        \includegraphics[width=1\linewidth]{hutb_building.png}
-        \caption{test}
-        \end{minipage}
-    \end{subfigure}\\
-    \begin{subfigure}[t]{0.15\linewidth}
-        \captionsetup{justification=centering} %ugly hacks
-        \begin{minipage}[b]{1\linewidth}
-        \includegraphics[width=1\linewidth]{hutb_eim.png}
-        \caption{test}
-        \end{minipage}
-    \end{subfigure}
-    \caption{图片纵向布局示例}
-    \label{f.col}
-\end{figure}
+\subsection{基于依存句法分析的三元组提取}
+依存句法分析是自然语言处理中的一个重要任务，它通过分析句子中单词之间的依存关系来理解句子的结构和语义。在自动驾驶测试场景生成中，基于依存句法分析的三元组提取能够将自然语言描述转化为结构化的场景要素，从而为后续的代码生成提供准确的输入。
 
-\section{竖排多图横排布局}
+依存句法分析的目标是识别句子中单词之间的依存关系，例如主谓关系、动宾关系等。通过依存句法分析，可以构建出句子的依存树，从而清晰地展示单词之间的语义关系。依存句法分析的结果为三元组提取提供了基础，三元组通常以（主体，关系，客体）的形式表示，能够清晰地描述场景中的实体及其相互关系。这种结构化的表示方式为后续的代码生成提供了准确的输入。
 
-\begin{figure}[!htb]
-    \centering
-    \begin{subfigure}[t]{0.13\linewidth}
-        \captionsetup{justification=centering} 
-        \begin{minipage}[b]{1\linewidth}
-        \includegraphics[width=1\linewidth]{hutb_building.png} 
-        \vspace{-1ex} \vfill
-        \includegraphics[width=1\linewidth]{hutb_eim.png}
-        \caption{aaa}
-        \end{minipage}
-    \end{subfigure}
-    \begin{subfigure}[t]{0.13\linewidth}
-        \captionsetup{justification=centering} 
-        \begin{minipage}[b]{1\linewidth}
-        \includegraphics[width=1\linewidth]{hutb_eim.png} 
-        \vspace{-1ex} \vfill
-        \includegraphics[width=1\linewidth]{hutb_building.png}
-        \caption{bbb}
-        \end{minipage}
-    \end{subfigure}
-    \caption{图片竖排多图横排布局}
-    \label{f.csu_col_row}
-\end{figure}
+为了提高三元组提取的准确性和效率，可以采用一些优化策略。例如，可以通过引入上下文信息和领域知识，对依存关系进行更准确的识别和分类。此外，还可以利用深度学习模型，如Transformer架构，来进一步提升依存句法分析的性能。这些优化策略有助于提高系统的准确性和效率，从而更好地满足自动驾驶测试场景生成的需求。
 
-竖排多图横排布局如图\ref{f.csu_col_row}所示。注意看(a)、(b)编号与图关系
+\subsection{模糊指令的交互式澄清策略}
+在自动驾驶测试场景生成中，用户输入的自然语言描述可能存在模糊性或歧义。为了确保系统能够准确理解用户的需求，需要设计模糊指令的交互式澄清策略。这种策略通过与用户的交互，澄清模糊指令的含义，从而提高系统的准确性和可靠性。
 
+模糊指令识别是交互式澄清策略的第一步。通过自然语言处理技术，如词性标注和依存句法分析，可以识别出用户输入中的模糊词汇或短语。这些技术能够帮助系统理解句子的结构和语义，从而识别出可能存在的模糊性。
 
-\section{横排多图竖排布局}
+交互式澄清是澄清模糊指令的关键环节。一旦识别出模糊指令，系统将与用户进行交互，通过提问或提供选项的方式澄清指令的含义。这种交互式澄清策略能够有效地减少模糊性，提高系统的理解能力。例如，系统可以询问用户关于模糊词汇的具体含义，或者提供一些预定义的选项供用户选择。通过这种方式，系统能够获得更准确的用户需求，从而生成更符合用户期望的测试场景。
 
-潮涌湘江阔，鹏翔天地宽。湖南工商大学正以习近平新时代中国特色社会主义思想为指引，秉持“新工科+新商科+新文科”与理科融合发展的思路，努力形成一流的理念、一流的目标、一流的标准、一流的质量、一流的机制，打造创新工商、人文工商、艺术工商、体育工商、数智工商、绿色工商、幸福工商，建设读书求知的好园地，乘高等教育改革奋进的东风，朝着创新型一流工商大学的愿景扬帆远航。
-
-\begin{figure}[!htb]
-    \centering
-    \begin{subfigure}[t]{0.3\linewidth}
-        \captionsetup{justification=centering} 
-        \begin{minipage}[b]{1\linewidth}
-        \includegraphics[width=0.45\linewidth]{hutb_building.png}
-        \includegraphics[width=0.45\linewidth]{hutb_eim.png}
-        \caption{}
-        \end{minipage}
-    \end{subfigure}\\
-    \begin{subfigure}[t]{0.3\linewidth}
-        \captionsetup{justification=centering} 
-        \begin{minipage}[b]{1\linewidth}
-        \includegraphics[width=0.45\linewidth]{hutb_eim.png}
-        \includegraphics[width=0.45\linewidth]{hutb_building.png}
-        \caption{}
-        \end{minipage}
-    \end{subfigure}
-    \caption{图片横排多图竖排布局}
-    \label{f.csu_row_col}
-\end{figure}
-
-横排多图竖排布局如图\ref{f.csu_row_col}所示。注意看(a)、(b)编号与图关系。
-
-\newpage
+用户反馈与学习是交互式澄清策略的重要组成部分。通过与用户的交互，系统不仅能够澄清模糊指令，还可以收集用户的反馈信息，从而进一步优化自然语言处理模块的性能。例如，可以根据用户的反馈调整词典内容、改进依存句法分析模型或
