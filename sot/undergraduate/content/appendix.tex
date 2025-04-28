@@ -2,107 +2,621 @@
 % \begin{appendixs} % 无章节编号
 \chapter{附录代码}
 
-附录部分用于存放这里用来存放不适合放置在正文的大篇幅内容、典型如代码、图纸、完整数学证明过程等内容。
-
-\section{堆溢出检测算法}
+\section{DeepSORT 多目标跟踪算法}
 
 \begin{algorithm}[h]
-    \caption{堆溢出检测算法}\label{alg:ovf}
+    \caption{DeepSORT 多目标跟踪算法}\label{alg:ovf}
     \begin{algorithmic}[1]
-        \IF {$\beta \in \mathbb{N^{*}} \land \Delta_\beta = \Delta_{\beta - 1} \land \beta < S$}
-            \STATE 正常写入
-        \ELSIF {$\beta \in \mathbb{N^{*}} \land \Delta_\beta \neq \Delta_{\beta - 1} \land \beta \geq S$}
-            \STATE 发生堆溢出
-        \ENDIF
+		\STATE 初始化跟踪器集合 $\mathcal{T}$
+		\FOR{每一帧图像}
+		    \STATE 检测所有目标，生成检测集合 $\mathcal{D}$
+		    \STATE 提取每个检测框的外观特征向量
+		    \STATE 根据卡尔曼滤波器预测每个跟踪器的位置
+		    \STATE 使用匈牙利算法（Hungarian Algorithm）匹配 $\mathcal{D}$ 与 $\mathcal{T}$，代价函数结合马氏距离和外观特征距离
+		    \FOR{每个成功匹配的检测与跟踪器对}
+		        \STATE 更新跟踪器状态（位置、速度、外观特征）
+		    \ENDFOR
+		    \FOR{每个未匹配到检测的跟踪器}
+		        \STATE 标记为失配，增加失配计数
+		    \ENDFOR
+		    \FOR{每个未匹配到跟踪器的检测}
+		        \STATE 初始化新的跟踪器
+		    \ENDFOR
+		    \STATE 移除失效跟踪器（如失配次数超过最大阈值）
+		\ENDFOR
     \end{algorithmic}
 \end{algorithm}
 
-\section{KMP算法C++描述}
-
+\section{面向自动驾驶的视觉目标跟踪和意图分析算法}
 % \begin{minted}[linenos]{c}
 \begin{lstlisting}
-    const int maxn=2e5+5; 
-    int nt[maxn];
-    int aa[maxn],bb[maxn];
-    int a[maxn],b[maxn];
-    int n;
-    //参数为模板串和next数组
-    //字符串均从下标0开始
-    void kmpGetNext(int *s,int *Next)
-    {
-        Next[0]=0;
-    //    int len=strlen(s);
-        for(int i=1,j=0;i<n;i++)
-        {
-            while(j&&s[i]!=s[j]) j=Next[j];
-            if(s[i]==s[j]) j++;
-            Next[i+1]=j;
-        }
-    //    Next[len]=0;
-    }
-    int kmp(int *ss,int *s,int *Next)
-    {
-        kmpGetNext(s,Next);
-    //  调试输出Next数组
-    //	int len=strlen(s);
-    //	for(int i=0;i<=n;i++)
-    //		cout<<Next[i]<<" ";
-    //	cout<<endl; 
-    
-    //    int ans=0;
-    //    int len1=strlen(ss);
-    //    int len2=strlen(s);
-        for(int i=0,j=0;i<2*n;i++)  //倍长 
-        {
-            while(j&&ss[i%n]!=s[j])j=Next[j];
-            if(ss[i%n]==s[j]) j++;
-            if(j==n){
-                return 1;
-            }
-               
-        }
-        return 0;
-    }
-    int main(void)
-    {
-        while(cin>>n)
-        {
-            memset(a,0,sizeof(a));
-            memset(b,0,sizeof(b));
-            rep(i,0,n) cin>>aa[i];
-            rep(i,0,n) cin>>bb[i];
-            sort(aa,aa+n);
-            sort(bb,bb+n);
-            rep(i,0,n-1){
-                a[i]=aa[i+1]-aa[i];
-                b[i]=bb[i+1]-bb[i];
-            }
-            a[n-1]=360000+aa[0]-aa[n-1];
-    //		rep(i,0,n) cout<<a[i]<<" ";
-    //		cout<<endl;
-            b[n-1]=360000+bb[0]-bb[n-1];
-    //		rep(i,0,n) cout<<b[i]<<" ";
-    //		cout<<endl;
-            if(kmp(a,b,nt))
-                cout<<"possible"<<endl;
-            else cout<<"impossible"<<endl;
-        }
-        return 0;
-    }
+	#!/usr/bin/env python
+	
+	# Copyright (c) 2019 Aptiv
+	#
+	# This work is licensed under the terms of the MIT license.
+	# For a copy, see <https://opensource.org/licenses/MIT>.
+	
+	"""
+	An example of client-side bounding boxes with basic car controls.
+	
+	Controls:
+	
+	    W            : throttle
+	    S            : brake
+	    AD           : steer
+	    Space        : hand-brake
+	
+	    ESC          : quit
+	"""
+	
+	# ==============================================================================
+	# -- find carla module ---------------------------------------------------------
+	# ==============================================================================
+	
+	import json
+	import cv2
+	from datetime import datetime
+	from deep_sort_realtime.deepsort_tracker import DeepSort
+	
+	import pathlib
+	pathlib.Path("data/images").mkdir(parents=True, exist_ok=True)
+	pathlib.Path("data/labels").mkdir(parents=True, exist_ok=True)
+	
+	import glob
+	import os
+	import sys
+	
+	try:
+	    sys.path.append(glob.glob('../carla/dist/carla-*%d.%d-%s.egg' % (
+	        sys.version_info.major,
+	        sys.version_info.minor,
+	        'win-amd64' if os.name == 'nt' else 'linux-x86_64'))[0])
+	except IndexError:
+	    pass
+	
+	
+	# ==============================================================================
+	# -- imports -------------------------------------------------------------------
+	# ==============================================================================
+	
+	import carla
+	
+	import weakref
+	import random
+	
+	try:
+	    import pygame
+	    from pygame.locals import K_ESCAPE
+	    from pygame.locals import K_SPACE
+	    from pygame.locals import K_a
+	    from pygame.locals import K_d
+	    from pygame.locals import K_s
+	    from pygame.locals import K_w
+	except ImportError:
+	    raise RuntimeError('cannot import pygame, make sure pygame package is installed')
+	
+	try:
+	    import numpy as np
+	except ImportError:
+	    raise RuntimeError('cannot import numpy, make sure numpy package is installed')
+	
+	VIEW_WIDTH = 1920//2
+	VIEW_HEIGHT = 1080//2
+	VIEW_FOV = 90
+	
+	BB_COLOR = (248, 64, 24)
+	
+	# ==============================================================================
+	# -- ClientSideBoundingBoxes ---------------------------------------------------
+	# ==============================================================================
+	
+	
+	# 在 ClientSideBoundingBoxes 类中添加一个方法来获取车辆的速度并渲染速度文本
+	
+	class ClientSideBoundingBoxes(object):
+	    @staticmethod
+	    def get_bounding_boxes(vehicles, camera):
+	        """
+	        Creates 3D bounding boxes based on carla vehicle list and camera.
+	        """
+	        bounding_boxes = []
+	        for vehicle in vehicles:
+	            bbox = ClientSideBoundingBoxes.get_bounding_box(vehicle, camera)
+	            speed = vehicle.get_velocity()
+	            speed_magnitude = np.sqrt(speed.x**2 + speed.y**2 + speed.z**2)  # 计算车辆的速度大小
+	            bounding_boxes.append((bbox, speed_magnitude))  # 返回边界框和速度
+	        # filter objects behind camera
+	        bounding_boxes = [bb for bb in bounding_boxes if all(bb[0][:, 2] > 0)]
+	        return bounding_boxes
+	
+	    @staticmethod
+	    def draw_bounding_boxes(display, bounding_boxes):
+	        """
+	        Draws bounding boxes on pygame display.
+	        """
+	        bb_surface = pygame.Surface((VIEW_WIDTH, VIEW_HEIGHT))
+	        bb_surface.set_colorkey((0, 0, 0))
+	        chinese_font = pygame.font.Font("C:/Windows/Fonts/simhei.ttf", 20)
+	
+	        for bbox, speed in bounding_boxes:
+	            points = [(int(bbox[i, 0]), int(bbox[i, 1])) for i in range(8)]
+	            # 绘制边界框
+	            pygame.draw.line(bb_surface, BB_COLOR, points[0], points[1])
+	            pygame.draw.line(bb_surface, BB_COLOR, points[0], points[1])
+	            pygame.draw.line(bb_surface, BB_COLOR, points[1], points[2])
+	            pygame.draw.line(bb_surface, BB_COLOR, points[2], points[3])
+	            pygame.draw.line(bb_surface, BB_COLOR, points[3], points[0])
+	            # top
+	            pygame.draw.line(bb_surface, BB_COLOR, points[4], points[5])
+	            pygame.draw.line(bb_surface, BB_COLOR, points[5], points[6])
+	            pygame.draw.line(bb_surface, BB_COLOR, points[6], points[7])
+	            pygame.draw.line(bb_surface, BB_COLOR, points[7], points[4])
+	            # base-top
+	            pygame.draw.line(bb_surface, BB_COLOR, points[0], points[4])
+	            pygame.draw.line(bb_surface, BB_COLOR, points[1], points[5])
+	            pygame.draw.line(bb_surface, BB_COLOR, points[2], points[6])
+	            pygame.draw.line(bb_surface, BB_COLOR, points[3], points[7])
+	            
+	            # 绘制速度文本
+	            speed_text = f"{speed:.2f} m/s"  # 显示速度，保留两位小数
+	            text_surface = chinese_font.render(speed_text, True, (255, 255, 255))  # 白色文字
+	            text_rect = text_surface.get_rect(center=(int(bbox[0, 0]), int(bbox[0, 1]) - 10))  # 在边界框上方显示
+	            bb_surface.blit(text_surface, text_rect)
+	        
+	        display.blit(bb_surface, (0, 0))
+	
+	
+	    @staticmethod
+	    def get_bounding_box(vehicle, camera):
+	        """
+	        Returns 3D bounding box for a vehicle based on camera view.
+	        """
+	
+	        bb_cords = ClientSideBoundingBoxes._create_bb_points(vehicle)
+	        cords_x_y_z = ClientSideBoundingBoxes._vehicle_to_sensor(bb_cords, vehicle, camera)[:3, :]
+	        cords_y_minus_z_x = np.concatenate([cords_x_y_z[1, :], -cords_x_y_z[2, :], cords_x_y_z[0, :]])
+	        bbox = np.transpose(np.dot(camera.calibration, cords_y_minus_z_x))
+	        camera_bbox = np.concatenate([bbox[:, 0] / bbox[:, 2], bbox[:, 1] / bbox[:, 2], bbox[:, 2]], axis=1)
+	        return camera_bbox
+	
+	    @staticmethod
+	    def _create_bb_points(vehicle):
+	        """
+	        Returns 3D bounding box for a vehicle.
+	        """
+	
+	        cords = np.zeros((8, 4))
+	        extent = vehicle.bounding_box.extent
+	        cords[0, :] = np.array([extent.x, extent.y, -extent.z, 1])
+	        cords[1, :] = np.array([-extent.x, extent.y, -extent.z, 1])
+	        cords[2, :] = np.array([-extent.x, -extent.y, -extent.z, 1])
+	        cords[3, :] = np.array([extent.x, -extent.y, -extent.z, 1])
+	        cords[4, :] = np.array([extent.x, extent.y, extent.z, 1])
+	        cords[5, :] = np.array([-extent.x, extent.y, extent.z, 1])
+	        cords[6, :] = np.array([-extent.x, -extent.y, extent.z, 1])
+	        cords[7, :] = np.array([extent.x, -extent.y, extent.z, 1])
+	        return cords
+	
+	    @staticmethod
+	    def _vehicle_to_sensor(cords, vehicle, sensor):
+	        """
+	        Transforms coordinates of a vehicle bounding box to sensor.
+	        """
+	
+	        world_cord = ClientSideBoundingBoxes._vehicle_to_world(cords, vehicle)
+	        sensor_cord = ClientSideBoundingBoxes._world_to_sensor(world_cord, sensor)
+	        return sensor_cord
+	
+	    @staticmethod
+	    def _vehicle_to_world(cords, vehicle):
+	        """
+	        Transforms coordinates of a vehicle bounding box to world.
+	        """
+	
+	        bb_transform = carla.Transform(vehicle.bounding_box.location)
+	        bb_vehicle_matrix = ClientSideBoundingBoxes.get_matrix(bb_transform)
+	        vehicle_world_matrix = ClientSideBoundingBoxes.get_matrix(vehicle.get_transform())
+	        bb_world_matrix = np.dot(vehicle_world_matrix, bb_vehicle_matrix)
+	        world_cords = np.dot(bb_world_matrix, np.transpose(cords))
+	        return world_cords
+	
+	    @staticmethod
+	    def _world_to_sensor(cords, sensor):
+	        """
+	        Transforms world coordinates to sensor.
+	        """
+	
+	        sensor_world_matrix = ClientSideBoundingBoxes.get_matrix(sensor.get_transform())
+	        world_sensor_matrix = np.linalg.inv(sensor_world_matrix)
+	        sensor_cords = np.dot(world_sensor_matrix, cords)
+	        return sensor_cords
+	
+	    @staticmethod
+	    def get_matrix(transform):
+	        """
+	        Creates matrix from carla transform.
+	        """
+	
+	        rotation = transform.rotation
+	        location = transform.location
+	        c_y = np.cos(np.radians(rotation.yaw))
+	        s_y = np.sin(np.radians(rotation.yaw))
+	        c_r = np.cos(np.radians(rotation.roll))
+	        s_r = np.sin(np.radians(rotation.roll))
+	        c_p = np.cos(np.radians(rotation.pitch))
+	        s_p = np.sin(np.radians(rotation.pitch))
+	        matrix = np.matrix(np.identity(4))
+	        matrix[0, 3] = location.x
+	        matrix[1, 3] = location.y
+	        matrix[2, 3] = location.z
+	        matrix[0, 0] = c_p * c_y
+	        matrix[0, 1] = c_y * s_p * s_r - s_y * c_r
+	        matrix[0, 2] = -c_y * s_p * c_r - s_y * s_r
+	        matrix[1, 0] = s_y * c_p
+	        matrix[1, 1] = s_y * s_p * s_r + c_y * c_r
+	        matrix[1, 2] = -s_y * s_p * c_r + c_y * s_r
+	        matrix[2, 0] = s_p
+	        matrix[2, 1] = -c_p * s_r
+	        matrix[2, 2] = c_p * c_r
+	        return matrix
+	
+	
+	# ==============================================================================
+	# -- BasicSynchronousClient ----------------------------------------------------
+	# ==============================================================================
+	
+	
+	class BasicSynchronousClient(object):
+	    """
+	    Basic implementation of a synchronous client.
+	    """
+	    def save_frame_and_labels(self, array, bounding_boxes, frame_idx):
+	        """
+	        保存当前帧图像和目标边界框 + 速度信息
+	        """
+	        timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
+	        img_filename = f"frame_{frame_idx}_{timestamp}.jpg"
+	        json_filename = img_filename.replace('.jpg', '.json')
+	
+	        # 保存图像
+	        img_path = os.path.join("data/images", img_filename)
+	        cv2.imwrite(img_path, array)
+	
+	        # 保存标注
+	        label_data = []
+	        for bbox, speed in bounding_boxes:
+	            points = [(int(bbox[i, 0]), int(bbox[i, 1])) for i in range(4)]
+	            is_tracked = False
+	            if self.tracking_mode and self.target_id is not None:
+	                x_min = min([p[0] for p in points])
+	                y_min = min([p[1] for p in points])
+	                x_max = max([p[0] for p in points])
+	                y_max = max([p[1] for p in points])
+	                box_area = (x_max - x_min) * (y_max - y_min)
+	                # 简易判定是否与当前追踪目标相符（可改进为 IoU）
+	                is_tracked = True if box_area > 1000 else False
+	
+	            label_data.append({
+	                "bbox": points,
+	                "speed_m_s": round(speed, 2),
+	                "tracked_id": self.target_id if is_tracked else None
+	            })
+	
+	
+	        with open(os.path.join("data/labels", json_filename), 'w') as f:
+	            json.dump(label_data, f, indent=2)
+	
+	    def __init__(self):
+	        self.client = None
+	        self.world = None
+	        self.camera = None
+	        self.car = None
+	        self.display = None
+	        self.image = None
+	        self.capture = True
+	        self.tracker = DeepSort(max_age=15)
+	        self.target_id = None         # 当前跟踪的目标 ID
+	        self.tracking_mode = True     # 是否启用追踪（便于后期控制开关）
+	        self.prev_distance = None        # 上一帧距离
+	        self.intent_text = ""           # 当前分析结果
+	
+	
+	    def select_closest_target(self, bounding_boxes):
+	        if not bounding_boxes:
+	            print("[TRACK] 没有检测到目标")
+	            return None
+	        """
+	        在所有检测目标中选择最近一个（速度最快+框最近）
+	        """
+	
+	        # 简单使用左上角点距离中心来估算“接近程度”
+	        center_x = VIEW_WIDTH / 2
+	        center_y = VIEW_HEIGHT / 2
+	
+	        min_dist = float('inf')
+	        closest_bbox = None
+	        for bbox, speed in bounding_boxes:
+	            x_coords = bbox[:, 0]
+	            y_coords = bbox[:, 1]
+	            x_min, y_min = np.min(x_coords), np.min(y_coords)
+	            dist = np.sqrt((x_min - center_x) ** 2 + (y_min - center_y) ** 2)
+	            if dist < min_dist:
+	                min_dist = dist
+	                closest_bbox = (bbox, speed)
+	        return closest_bbox
+	
+	
+	    def analyze_intention(self, bbox, speed):
+	        """
+	        基于边界框位置和速度分析当前意图
+	        """
+	        # 当前中心点
+	        x_coords = bbox[:, 0]
+	        y_coords = bbox[:, 1]
+	        x_center = np.mean(x_coords)
+	        y_center = np.mean(y_coords)
+	        current_center = (x_center, y_center)
+	
+	        # 自车视图中心（屏幕正下方）
+	        car_center = (VIEW_WIDTH / 2, VIEW_HEIGHT)
+	
+	        # 计算欧氏距离
+	        distance = np.linalg.norm(np.array(current_center) - np.array(car_center))
+	
+	        if self.prev_distance is None:
+	            self.prev_distance = distance
+	            self.intent_text = "目标初始化中"
+	            return
+	
+	        delta_d = distance - self.prev_distance
+	        self.prev_distance = distance
+	
+	        if delta_d < -5 and speed > 1.5:
+	            self.intent_text = "目标靠近中"
+	        elif delta_d > 5:
+	            self.intent_text = "目标远离中"
+	        elif distance < 150 and speed > 3:
+	            self.intent_text = "危险靠近"
+	        else:
+	            self.intent_text = "目标稳定"
+	
+	
+	    def camera_blueprint(self):
+	        """
+	        Returns camera blueprint.
+	        """
+	
+	        camera_bp = self.world.get_blueprint_library().find('sensor.camera.rgb')
+	        camera_bp.set_attribute('image_size_x', str(VIEW_WIDTH))
+	        camera_bp.set_attribute('image_size_y', str(VIEW_HEIGHT))
+	        camera_bp.set_attribute('fov', str(VIEW_FOV))
+	        return camera_bp
+	
+	    def set_synchronous_mode(self, synchronous_mode):
+	        """
+	        Sets synchronous mode.
+	        """
+	
+	        settings = self.world.get_settings()
+	        settings.synchronous_mode = synchronous_mode
+	        self.world.apply_settings(settings)
+	
+	    def setup_car(self):
+	        """
+	        Spawns actor-vehicle to be controled.
+	        """
+	
+	        car_bp = self.world.get_blueprint_library().filter('vehicle.*')[0]
+	        location = random.choice(self.world.get_map().get_spawn_points())
+	        self.car = self.world.spawn_actor(car_bp, location)
+	
+	    def setup_camera(self):
+	        """
+	        Spawns actor-camera to be used to render view.
+	        Sets calibration for client-side boxes rendering.
+	        """
+	
+	        camera_transform = carla.Transform(carla.Location(x=-5.5, z=2.8), carla.Rotation(pitch=-15))
+	        self.camera = self.world.spawn_actor(self.camera_blueprint(), camera_transform, attach_to=self.car)
+	        weak_self = weakref.ref(self)
+	        self.camera.listen(lambda image: weak_self().set_image(weak_self, image))
+	
+	        calibration = np.identity(3)
+	        calibration[0, 2] = VIEW_WIDTH / 2.0
+	        calibration[1, 2] = VIEW_HEIGHT / 2.0
+	        calibration[0, 0] = calibration[1, 1] = VIEW_WIDTH / (2.0 * np.tan(VIEW_FOV * np.pi / 360.0))
+	        self.camera.calibration = calibration
+	
+	    def control(self, car):
+	        """
+	        Applies control to main car based on pygame pressed keys.
+	        Will return True If ESCAPE is hit, otherwise False to end main loop.
+	        """
+	
+	        keys = pygame.key.get_pressed()
+	        if keys[K_ESCAPE]:
+	            return True
+	
+	        control = car.get_control()
+	        control.throttle = 0
+	        if keys[K_w]:
+	            control.throttle = 1
+	            control.reverse = False
+	        elif keys[K_s]:
+	            control.throttle = 1
+	            control.reverse = True
+	        if keys[K_a]:
+	            control.steer = max(-1., min(control.steer - 0.05, 0))
+	        elif keys[K_d]:
+	            control.steer = min(1., max(control.steer + 0.05, 0))
+	        else:
+	            control.steer = 0
+	        control.hand_brake = keys[K_SPACE]
+	
+	        car.apply_control(control)
+	        return False
+	
+	    @staticmethod
+	    def set_image(weak_self, img):
+	        """
+	        Sets image coming from camera sensor.
+	        The self.capture flag is a mean of synchronization - once the flag is
+	        set, next coming image will be stored.
+	        """
+	
+	        self = weak_self()
+	        if self.capture:
+	            self.image = img
+	            self.capture = False
+	
+	    def render(self, display):
+	        """
+	        渲染图像并返回 RGB 数组（用于保存）
+	        """
+	        if self.image is not None:
+	            array = np.frombuffer(self.image.raw_data, dtype=np.dtype("uint8"))
+	            array = np.reshape(array, (self.image.height, self.image.width, 4))
+	            rgb_array = array[:, :, :3]  # RGB，不做反转
+	            bgr_array = rgb_array[:, :, ::-1]  # BGR for pygame
+	
+	            surface = pygame.surfarray.make_surface(bgr_array.swapaxes(0, 1))
+	            display.blit(surface, (0, 0))
+	            return rgb_array  # 返回原始 RGB 图像用于保存
+	        return None
+	
+	
+	
+	    def game_loop(self):
+	        """
+	        Main program loop.
+	        """
+	
+	        try:
+	            pygame.init()
+	
+	            self.client = carla.Client('127.0.0.1', 2000)
+	            self.client.set_timeout(2.0)
+	            self.world = self.client.get_world()
+	
+	            self.setup_car()
+	            self.setup_camera()
+	
+	            self.display = pygame.display.set_mode((VIEW_WIDTH, VIEW_HEIGHT), pygame.HWSURFACE | pygame.DOUBLEBUF)
+	            pygame_clock = pygame.time.Clock()
+	
+	            self.set_synchronous_mode(True)
+	            vehicles = [v for v in self.world.get_actors().filter('vehicle.*') if v.id != self.car.id]
+	
+	
+	            frame_count = 0  # 添加在循环开始前的计数器
+	            while True:
+	                self.world.tick()
+	                self.capture = True
+	                pygame_clock.tick_busy_loop(20)
+	
+	                frame_count += 1
+	                rgb_array = self.render(self.display)
+	
+	                bounding_boxes = ClientSideBoundingBoxes.get_bounding_boxes(vehicles, self.camera)
+	                ClientSideBoundingBoxes.draw_bounding_boxes(self.display, bounding_boxes)
+	                # ---- 单目标追踪逻辑 ----
+	                target_input = None
+	                if self.tracking_mode:
+	                    closest = self.select_closest_target(bounding_boxes)
+	                    if closest:
+	                        bbox, speed = closest
+	                        x_coords = bbox[:, 0]
+	                        y_coords = bbox[:, 1]
+	                        x_min, y_min = np.min(x_coords), np.min(y_coords)
+	                        x_max, y_max = np.max(x_coords), np.max(y_coords)
+	                        width = x_max - x_min
+	                        height = y_max - y_min
+	
+	                        # 避免空框
+	                        if width >= 10 and height >= 10:
+	                            target_input = [([x_min, y_min, width, height], 0.9, "vehicle")]
+	
+	                # 用 DeepSort 追踪目标
+	
+	                track_id = None
+	                if target_input:
+	                    tracks = self.tracker.update_tracks(target_input, frame=rgb_array)
+	
+	                    bb_surface = pygame.Surface((VIEW_WIDTH, VIEW_HEIGHT))
+	                    bb_surface.set_colorkey((0, 0, 0))
+	                    font = pygame.font.SysFont("Arial", 20)
+	
+	                    for track in tracks:
+	                        if not track.is_confirmed():
+	                            continue
+	                        track_id = track.track_id
+	                        l, t, r, b = track.to_ltrb()
+	                        pygame.draw.rect(bb_surface, (255, 255, 0), pygame.Rect(l, t, r - l, b - t), 2)
+	                        text_surface = font.render(f"Tracked ID: {track_id}", True, (255, 255, 255))
+	                        bb_surface.blit(text_surface, (int(l), int(t) - 20))
+	                        # 分析意图（基于 closest）
+	                        if closest:
+	                            bbox, speed = closest
+	                            self.analyze_intention(bbox, speed)
+	
+	                        chinese_font = pygame.font.Font("C:/Windows/Fonts/simhei.ttf", 20)
+	                        intent_color = {
+	                            "危险靠近": (255, 0, 0),
+	                            "目标靠近中": (255, 128, 0),
+	                            "目标远离中": (0, 255, 0),
+	                            "目标稳定": (200, 200, 200),
+	                            "目标初始化中": (150, 150, 150)
+	                        }.get(self.intent_text, (255, 255, 255))
+	                        intent_surface = chinese_font.render(self.intent_text, True, intent_color)
+	                        bb_surface.blit(intent_surface, (int(l), int(t) - 40))
+	
+	
+	
+	                    self.display.blit(bb_surface, (0, 0))
+	
+	                self.target_id = track_id
+	                # ---- end ----
+	
+	
+	                # 每 5 帧保存一次
+	                if frame_count % 5 == 0 and rgb_array is not None:
+	                    self.save_frame_and_labels(rgb_array, bounding_boxes, frame_count)
+	
+	                pygame.display.flip()
+	                pygame.event.pump()
+	                if self.control(self.car):
+	                    return
+	
+	        finally:
+	            self.set_synchronous_mode(False)
+	            self.camera.destroy()
+	            self.car.destroy()
+	            pygame.quit()
+	
+	
+	# ==============================================================================
+	# -- main() --------------------------------------------------------------------
+	# ==============================================================================
+	
+	
+	def main():
+	    """
+	    Initializes the client-side bounding box demo.
+	    """
+	
+	    try:
+	        client = BasicSynchronousClient()
+	        client.game_loop()
+	    finally:
+	        print('EXIT')
+	
+	
+	if __name__ == '__main__':
+	    main()
+
 \end{lstlisting}
 % \end{minted}
-
-\chapter{康托尔辩辞录：数学的自由与制约}
-
-（录自康托尔：《一般集合论基础》，1883）
-
-数学在其发展中是完全自由的，它只受下述自明的关注所制约，即它的概念既要内在地不存在矛盾，还要参与确定与此前形成的，已经存在着地和已被证明地概念之关系（借助定义贯串起来）。特别地，在引入新数时，数学只遵循：在给出它们地定义时使之具有某种确定性，并且在某些情况下，使之与老数有某种关系，在特定地场合中这种关系一定会使它们（新数和老数）互相区别开来，只要一个数满足这些条件，数学只能而且必须把它看作是存在的和实在的东西，这正是我……关于为什么必须把有理数、无理数和复数看作与有限正整数一样是实在的所建议的理由。
-
-我相信，没有必要害怕，许多人是害怕，这些原则含有对于科学的危险，一方面，实行造出新数的自由必须服从所设计的条件，但这些条件给任意性留下的活动空间是非常小的。而且，每一数学概念在其自身之中也带有必要的矫正物；如果它没有收获也不合适（它的无用很快就会表明这一点），那么它将由于没有成功而被丢弃。另一方面，在我看来，对于数学研究工作的任何多余的限制只会随之而带来更大的危险，由于实际上并没有任何理由可说明它是由科学的本质推断出来的，它的危险就更大了，而数学的本质恰恰在于它的自由。
-
-如果高斯、柯西、阿贝尔、雅可比、狄利克雷、魏尔斯特拉斯、埃尔米特和黎曼总是被束缚而拿他们的新想法去臣服于形而上学的控制，那么，我们今日就不可能为现代函数论的雄伟建筑而高兴，现代函数论的设计和矗立是完全自由的，毫无短视的瞬间目的……。如果福克斯、庞加莱和其他许多杰出的智者受外来影响所包围和限制，我们就会见不到他们带给微分方程论的巨大的推动，还有，如果枯莫尔不是斗胆地（大有仿效者）把所谓的“理想”数引入数论，我们今天也无从去羡慕钦佩克罗内克和戴德金在代数和算术上十分重要和杰出的工作。
-
-因此，如已说明的，数学是要脱离形而上学的桎梏而完全自由地发展 \dots
 
 
 
