@@ -4,8 +4,10 @@ import torch
 import transformers
 
 # 设置 OpenAI API 密钥
-os.environ["OPENAI_API_KEY"] = 'sk-...s0kA'  # 请替换为你的实际 API 密钥
+os.environ["OPENAI_API_KEY"] = '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'  # 请替换为你的实际 API 密钥
 
+# 设置 API 基础地址（如果你需要使用代理服务）
+openai.api_base = 'https://api.openai-proxy.org/v1'
 
 class LLMChat:
     def __init__(self, model_name='gpt-4', use_gpu=True):
@@ -20,7 +22,7 @@ class LLMChat:
 
         # 如果是 GPT 模型，使用 OpenAI API
         if model_name.startswith('gpt'):
-            openai.api_key = os.environ["OPENAI_API_KEY"]  # 设置 OpenAI API 密钥
+            self.client = openai.OpenAI()  # 初始化 OpenAI 客户端
         else:
             # 设置 HuggingFace 模型并选择 GPU 或 CPU
             self.device = "cuda" if torch.cuda.is_available() and use_gpu else "cpu"
@@ -39,13 +41,13 @@ class LLMChat:
         """
         if self.model_name.startswith('gpt'):
             # 对于 OpenAI GPT 模型，使用新的聊天 API
-            response = openai.ChatCompletion.create(
+            response = self.client.chat.completions.create(
                 model=self.model_name,
                 messages=messages,  # 将消息数组直接传递给 chat 模型
                 temperature=0.7,  # 控制生成文本的多样性
                 max_tokens=max_new_tokens,
             )
-            return response['choices'][0]['message']['content'].strip()  # 返回生成的文本
+            return response.choices[0].message.content.strip()  # 返回生成的文本
 
         else:
             # 对于 HuggingFace 模型，使用文本生成 pipeline
