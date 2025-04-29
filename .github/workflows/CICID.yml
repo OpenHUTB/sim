@@ -82,7 +82,7 @@ jobs:
             fc-cache -f
 
       # 触发面向自动驾驶的视觉目标跟踪和意图分析算法论文的 action
-      - name: Compile Pedestrian LaTeX document
+      - name: Compile SOT LaTeX document
         uses: xu-cheng/latex-action@v3
         with:
           working_directory: sot/undergraduate
