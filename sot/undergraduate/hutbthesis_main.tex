@@ -7,7 +7,17 @@
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 \documentclass[AutoFakeBold]{hutbthesis}
+%%%%%%%%%%%%%%%%%%%导言区%%%%%%%%%%%%%%%%%%%%%%%%%%
+%\usepackage{fancyhdr}
+%\setlength{\headheight}{26pt}
+%\addtolength{\topmargin}{-11.5pt}  % 精确补偿值可能需要微调
+%{\setlength{\emergencystretch}{1em}  % 增加段落弹性间距
+%\usepackage{lastpage}  % 导言区加载宏包
+%\usepackage{float}
 
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \addbibresource{content/reference.bib}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -80,7 +90,8 @@
 \include{content/chapter3.tex}
 \include{content/chapter4.tex}
 \include{content/chapter5.tex}
-
+\include{content/chapter6.tex}
+\include{content/chapter7.tex}
 % % 主文件有代码去掉页眉章节编号的“.”，但这会因为bug导致无编号章节显示一个错误编号，所以这里在无编号章节之前再次重定义sectionmark。
 % \renewcommand{\sectionmark}[1]{\markright{#1}}
 
