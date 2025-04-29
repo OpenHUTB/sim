@@ -154,3 +154,37 @@ Thumbs.db
 *.vscode-workspace
 *.vscode-insiders-workspace
 *.vscode-remote-workspace
+# LaTeX intermediate files
+*.aux
+*.bbl
+*.blg
+*.brf
+*.log
+*.lof
+*.lot
+*.fls
+*.out
+*.toc
+*.fdb_latexmk
+*.synctex.gz
+*.nav
+*.snm
+*.vrb
+*.xdv
+*.dvi
+*.bcf
+*.run.xml
+*.gz
+*.acn
+*.acr
+*.alg
+*.glg
+*.glo
+*.gls
+*.ist
+*.xdy
+
+# VSCode/TeXstudio temporary files
+*.synctex.*
+*.pdfsync
+*~
