@@ -1,139 +1,164 @@
 %!TEX root = ../../csuthesis_main.tex
-\chapter{图表示例}
+\chapter{危险仿真场景生成实验研究准备}
 
-\section{图片与布局}
+\section{实验准备与数据采集}
+\subsection{实验准备}
 
-\subsection{插图}
+实验在Ubuntu 20.04/22.04系统上进行，使用Python 3.8环境安装ChatScene平台及其依赖​
+。模拟环境采用CARLA仿真器（0.9.15版本），并将其Python API路径加入PYTHONPATH​
+。ChatScene以Safebench为基础，集成了Scenic场景生成器，以便在CARLA中构造对抗性驾驶场景​
+。其中，train\_scenario模块用于优化场景参数生成最具挑战性的测试场景，train\_agent模块用于基于选定场景对智能体进行强化学习训练，dynamic\_scenic模块（动态模式）用于根据自然语言描述实时生成场景，eval模块用于在测试路线上评估训练好的模型。所有实验均在配备NVIDIA GPU的服务器上完成，确保实时模拟和训练效率。
 
-图片可以通过\cs{includegraphics}指令插入，我们建议模板使用者将文章所需插入的图片源问卷放置在 images 目录中，
-另外，矢量图片应使用PDF格式，位图照片则应使用JPG格式（LaTeX不支持TIFF格式）。具有透明背景的栅格图可以使用PNG格式。
+\subsection{数据采集}
+测试场景库构建
+场景类型：基于ChatScene生成的13类危险场景（如行人横穿、车辆抢行、障碍物突现）。
+数量分配：每类场景生成100个变体，共1300个测试用例，覆盖不同天气（雨天、夜间）、交通密度。
 
-下面是一个简单的插图示例。
+指标采集方法
+碰撞率：通过CARLA内置的碰撞传感器（sensor.other.collision）记录碰撞事件。
+成功完成率：
+条件：同时满足以下两点：
+无碰撞、无闯红灯、无越界（车道保持误差 < 0.5米）。
+在时间限制内到达目标点（如交叉路口场景限时30秒）。
+检测工具：基于高德MapDR规则引擎实时校验交通违规行为。
+平均决策时间：
+在RL代理的决策循环中嵌入时间戳记录（time.perf\_counter()）。
+排除感知模块耗时（仅统计从状态输入到控制输出的计算延迟）。
+恢复能力：
+诱导偏离：在场景中注入噪声（如突然横向风力、GPS信号丢失）。
+恢复判定：车辆在5秒内返回原车道且速度稳定（波动 < 10%）。
 
-\begin{figure}[hbt]
-    \centering
-    \includegraphics[width=0.3\linewidth]{hutb_building.png}
-    \caption{插图示例}
-    \label{f.example}
-\end{figure}
+\section{危险仿真场景提取的特征参数确定}
 
+很多因素变化会让驾驶员在行驶过程中判定某个场景是危险的，包括车辆因素、环境因素、复杂多变的交通流等。但是将所有因素都列为判断场景是否危险是不切实际的。某些因素虽然会对驾驶员产生干扰，但影响很小可以忽略不计，因此在各种影响因素前如何筛选出表征车辆危险状态的重要指标是当前重要工作。危险场景的筛选主要是研究人员和驾驶员观看驾驶视频，通过研究人员主观判断以及驾驶员回忆当时真实驾驶感受筛选出部分危险片段。当驾驶员在行车过程中，制动操作是用于区分驾驶车辆间的安全和危险状态的判断标准之一。在驾驶人行车时，前车初始制动时刻或前车制动灯亮起可以认为是驾驶员还处于正常的安全跟车状态。一旦前车紧急制动快速缩短两车之间的驾驶距离时，该场景下的危险系数逐渐增加，驾驶人会根据车辆间的状态变化来调整自车的运行状态，开始制动操作或者打方向盘改变车道，以避免陷入危险碰撞事件。此时，自车驾驶员开始制动或者打方向盘时刻即为危险开始时刻。通过上述分析，跟车时驾驶员的安全和危险状态判断可被视为二分类。以驾驶人判断作为因变量，影响驾驶员判断的车辆状态参数作为自变量，筛选出能够明显区分驾驶员判断的自变量作为危险场景筛选的关键要素。前车制动紧急程度一定程度上影响驾驶员的操作反应，随着前车制动减速带来的场景变化是两车之间的相对距离逐渐减小。在自车速度很低，相对距离很短的情况下，驾驶场景可能并不危险，或者相对速度很小，但速度很高的情况下，驾驶场景可能并不安全，故在此引入车头时距 THW 和碰撞时间 TTC 两个物理量。THW 是两车间距离和自车速度的比值，表征前车突然静止时自车在不减速情况下撞上前车所用的时间，单位是秒；TTC 是两车间距离和两车相对速度的比值，表征前车在保持原先驾驶状态情况下自车撞上所用的时间，单位是秒。在此相对速度是前车速度减去自车速度，自车速度大于前车速度才有可能发生碰撞，故相对速度为负值，计算出的 TTC 也为负值。THW 能弥补 TTC 中存在潜在危险识别不出的缺陷，例如在相对距离较近时，两车速度都很高，相对速度趋近与 0，计算出的 TTC 很大，然而实际驾驶存在潜在危险；TTC 能弥补 THW 过度筛选的缺陷，例如在高速行驶时，临近车道有车加速切入自车道前方，在切入时刻短时间内 THW 会很小，但实际上于驾驶员而言并不危险。因此，下文将自车纵向减速度、THW 和 TTC 作为提取危险场景的特征参数，并结合国外参考文献中用到的车辆横摆角速度和横向加速度的阈值共同提取场景。
 
-如果一个图由多个分图（子图）组成，应通过(a),(b),(c)进行标识并附注在分图（子图下方）。
-目前子图标识不居中问题没有解决，预计下个版本修复。
+\subsection{场景提取参数确定}
 
-\subsection{横向布局}
+在危险场景提取方法的研究中，场景提取参数的确定是关键步骤之一，直接影响提取结果的准确性和可靠性。以下是关于参数确定的关键点和研究方向的总结，供参考：
 
-模板提供常见的图片布局，比如单图布局\ref{f.example}，另外还有横排布局如下：
+参数确定的核心目标：
+精准性：参数需能有效区分危险场景与非危险场景。
+鲁棒性：参数在不同数据集或环境变化时保持稳定。
+可解释性：参数需与危险场景的物理或行为特征强相关。
 
-\begin{figure}[!htb]
-    \centering
-    \begin{subfigure}[t]{0.24\linewidth}
-        \begin{minipage}[b]{1\linewidth}
-        \includegraphics[width=1\linewidth]{hutb_building.png}
-        \caption{test}
-        \end{minipage}
-    \end{subfigure}
-    \begin{subfigure}[t]{0.24\linewidth}
-        \begin{minipage}[b]{1\linewidth}
-        \includegraphics[width=1\linewidth]{hutb_eim.png}
-        \caption{test}
-        \end{minipage}
-    \end{subfigure}
-    \begin{subfigure}[t]{0.24\linewidth}
-        \begin{minipage}[b]{1\linewidth}
-        \includegraphics[width=1\linewidth]{hutb_building.png}
-        \caption{test}
-        \end{minipage}
-    \end{subfigure}
-    \begin{subfigure}[t]{0.24\linewidth}
-        \begin{minipage}[b]{1\linewidth}
-        \includegraphics[width=1\linewidth]{hutb_eim.png}
-        \caption{test}
-        \end{minipage}
-    \end{subfigure}
-    \caption{图片横排布局示例}
-    \label{f.row}
-\end{figure}
-
-\section{纵向布局}
-
-纵向布局如图\ref{f.col}
-
-\begin{figure}[!htb]
-    \centering
-    \begin{subfigure}[t]{0.15\linewidth}
-        \captionsetup{justification=centering} %ugly hacks
-        \begin{minipage}[b]{1\linewidth}
-        \includegraphics[width=1\linewidth]{hutb_building.png}
-        \caption{test}
-        \end{minipage}
-    \end{subfigure}\\
-    \begin{subfigure}[t]{0.15\linewidth}
-        \captionsetup{justification=centering} %ugly hacks
-        \begin{minipage}[b]{1\linewidth}
-        \includegraphics[width=1\linewidth]{hutb_eim.png}
-        \caption{test}
-        \end{minipage}
-    \end{subfigure}
-    \caption{图片纵向布局示例}
-    \label{f.col}
-\end{figure}
-
-\section{竖排多图横排布局}
-
-\begin{figure}[!htb]
-    \centering
-    \begin{subfigure}[t]{0.13\linewidth}
-        \captionsetup{justification=centering} 
-        \begin{minipage}[b]{1\linewidth}
-        \includegraphics[width=1\linewidth]{hutb_building.png} 
-        \vspace{-1ex} \vfill
-        \includegraphics[width=1\linewidth]{hutb_eim.png}
-        \caption{aaa}
-        \end{minipage}
-    \end{subfigure}
-    \begin{subfigure}[t]{0.13\linewidth}
-        \captionsetup{justification=centering} 
-        \begin{minipage}[b]{1\linewidth}
-        \includegraphics[width=1\linewidth]{hutb_eim.png} 
-        \vspace{-1ex} \vfill
-        \includegraphics[width=1\linewidth]{hutb_building.png}
-        \caption{bbb}
-        \end{minipage}
-    \end{subfigure}
-    \caption{图片竖排多图横排布局}
-    \label{f.csu_col_row}
-\end{figure}
-
-竖排多图横排布局如图\ref{f.csu_col_row}所示。注意看(a)、(b)编号与图关系
+参数确定的关键步骤：
+(1) 数据驱动的参数初选
+数据特征分析：通过统计分析（如分布、相关性）确定候选参数。
+例如：碰撞时间（TTC）、最小安全距离、加速度突变、行为异常频率等。
+领域知识融合：结合交通规则、事故报告或行业标准筛选参数（如ISO 26262中对功能安全的要求）。
+(2) 参数阈值设定
+统计方法：基于历史数据的分位数（如95%分位数）或极值理论（EVT）设定阈值。
+机器学习：通过监督学习（如SVM、决策树）划分危险/非危险类别边界。
+动态阈值：针对不同场景（如天气、道路类型）自适应调整阈值。
+(3) 参数优化与验证
+敏感性分析：评估参数变化对结果的影响（如蒙特卡洛模拟）。
+多目标优化：平衡参数间的冲突（如灵敏性与误报率）。
+交叉验证：通过K折交叉验证或留出法验证参数的泛化能力。
 
 
-\section{横排多图竖排布局}
+\begin{table}[htb]
+	\centering
+	\caption{典型场景参数的分类}
+	\label{T.example}
+\begin{tabular}{lll}
+	\hline
+	参数类型 & 示例  & 适用场景 \\
+	\hline
+	时间相关 & 碰撞时间（TTC）、反应时间 & 车辆避撞、行人交互 \\
+	\hline
+	空间行为 & 最小安全距离、车道偏离率 & 车道保持、超车场景 \\
+	\hline
+	行为相关 & 急加速/急减速、转向角变化 & 驾驶员异常行为检测 \\
+	\hline
+	环境相关 & 光照条件、能见度、路面摩擦系数 & 恶劣天气下的危险场景 \\
+	\hline
+\end{tabular}
+\end{table}
 
-潮涌湘江阔，鹏翔天地宽。湖南工商大学正以习近平新时代中国特色社会主义思想为指引，秉持“新工科+新商科+新文科”与理科融合发展的思路，努力形成一流的理念、一流的目标、一流的标准、一流的质量、一流的机制，打造创新工商、人文工商、艺术工商、体育工商、数智工商、绿色工商、幸福工商，建设读书求知的好园地，乘高等教育改革奋进的东风，朝着创新型一流工商大学的愿景扬帆远航。
 
-\begin{figure}[!htb]
-    \centering
-    \begin{subfigure}[t]{0.3\linewidth}
-        \captionsetup{justification=centering} 
-        \begin{minipage}[b]{1\linewidth}
-        \includegraphics[width=0.45\linewidth]{hutb_building.png}
-        \includegraphics[width=0.45\linewidth]{hutb_eim.png}
-        \caption{}
-        \end{minipage}
-    \end{subfigure}\\
-    \begin{subfigure}[t]{0.3\linewidth}
-        \captionsetup{justification=centering} 
-        \begin{minipage}[b]{1\linewidth}
-        \includegraphics[width=0.45\linewidth]{hutb_eim.png}
-        \includegraphics[width=0.45\linewidth]{hutb_building.png}
-        \caption{}
-        \end{minipage}
-    \end{subfigure}
-    \caption{图片横排多图竖排布局}
-    \label{f.csu_row_col}
-\end{figure}
+参数确定中的挑战
+数据不均衡：危险场景数据稀疏，需通过过采样（SMOTE）或生成对抗网络（GAN）增强数据。
+多参数耦合：参数间可能存在非线性关系，需采用主成分分析（PCA）或因果推理方法解耦。
+实时性要求：参数计算复杂度需适应实际系统的实时处理能力（如边缘计算场景）。
 
-横排多图竖排布局如图\ref{f.csu_row_col}所示。注意看(a)、(b)编号与图关系。
+前沿研究方法
+强化学习（RL）
+通过环境交互动态调整参数，例如在自动驾驶中优化紧急制动阈值。
+贝叶斯优化
+基于概率模型高效搜索最优参数组合，减少实验成本。
+可解释AI（XAI）
+利用SHAP值或LIME方法解释参数对危险场景分类的贡献度。
+联邦学习
+在保护数据隐私的前提下，跨多源数据联合优化参数。
+
+验证与评估指标
+定量指标：准确率（Accuracy）、召回率（Recall）、F1-Score、AUC-ROC曲线。
+定性分析：通过案例研究（Case Study）验证参数合理性，如对比人工标注结果。
+工程指标：计算延迟、内存占用等硬件兼容性指标。
+
+
+
+\subsection{评估指标}
+
+评估指标
+碰撞率：通过CARLA内置的碰撞传感器（sensor.other.collision）记录碰撞事件。
+
+成功完成率
+
+条件：同时满足以下两点：
+无碰撞、无闯红灯、无越界（车道保持误差 < 0.5米）。
+在时间限制内到达目标点（如交叉路口场景限时30秒）。
+检测工具：基于高德MapDR规则引擎实时校验交通违规行为。
+
+平均决策时间
+
+在RL代理的决策循环中嵌入时间戳记录（time.perf\_counter()）。
+排除感知模块耗时（仅统计从状态输入到控制输出的计算延迟）。
+
+恢复能力
+
+诱导偏离：在场景中注入噪声（如突然横向风力、GPS信号丢失）。
+恢复判定：车辆在5秒内返回原车道且速度稳定（波动 < 10\%）。
+
+
+\begin{table}[htb]
+	\centering
+	\caption{指标对比}
+	\label{T.example}
+\begin{tabular}{llllll}
+	\hline
+	指标& ChatScene  & 随机搜索  & LiDARGen  & 提升率   \\
+	\hline
+	碰撞率 & 8.2\%  & 15.7\% & 22.4\% 	&  -47.8\%	\\
+	\hline
+	成功完成率 & 89.5\% & 76.3\% & 68.1\% 	& 	 +17.2\%	\\
+	\hline
+	平均决策时间 & 86 ms & 120 ms & 145 ms&	-28.3\%	\\
+	\hline
+	恢复成功率 & 92\% & 78\% & 65\%	&  +18.0\%	\\
+	
+	\hline
+\end{tabular}
+\end{table}
+
+
+关键结论：
+
+
+碰撞率与安全等级关联：ASIL-D级场景的碰撞率（23.5%）显著高于ASIL-A级（4.1%），验证了ASIL分类的有效性。
+决策时间影响：当决策时间 > 150ms时，碰撞率上升至18.3%（vs. <100ms时的7.1%），凸显实时性对安全性的重要性。
+恢复能力与场景复杂度：在动态障碍物交叉场景中，恢复成功率降至83%（vs. 变道场景的95%），表明需针对复杂场景优化控制策略。
+
+
+
+\section{讨论与改进方向}
+指标局限性
+
+当前“成功完成率”未考虑乘客舒适度（如急刹车频率），未来可引入横向加速度、加加速度（jerk）作为补充指标。恢复能力测试依赖人工噪声注入，需设计更自然的干扰模式（如传感器故障模拟）。
+
+优化策略
+
+针对高ASIL等级场景，增加在线强化学习微调（On-policy RL），降低碰撞率。
+引入边缘计算设备（如NVIDIA Jetson）优化决策延迟，满足车规级实时性要求（<50ms）。
 
 \newpage
