@@ -792,7 +792,7 @@
 		\vspace{40pt}
 		% \vfill
 		\begingroup
-		{\zihao{2} \heiti 计算机学院 \par}
+		{\zihao{2} \heiti 人工智能与先进计算学院 \par}
 		\vspace{10pt}
 		{\zihao{-2} \heiti \@thesisdate \par}
 		\endgroup
