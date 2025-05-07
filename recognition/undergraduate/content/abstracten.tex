@@ -1,10 +1,9 @@
 %!TEX root = ../csuthesis_main.tex
-\keywordsen{HUTB\ \ LaTeX\ \ Template}
+\keywordsen{Brain-inspired vision\ \ CORnet model\ \ Channel attention\ \ Brain-Score evaluation\ \ Neural response similarity}
 \begin{abstracten}
 
-LaTeX can be compiled into a pdf of uniform format using the set template.At present, most domestic publishers and universities still use word. Because of its powerful function and flexibility, when faced with fixed-form papers by novices, simple matters such as typesetting, numbering, and reference documents will bring many difficulties and troubles. For some problems that need to be modified throughout, to achieve the efficiency of LaTeX, it requires a high level of skill for word users.
+Brain-inspired visual models aim to simulate the information processing mechanisms of the human visual cortex and play a significant role in the interdisciplinary research between computer vision and neuroscience. This study is based on the CORnet model family and focuses on two main aspects: recognition performance optimization and brain-likeness analysis. First, the CORnet-S model was reproduced on the Tiny-ImageNet dataset to verify its image recognition ability under a lightweight architecture. Then, a modified model named CORnet-Z+SE was constructed by introducing a Squeeze-and-Excitation (SE) channel attention mechanism into the CORnet-Z model. Experimental results show that both Top-1 and Top-5 accuracy improved to a certain extent.
 
-In order to focus on the writing of papers, many international journals and universities support the writing and submission of LaTeX. Novices don't need to care about formatting issues. They only need to use a few symbolic labels step by step to get the documents that meet the requirements. And when you need to modify the entire format, you can directly recompile the template file by replacing or modifying the template file. This is incredible for the word novice to use the word.
-
+To evaluate the brain-likeness of the models, this study employed the Brain-Score framework and used the publicly available MajajHong2015 neural dataset to assess representational similarity in the V4 and IT brain regions. Results indicate that although the introduction of attention mechanisms improved classification accuracy, it led to a decline in brain similarity scores, suggesting a trade-off between discriminative performance and neural alignment. Visualization of activation maps further showed that the SE module enhanced the model’s response to local target regions, but may have reduced the breadth of overall activation, potentially affecting its biological plausibility.
 
 \end{abstracten}

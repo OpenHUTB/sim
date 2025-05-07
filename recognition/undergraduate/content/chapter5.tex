@@ -5,28 +5,31 @@
 
 \subsection{测试数据与标准}
 
-为了量化模型与灵长类大脑视觉皮层之间的表征相似性，本文采用Brain-Score提供的公开评估基准进行测试。Brain-Score是由Schrimpf等人提出的类脑模型评估体系，整合了神经响应记录、行为数据和代表性任务表现指标，在神经科学与人工智能领域得到了广泛应用。
+为了量化模型与灵长类大脑视觉皮层之间的表征相似性，本文采用Brain-Score提供的公开评估基准进行测试。Brain-Score是由Schrimpf等人提出的类脑模型评估体系，整合了神经电生理记录、人类行为数据和代表性任务表现指标，在神经科学与人工智能领域得到了广泛应用\cite{schrimpf2018brain}。
 
-实验中使用的数据来源于MajajHong2015公开神经数据集，该数据集记录了两只恒河猴在被动注视任务中对2560张自然图像的皮层神经反应。这些图像从ImageNet数据集中选取，涵盖了64个类别的典型自然物体，如动物、交通工具、器皿等，图像被统一裁剪为中心对齐并标准化灰度背景。
+实验中所使用的神经数据来源于Majaj和Hong等人发布的MajajHong2015公开神经数据集，该数据集记录了两只恒河猴在静态注视条件下，对一组自然图像的皮层响应。图像总数为2560张，全部从ImageNet数据集中筛选，涵盖了64个常见物体类别，如动物、器皿、交通工具等，并经过标准化预处理，包括图像中心对齐、统一灰度背景等操作，以便于神经记录的可比性\cite{majaj2015simple}。
 
 \begin{figure}[hbt]
 	\centering
-	\includegraphics[width=0.6\linewidth]{majaj2015.png}
+	\includegraphics[width=0.5\linewidth]{majaj2015.png}
 	\caption{majajhong2015图像}
 	\label{f.majajhong}
 \end{figure}
 
-在实验中，猴子的颞下皮层（IT）和视觉皮层第4区（V4）中的数百个神经元通过多电极阵列进行电生理记录。每张图像呈现约100毫秒，系统记录神经元在图像呈现后70~170毫秒窗口内的平均响应。V4区主要参与中等复杂度形状与边缘整合，而IT区被认为是高阶语义整合与对象恒常识别的关键区域。
+在实验中，研究者使用多电极阵列对恒河猴子的颞下皮层（IT）和视觉皮层第4区（V4）中的数百个神经元通过多电极阵列进行了电生理记录。每张图像呈现约100毫秒，系统记录了神经元在图像呈现后70~170毫秒窗口内的平均响应。V4区主要参与中等复杂度形状与边缘整合，而IT区被认为是高阶语义整合与对象恒常识别的关键区域\cite{dicarlo2012does}。
 
-在评估过程中，模型将对与猴子实验中相同的图像集合进行处理，并提取对应层的神经激活。随后，使用偏最小二乘回归（PLS）将模型激活映射至神经数据空间，计算Pearson相关系数作为匹配度指标，最终得分越高表示模型越“类脑”。这些神经反应数据经过了标准化处理，并由Brain-Score平台封装为benchmark接口，可用于统一评估各类人工视觉模型的神经预测能力。
+在神经一致性评估过程中，模型将对与猴子实验中相同的图像集合进行处理，并提取对应层的神经激活。随后，使用偏最小二乘回归（PLS）方法将模型激活映射至神经数据空间，计算皮尔逊相关系数作为匹配度指标，最终得分越高表示模型越“类脑”。这些神经反应数据经过了标准化处理，并由Brain-Score平台封装为benchmark接口，可用于统一评估各类人工视觉模型的神经预测能力。
 
 \subsection{神经区域对齐方式与激活提取策略}
 
-为了将神经数据与模型结构对应起来，需明确模型中的哪一层特征输出代表生物视觉皮层中的特定脑区。CORnet-Z系列模型具备清晰的模块化分层结构，其V1、V2、V4与IT模块在结构命名上就与生物皮层对齐，因此具有较强的类脑可比性。
+在进行类脑评估实验时，首先需要明确人工神经网络中不同层级的特征表征应如何与大脑视觉皮层中的具体区域进行对应。这一对齐过程是评估神经一致性的基础，也是 Brain-Score 平台设定的关键前提之一。换言之，若模型中间层的输出不能明确映射至生物脑区，则神经预测指标将失去生理解释意义\cite{schrimpf2018brain}。
 
-在本实验中，模型的V4模块输出被映射至灵长类大脑的V4区域，IT模块输出则对应真实IT区神经反应。对于每幅图像，模型将输入图像后产生的对应层激活作为表征向量，用于与神经数据进行匹配。激活输出在维度上通过flatten操作转为一维向量，以便参与后续相关性计算。
+为了将神经数据与模型结构对应起来，需明确模型中的哪一层特征输出代表生物视觉皮层中的特定脑区。CORnet-Z系列模型具备清晰的模块化分层结构，其V1、V2、V4与IT层模块直接参考了灵长类视觉通路的区域划分。每个模块不仅在结构上模拟了对应脑区的感受野变化和特征抽象过程，还保持了信息传递顺序与神经处理层级一致。因此，该类模型在结构上具有天然的神经对齐优势，广泛用于视觉皮层建模研究中\cite{kubilius2019brain}。
 
-为确保横向比较的公正性，所有待测模型（包括原始CORnet-Z、引入SE模块后的CORnet-Z+SE、加入CBAM模块的CORnet-Z+CBAM，以及将V1替换为VOneBlock的CORnet-Z+VOne）均保持相同的层级映射关系和预处理方式。
+在本实验中，模型的V4模块输出被映射至灵长类大脑的V4区域，IT模块输出则对应真实IT区神经反应。对于每幅图像，模型将输入图像后产生的对应层激活作为表征向量，用于与神经数据进行匹配。激活输出在维度上通过flatten操作转为一维向量，以便参与后续相关性计算。为确保横向比较的公正性，所有待测模型（包括原始CORnet-Z、引入SE模块后的CORnet-Z+SE、加入CBAM模块的CORnet-Z+CBAM，以及将V1替换为VOneBlock的CORnet-Z+VOne）在进行神经一致性评估时均采用相同的激活提取策略与区域对齐方式。
+
+这种模块对脑区的静态映射虽然不能够完全复现真实大脑中存在的多尺度、多方向反馈通路，但在静态图像识别任务中已被多项研究证明具有良好的预测效果。特别是在IT层区域，具备高语义表达能力的深层卷积或递归单元输出，与恒河猴的实际神经响应之间常表现出较高的一致性，是目前类脑建模中最为成熟的区域对齐方式之一\cite{rajalingham2018large}。
+
 
 \subsection{评估方法与流程}
 
@@ -49,7 +52,6 @@ Brain-Score框架采用神经预测得分（Neural Predictivity）作为主要�
 
 得分计算：对所有神经元的预测得分取平均，作为该层的最终Brain-Score分数，分数范围为0（无关）到1（完美匹配）。
 
-
 \section{多模型类脑得分对比}
 
 为探究不同结构设计对模型类脑性的影响，本文基于Brain-Score框架，对六种视觉模型在V4和IT两个关键脑区的神经预测能力进行了评估。所测试模型包括：原始CORnet-Z、ResNet-18、AlexNet，以及在CORnet-Z基础上引入三种结构改进的变体（SE模块、CBAM模块、VOneBlock替代V1）。评估指标为Pearson相关系数，表示模型中间层输出与神经实测响应之间的相似性，得分越高，说明模型越“类脑”。
@@ -61,6 +63,13 @@ V4区作为腹侧通路的中间阶段，负责对中等复杂度的形状、颜
 相比之下，引入注意力机制或生物启发模块的三种改进模型得分均较低，CORnet-Z+SE、CORnet-Z+CBAM、CORnet-Z+VOneBlock分别仅为0.2475、0.2520和0.2213。分析其原因，这些结构在模型内部均强化了特征通道的选择性或稀疏性，改变了中层特征的分布形态。尽管此类机制对分类任务有利，但在与V4区域多通道、非集中响应的神经数据进行匹配时，相关性下降。
 
 在评估过程中，所有模型均以相同预处理流程对图像输入，并在关闭Dropout与BatchNorm更新的推理模式下提取V4层的激活输出。模型输出被转换为一维向量，与大脑神经元反应向量进行对齐。统一的层级命名（如V4.output）使评估系统能直接将模型结构映射至神经区域，排除结构适配偏差。
+
+\begin{figure}[hbt]
+	\centering
+	\includegraphics[width=0.8\linewidth]{脑区得分柱状图.png}
+	\caption{模型V4与IT脑区得分}
+	\label{f.脑区得分柱状图}
+\end{figure}
 
 \subsection{在IT脑区的评估结果}
 
@@ -91,7 +100,45 @@ CORnet-Z模型得分为0.4748，虽然略低于上述两者，但仍优于其三
 
 \subsection{不同结构改进的对比分析}
 
-评估结果表明，不同模型结构对类脑评分影响较大。在本实验条件下，原始CORnet-Z模型在神经预测能力上表现较为稳定，而引入注意力机制或生物结构模块的几种变体并未在Brain-Score上取得更好得分。这说明结构的改动在提升分类准确率的同时，未必能带来更强的神经对齐能力。对于后续工作，可以在结构调整的基础上进一步探索影响模型神经响应模式的因素。
+实验结果表明，不同模型结构的微调对神经一致性得分影响比较显著。在本次实验中，原始的CORnet-Z模型在V4和IT两个脑区都表现出较高的类脑一致性评分，它的结构简洁、模块明确，天然具备较好的神经可映射性。但是，几种基于CORnet-Z模型的结构变体虽然在分类准确率方面略有提升，在Brain-Score指标中却没有体现出更强的神经对齐能力。
+
+为了进一步分析不同结构对模型类脑性能的影响，本文对各模型的关键结构组成进行了整理与比较，如下表所示：
+
+\begin{table}[htb]
+	\centering
+	\caption{各模型关键结构比较表}
+	\label{tab:各模型关键结构比较表}
+	\begin{tabular}{lllll}
+		\hline
+		模型名称& V1层特征处理 & V4层特征处理 & IT层特征处理  \\
+		\hline
+		CORnet-Z &
+		\begin{tabular}[c]{@{}c@{}}Conv7x7+BatchNorm \\+ReLU+MaxPool\end{tabular} &
+		\begin{tabular}[c]{@{}c@{}}Conv3x3+BatchNorm \\+ReLU+MaxPool\end{tabular} & \begin{tabular}[c]{@{}c@{}}Conv3x3+BatchNorm \\+ReLU+MaxPool\end{tabular} \\
+		\hline
+		\begin{tabular}[c]{@{}c@{}}CORnet-Z\\+SE\end{tabular} &
+		\begin{tabular}[c]{@{}c@{}}Conv7x7+BatchNorm \\+ReLU+MaxPool\end{tabular} &
+		\begin{tabular}[c]{@{}c@{}}Conv3x3+BatchNorm \\+ReLU+MaxPool \\+SE\end{tabular} & \begin{tabular}[c]{@{}c@{}}Conv3x3+BatchNorm \\+ReLU+MaxPool \\+SE\end{tabular}\\
+		\hline
+		\begin{tabular}[c]{@{}c@{}}CORnet-Z\\+CBMA\end{tabular} &
+		\begin{tabular}[c]{@{}c@{}}Conv7x7+BatchNorm \\+ReLU+MaxPool\end{tabular} &
+		\begin{tabular}[c]{@{}c@{}}Conv3x3+BatchNorm \\+ReLU+MaxPool \\+CBMA\end{tabular} & \begin{tabular}[c]{@{}c@{}}Conv3x3+BatchNorm \\+ReLU+MaxPool \\+CBMA\end{tabular}\\
+		\hline
+		\begin{tabular}[c]{@{}c@{}}CORnet-Z\\+VOneBlock\end{tabular} &
+		\begin{tabular}[c]{@{}c@{}}VOneBlock\\包含Gabor滤波+噪声\end{tabular} &
+		\begin{tabular}[c]{@{}c@{}}Conv3x3+BatchNorm \\+ReLU+MaxPool\end{tabular} & \begin{tabular}[c]{@{}c@{}}Conv3x3+BatchNorm \\+ReLU+MaxPool\end{tabular} \\
+		\hline
+	\end{tabular}
+\end{table}
+
+
+这些结构变化虽然增强了模型的表示能力或对某些目标区域的关注能力，但也引入了信息流的重新分布。在类脑评估任务中，模型输出需与灵长类神经反应高度一致，而注意力机制往往会引导模型聚焦于更具判别性的通道，可能牺牲掉部分自然图像中存在的冗余空间信息，这种代价在神经预测任务中表现为得分下降。
+
+结合表\ref{f.各模型在V4和IT层的类脑评分对比}中的类脑评分数据，可以发现原始CORnet-Z在V4层和IT层分别取得了0.5418和0.4748的得分，均高于所有结构改进版本。引入SE后，尽管模型在Tiny-ImageNet-200分类任务上的Top-1和Top-5准确率有所提升，但是类脑相似性评分都分别下降了。这一现象说明，某些面向分类精度的结构优化，在神经机制层面可能打破了与真实视觉皮层的信息分布规律，尤其是注意力机制在抑制不相关通道时，也可能剥离了部分对脑区响应有意义的低强度特征。
+
+相比较之下，CBAM模块引入了额外的空间注意力路径，与SE相比它的结构更加复杂，但是在Brain-Score得分中依然未能取得优势，推测空间注意力在高层抽象阶段可能与真实脑区响应策略存在偏差。
+
+综合来看，追求更高分类准确率所引入的结构变更，并不总是有助于提升神经对齐性能。这一结果提示我们：在优化类脑模型时，应更注重结构改动对中间层神经响应模式的影响，而非仅追求任务性能提升。
 
 \section{激活图可视化分析}
 
@@ -177,7 +224,7 @@ V4层图\ref{f.v4_se_act}进一步体现了这种稀疏化趋势，相较于CORn
 
 \begin{figure}[hbt]
 	\centering
-	\includegraphics[width=0.6\linewidth]{V4层通道2对比图.png}
+	\includegraphics[width=0.4\linewidth]{V4层通道2对比图.png}
 	\caption{V4层通道2对比图}
 	\label{f.v4_2_act}
 \end{figure}
