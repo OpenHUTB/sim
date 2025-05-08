@@ -38,8 +38,13 @@ CARLA（Car Learning to Act）是目前应用最广泛的开源自动驾驶仿�
 本项目采用 CARLA 0.9.15 版本作为仿真环境。通过将生成的 Scenic 脚本转译成 CARLA 可执行场景，我们能够实现自然语言指令到仿真测试的完整闭环。这种从自然语言描述到仿真测试的无缝转换，为自动驾驶技术的研发和测试提供了一种高效、灵活的方法。
 
 \section{ChatScene 项目基础与本项目创新点}
-ChatScene 是近期提出的一套基于知识检索的安全关键场景生成系统。它主要通过使用 sentence-t5-large 模型对自然语言描述进行检索匹配，结合 SafeBench 框架在 CARLA 上进行仿真测试。ChatScene 的主要思路是利用已有的场景数据库，通过检索与输入描述最相似的场景来生成新的场景。这种方法的优点是能够快速生成与已有场景相似的新场景，但其局限性在于依赖于数据库中的已有场景，无法生成全新的场景。
-
+ChatScene 是近期提出的一套基于知识检索的安全关键场景生成系统。它主要通过使用 sentence-t5-large 模型对自然语言描述进行检索匹配，结合 SafeBench 框架在 CARLA 上进行仿真测试。ChatScene 的主要思路是利用已有的场景数据库，通过检索与输入描述最相似的场景来生成新的场景。这种方法的优点是能够快速生成与已有场景相似的新场景，但其局限性在于依赖于数据库中的已有场景，无法生成全新的场景。它的整体结构如下：
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=1.0\textwidth]{"images/chatscene项目结构.pdf"}
+	\caption{chatscene项目结构}
+	\label{fig:chatscene_framework}
+\end{figure}
 然而，ChatScene 在以下方面存在一定局限：
 \begin{itemize}
 	\item \textbf{依赖检索}：ChatScene 无法自由生成未在数据库中存在的新场景，这限制了其在生成创新性场景方面的能力。

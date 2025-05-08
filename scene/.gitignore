@@ -1,3 +1,4 @@
+*.png
 # 缓存文件
 *.cache
 *.tmp
