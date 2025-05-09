@@ -1,4 +1,5 @@
 %!TEX root = ../../csuthesis_main.tex
+
 \chapter{类脑相似性评估与可视化分析}
 
 \section{Brain-Score评估实验设计}
@@ -9,11 +10,29 @@
 
 实验中所使用的神经数据来源于Majaj和Hong等人发布的MajajHong2015公开神经数据集，该数据集记录了两只恒河猴在静态注视条件下，对一组自然图像的皮层响应。图像总数为2560张，全部从ImageNet数据集中筛选，涵盖了64个常见物体类别，如动物、器皿、交通工具等，并经过标准化预处理，包括图像中心对齐、统一灰度背景等操作，以便于神经记录的可比性\cite{majaj2015simple}。
 
-\begin{figure}[hbt]
+\begin{figure}[!htb]
 	\centering
-	\includegraphics[width=0.5\linewidth]{majaj2015.png}
-	\caption{majajhong2015图像}
-	\label{f.majajhong}
+	\begin{subfigure}[t]{0.9\linewidth}
+		\centering
+		\includegraphics[width=0.25\linewidth]{majaj2015_01.png}
+		\hspace{0.05cm}
+		\includegraphics[width=0.25\linewidth]{majaj2015_02.png}
+		\hspace{0.05cm}
+		\includegraphics[width=0.25\linewidth]{majaj2015_03.png}
+	\end{subfigure}	
+	
+	\vspace{0.05cm}
+	
+	\begin{subfigure}[t]{0.9\linewidth}
+		\centering
+		\includegraphics[width=0.25\linewidth]{majaj2015_04.png}
+		\hspace{0.05cm}
+		\includegraphics[width=0.25\linewidth]{majaj2015_05.png}
+		\hspace{0.05cm}
+		\includegraphics[width=0.25\linewidth]{majaj2015_06.png}
+	\end{subfigure}
+	\caption{MajajHong2015图像示例}
+	\label{f.majaj_samples}
 \end{figure}
 
 在实验中，研究者使用多电极阵列对恒河猴子的颞下皮层（IT）和视觉皮层第4区（V4）中的数百个神经元通过多电极阵列进行了电生理记录。每张图像呈现约100毫秒，系统记录了神经元在图像呈现后70~170毫秒窗口内的平均响应。V4区主要参与中等复杂度形状与边缘整合，而IT区被认为是高阶语义整合与对象恒常识别的关键区域\cite{dicarlo2012does}。
@@ -114,27 +133,26 @@ CORnet-Z模型得分为0.4748，虽然略低于上述两者，但仍优于其三
 		\hline
 		CORnet-Z &
 		\begin{tabular}[c]{@{}c@{}}Conv7x7+BatchNorm \\+ReLU+MaxPool\end{tabular} &
-		\begin{tabular}[c]{@{}c@{}}Conv3x3+BatchNorm \\+ReLU+MaxPool\end{tabular} & \begin{tabular}[c]{@{}c@{}}Conv3x3+BatchNorm \\+ReLU+MaxPool\end{tabular} \\
+		\begin{tabular}[c]{@{}c@{}}Conv3x3+BatchNorm \\+ReLU+MaxPool\end{tabular} & \begin{tabular}[c]{@{}c@{}}同V4层\end{tabular} \\
 		\hline
 		\begin{tabular}[c]{@{}c@{}}CORnet-Z\\+SE\end{tabular} &
-		\begin{tabular}[c]{@{}c@{}}Conv7x7+BatchNorm \\+ReLU+MaxPool\end{tabular} &
-		\begin{tabular}[c]{@{}c@{}}Conv3x3+BatchNorm \\+ReLU+MaxPool \\+SE\end{tabular} & \begin{tabular}[c]{@{}c@{}}Conv3x3+BatchNorm \\+ReLU+MaxPool \\+SE\end{tabular}\\
+		\begin{tabular}[c]{@{}c@{}}Conv7x7+BatchNorm \\+ReLU+MaxPool \\+SE\end{tabular} &
+		\begin{tabular}[c]{@{}c@{}}Conv3x3+BatchNorm \\+ReLU+MaxPool \\+SE\end{tabular} & \begin{tabular}[c]{@{}c@{}}同V4层\end{tabular}\\
 		\hline
 		\begin{tabular}[c]{@{}c@{}}CORnet-Z\\+CBMA\end{tabular} &
 		\begin{tabular}[c]{@{}c@{}}Conv7x7+BatchNorm \\+ReLU+MaxPool\end{tabular} &
-		\begin{tabular}[c]{@{}c@{}}Conv3x3+BatchNorm \\+ReLU+MaxPool \\+CBMA\end{tabular} & \begin{tabular}[c]{@{}c@{}}Conv3x3+BatchNorm \\+ReLU+MaxPool \\+CBMA\end{tabular}\\
+		\begin{tabular}[c]{@{}c@{}}Conv3x3+BatchNorm \\+ReLU+MaxPool \\+CBMA\end{tabular} & \begin{tabular}[c]{@{}c@{}}同V4层\end{tabular}\\
 		\hline
 		\begin{tabular}[c]{@{}c@{}}CORnet-Z\\+VOneBlock\end{tabular} &
 		\begin{tabular}[c]{@{}c@{}}VOneBlock\\包含Gabor滤波+噪声\end{tabular} &
-		\begin{tabular}[c]{@{}c@{}}Conv3x3+BatchNorm \\+ReLU+MaxPool\end{tabular} & \begin{tabular}[c]{@{}c@{}}Conv3x3+BatchNorm \\+ReLU+MaxPool\end{tabular} \\
+		\begin{tabular}[c]{@{}c@{}}Conv3x3+BatchNorm \\+ReLU+MaxPool\end{tabular} & \begin{tabular}[c]{@{}c@{}}同V4层\end{tabular} \\
 		\hline
 	\end{tabular}
 \end{table}
 
-
 这些结构变化虽然增强了模型的表示能力或对某些目标区域的关注能力，但也引入了信息流的重新分布。在类脑评估任务中，模型输出需与灵长类神经反应高度一致，而注意力机制往往会引导模型聚焦于更具判别性的通道，可能牺牲掉部分自然图像中存在的冗余空间信息，这种代价在神经预测任务中表现为得分下降。
 
-结合表\ref{f.各模型在V4和IT层的类脑评分对比}中的类脑评分数据，可以发现原始CORnet-Z在V4层和IT层分别取得了0.5418和0.4748的得分，均高于所有结构改进版本。引入SE后，尽管模型在Tiny-ImageNet-200分类任务上的Top-1和Top-5准确率有所提升，但是类脑相似性评分都分别下降了。这一现象说明，某些面向分类精度的结构优化，在神经机制层面可能打破了与真实视觉皮层的信息分布规律，尤其是注意力机制在抑制不相关通道时，也可能剥离了部分对脑区响应有意义的低强度特征。
+结合表~\ref{tab:各模型在V4和IT层的类脑评分对比}中的类脑评分数据，可以发现原始CORnet-Z在V4层和IT层分别取得了0.5418和0.4748的得分，均高于所有结构改进版本。引入SE后，尽管模型在Tiny-ImageNet-200分类任务上的Top-1和Top-5准确率有所提升，但是类脑相似性评分都分别下降了。这一现象说明，某些面向分类精度的结构优化，在神经机制层面可能打破了与真实视觉皮层的信息分布规律，尤其是注意力机制在抑制不相关通道时，也可能剥离了部分对脑区响应有意义的低强度特征。
 
 相比较之下，CBAM模块引入了额外的空间注意力路径，与SE相比它的结构更加复杂，但是在Brain-Score得分中依然未能取得优势，推测空间注意力在高层抽象阶段可能与真实脑区响应策略存在偏差。
 
@@ -146,75 +164,87 @@ CORnet-Z模型得分为0.4748，虽然略低于上述两者，但仍优于其三
 
 \subsection{CORnet-Z模型不同层激活特征}
 
-原始CORnet-Z模型在各层的激活图中展现出典型的分层特征加工趋势。如图\ref{f.v1_act}所示，V1层保留了较多边缘与轮廓信息，多个通道对图像的不同区域都产生了清晰响应，整体呈现出对整张图像较均匀的关注。
+原始CORnet-Z模型在各层的激活图中展现出典型的分层特征加工趋势。如图~\ref{f.cornet_z_jihuo}的(a)图所示，V1层保留了较多边缘与轮廓信息，多个通道对图像的不同区域都产生了清晰响应，整体呈现出对整张图像较均匀的关注。
 
-\begin{figure}[hbt]
+\begin{figure}[!htb]
 	\centering
-	\includegraphics[width=0.8\linewidth]{V1_activations.png}
-	\caption{CORnet-Z模型V1层激活图}
-	\label{f.v1_act}
+	\begin{subfigure}[t]{0.8\linewidth}
+		\captionsetup{justification=centering}
+		\begin{minipage}[b]{1\linewidth}
+			\includegraphics[width=1\linewidth]{V1_activations.png}
+			\caption{V1层激活图}
+		\end{minipage}
+	\end{subfigure}\\
+	\begin{subfigure}[t]{0.8\linewidth}
+		\captionsetup{justification=centering}
+		\begin{minipage}[b]{1\linewidth}
+			\includegraphics[width=1\linewidth]{V2_activations.png}
+			\caption{V2层激活图}
+		\end{minipage}
+	\end{subfigure}\\
+	\begin{subfigure}[t]{0.8\linewidth}
+		\captionsetup{justification=centering}
+		\begin{minipage}[b]{1\linewidth}
+			\includegraphics[width=1\linewidth]{V4_activations.png}
+			\caption{V4层激活图}
+		\end{minipage}
+	\end{subfigure}\\
+	\begin{subfigure}[t]{0.8\linewidth}
+		\captionsetup{justification=centering}
+		\begin{minipage}[b]{1\linewidth}
+			\includegraphics[width=1\linewidth]{IT_activations.png}
+			\caption{IT层激活图}
+		\end{minipage}
+	\end{subfigure}
+	\caption{CORnet-Z模型各层激活图}
+	\label{f.cornet_z_jihuo}
 \end{figure}
 
-随着网络加深，在V2图\ref{f.v2_act}与V4层图\ref{f.v4_act}中，激活图的结构逐渐从边缘线条过渡为较粗的区域块，表明模型开始提取更高级别的图像结构特征。
+随着网络加深，在V2层图~\ref{f.cornet_z_jihuo}的(b)图与V4层图~\ref{f.cornet_z_jihuo}的(c)图中，激活图的结构逐渐从边缘线条过渡为较粗的区域块，表明模型开始提取更高级别的图像结构特征。
 
-\begin{figure}[hbt]
-	\centering
-	\includegraphics[width=0.8\linewidth]{V2_activations.png}
-	\caption{CORnet-Z模型V2层激活图}
-	\label{f.v2_act}
-\end{figure}
-
-\begin{figure}[hbt]
-	\centering
-	\includegraphics[width=0.8\linewidth]{V4_activations.png}
-	\caption{CORnet-Z模型V4层激活图}
-	\label{f.v4_act}
-\end{figure}
-
-\begin{figure}[hbt]
-	\centering
-	\includegraphics[width=0.8\linewidth]{IT_activations.png}
-	\caption{CORnet-Z模型IT层激活图}
-	\label{f.it_act}
-\end{figure}
-
-在最高层IT图\ref{f.it_act}中，激活图整体变得更抽象，但依然可以观察到对目标核心区域的聚焦响应，表现出较强的语义抽象能力。不同通道间的激活存在差异，说明模型在高层仍保持了一定程度的特征多样性。
+在最高层IT图~\ref{f.cornet_z_jihuo}的(d)图中，激活图整体变得更抽象，但依然可以观察到对目标核心区域的聚焦响应，表现出较强的语义抽象能力。不同通道间的激活存在差异，说明模型在高层仍保持了一定程度的特征多样性。
 
 \subsection{引入SE机制后的激活变化}
 
-在引入通道注意力机制后，模型的特征响应发生了明显变化。如图\ref{f.v1_se_act}所示，V1层的激活图较原始模型出现了显著压缩，部分通道的响应范围明显减小，整体响应区域更加集中。
+在引入通道注意力机制后，模型的特征响应发生了明显变化。如图\ref{f.cornet_z_se_jihuo}中图(a)所示，V1层的激活图较原始模型出现了显著压缩，部分通道的响应范围明显减小，整体响应区域更加集中。
 
-\begin{figure}[hbt]
+\begin{figure}[!htb]
 	\centering
-	\includegraphics[width=0.8\linewidth]{V1_se_activations.png}
-	\caption{CORnet-Z+SE模型V1层激活图}
-	\label{f.v1_se_act}
+	\begin{subfigure}[t]{0.8\linewidth}
+		\captionsetup{justification=centering}
+		\begin{minipage}[b]{1\linewidth}
+			\includegraphics[width=1\linewidth]{V1_se_activations.png}
+			\caption{V1层激活图}
+		\end{minipage}
+	\end{subfigure}\\
+	\begin{subfigure}[t]{0.8\linewidth}
+		\captionsetup{justification=centering}
+		\begin{minipage}[b]{1\linewidth}
+			\includegraphics[width=1\linewidth]{V2_se_activations.png}
+			\caption{V2层激活图}
+		\end{minipage}
+	\end{subfigure}\\
+	\begin{subfigure}[t]{0.8\linewidth}
+		\captionsetup{justification=centering}
+		\begin{minipage}[b]{1\linewidth}
+			\includegraphics[width=1\linewidth]{V4_se_activations.png}
+			\caption{V4层激活图}
+		\end{minipage}
+	\end{subfigure}\\
+	\begin{subfigure}[t]{0.8\linewidth}
+		\captionsetup{justification=centering}
+		\begin{minipage}[b]{1\linewidth}
+			\includegraphics[width=1\linewidth]{IT_se_activations.png}
+			\caption{IT层激活图}
+		\end{minipage}
+	\end{subfigure}
+	\caption{CORnet-Z+SE模型各层激活图}
+	\label{f.cornet_z_se_jihuo}
 \end{figure}
 
-V2层图\ref{f.v2_se_act}表现出更零散的响应点分布，通道间响应差异增大，部分通道几乎无明显激活。
+V2层图\ref{f.cornet_z_se_jihuo}中图(b)表现出更零散的响应点分布，通道间响应差异增大，部分通道几乎无明显激活。
 
-\begin{figure}[hbt]
-	\centering
-	\includegraphics[width=0.8\linewidth]{V2_se_activations.png}
-	\caption{CORnet-Z+SE模型V2层激活图}
-	\label{f.v2_se_act}
-\end{figure}
-
-V4层图\ref{f.v4_se_act}进一步体现了这种稀疏化趋势，相较于CORnet-Z模型，SE版本在此层的高响应区域数量更少，许多通道的响应接近全黑。IT层激活图层图\ref{f.it_se_act}也呈现出类似特征，尽管部分通道对图像的核心区域产生了明显响应，但整体激活的多样性有所下降。
-
-\begin{figure}[hbt]
-	\centering
-	\includegraphics[width=0.8\linewidth]{V4_se_activations.png}
-	\caption{CORnet-Z+SE模型V4层激活图}
-	\label{f.v4_se_act}
-\end{figure}
-
-\begin{figure}[hbt]
-	\centering
-	\includegraphics[width=0.8\linewidth]{IT_se_activations.png}
-	\caption{CORnet-Z+SE模型IT层激活图}
-	\label{f.it_se_act}
-\end{figure}
+V4层图\ref{f.cornet_z_se_jihuo}中图(c)进一步体现了这种稀疏化趋势，相较于CORnet-Z模型，SE版本在此层的高响应区域数量更少，许多通道的响应接近全黑。IT层激活图层图\ref{f.cornet_z_se_jihuo}中图(d)也呈现出类似特征，尽管部分通道对图像的核心区域产生了明显响应，但整体激活的多样性有所下降。
 
 这些变化说明，SE模块在网络中强化了部分重要通道的表达能力，同时抑制了其它通道的信息流。这种通道间的强弱选择虽然可能有助于提升分类性能，但也在一定程度上削弱了模型对图像整体结构的表达能力。
 
