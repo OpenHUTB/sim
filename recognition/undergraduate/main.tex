@@ -1,3 +1,4 @@
+% !TeX document-id = {1f1cd383-6721-4950-8823-96b3144f4af7}
 %!TEX program = xelatex 
 % !BIB program = biber
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -18,8 +19,6 @@
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \include{content/cover}
 
-
-
 \begin{document}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % 封面绘制
@@ -37,21 +36,21 @@
 
 %\include{content/info}
 
-%\include{content/declarationzh}
+\include{content/declarationzh}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % 中文摘要
 %
 % 存储在\content\abstractzh.tex文件中
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%\include{content/abstractzh}
+\include{content/abstractzh}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % 英文摘要
 %
 % 存储在\content\abstracten.tex文件中
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%\include{content/abstracten}
+\include{content/abstracten}
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -76,10 +75,11 @@
 
 
 \include{content/chapter1.tex}
-%\include{content/chapter2.tex}
-%\include{content/chapter3.tex}
-%\include{content/chapter4.tex}
-%\include{content/chapter5.tex}
+\include{content/chapter2.tex}
+\include{content/chapter3.tex}
+\include{content/chapter4.tex}
+\include{content/chapter5.tex}
+\include{content/chapter6.tex}
 
 % % 主文件有代码去掉页眉章节编号的“.”，但这会因为bug导致无编号章节显示一个错误编号，所以这里在无编号章节之前再次重定义sectionmark。
 % \renewcommand{\sectionmark}[1]{\markright{#1}}
@@ -91,7 +91,7 @@
 % 存储在\content\acknowledgements.tex文件中
 % 根据本科生院的要求，致谢应该在参考文献的前面，不编章号，而附录应该位于参考文献后。
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%\include{content/acknowledgements}
+\include{content/acknowledgements}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % 参考文献
@@ -100,9 +100,9 @@
 % 根据本科生院的要求，致谢应该在参考文献的前面，不编章号，而附录应该位于参考文献后。
 % 有待修复
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-% \section{参考文献} % bibliography会自动显示参考文献四个字
-%\addcontentsline{toc}{chapter}{参考文献} % 由于参考文献不是chapter，这句把参考文献加入目录
-% \nocite{*} % 该命令用于显示全部参考文献，即使文中没引用
+%\section{参考文献} % bibliography会自动显示参考文献四个字
+\addcontentsline{toc}{chapter}{参考文献} % 由于参考文献不是chapter，这句把参考文献加入目录
+\nocite{*} % 该命令用于显示全部参考文献，即使文中没引用
 % cls文件中已经引入package，这里不需要调用 \bibliographystyle 了。
 %\bibliographystyle{gbt7714-2005}
 %\bibliography{reference}
@@ -110,7 +110,9 @@
 \printbibliography
 
 %\bibliography{hutbtheisi_main}
-\newpage
+%\newpage
+
+
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -130,7 +132,7 @@
 
 % \renewcommand\appendix{\setcounter{secnumdepth}{-2}}
 \appendix
-%\include{content/appendix}
+%\include{content/appendix}%附录
 
 
 \end{document}

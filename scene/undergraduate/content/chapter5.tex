@@ -11,7 +11,7 @@
 		\item 空间位置关系：如“在路口等待”、“位于右侧车道”、“靠近斑马线”等描述是否体现在实体布局中；
 		\item 行为逻辑一致性：如“等待绿灯”、“直行通过”、“与前车保持车距”等行为是否在仿真中得以体现。
 	\end{itemize}
-	评估方式采用**检索式语义匹配评分（自动化）+人工评审打分（主观验证）**的双重手段：
+	评估方式采用检索式语义匹配评分（自动化）+人工评审打分（主观验证）的双重手段：
 	\begin{itemize}
 		\item 自动化方面使用自然语言处理模型计算输入描述与生成场景之间的语义相似度；
 		\item 主观方面由3名评估者根据统一评分标准对每条样本进行1-5分打分，取平均作为最终得分。
@@ -32,58 +32,124 @@
 		\item 仿真加载与渲染时间：Scenic 编译后至 CARLA 仿真运行启动所经历的延迟；
 		\item 总响应时间：综合上述所有子流程，从输入自然语言到仿真画面出现的端到端时间。
 	\end{itemize}
-	通过日志记录与脚本打点方式采集各阶段耗时，并以平均响应时长（ms）、方差等指标量化性能表现。此外，系统在多轮连续输入下的响应稳定性亦被纳入评估。
+通过日志记录还有脚本打点的方式来采集各个阶段的耗时，并且用平均响应时长（ms）、方差这类指标对性能表现进行量化，系统在多轮连续输入情况下的响应稳定性也被纳入评估范围。
 \end{itemize}
 
+
+
+
+	
 \section{实验设置}
-硬件配置：处理器：Intel Core i9、显卡：3060、内存：32GB
-
-软件环境：虚拟环境：项目中使用了两个虚拟环境
-\begin{enumerate}
-	\item carla（Python 3.7）：用于运行 CARLA 0.9.15 版本进行仿真和场景生成。
-	\item chatscene（Python 3.8）：用于处理与生成自然语言描述相关的任务，以及进行场景量化评估。
-\end{enumerate}
-依赖库：安装了必要的依赖，包括但不限于 \texttt{openai}、\texttt{sentence\_transformers}、\texttt{torch} 等。
-
-输入数据：本实验使用约 20 条自然语言描述作为输入样本，用于生成自动驾驶场景。这些描述涵盖了多种交通情境与突发事件，例如：自车在红绿灯前等待信号、行人突然横穿街道、道路上突现障碍物等。
 
 
-场景生成流程：
-\begin{enumerate}
+本实验是依靠性能比较强的本地计算机来完成的，其主要的硬件配置情况如下，处理器选用的是 Intel Core i9，它拥有多核心以及高主频，能够支持复杂计算任务和高并发程序的运行，显卡采用的是 NVIDIA GeForce RTX 3060，具备较强的图形渲染与并行计算能力，有利于运行自动驾驶模拟平台（像 CARLA）和进行深度学习模型推理，内存大小为 32GB，大容量内存保证了在多线程和大数据处理时系统的流畅性，能有效避免内存瓶颈方面的问题。这样的硬件配置为自然语言场景生成、自动驾驶仿真以及模型评估等任务提供了稳定且高效的运行环境。
+
+\vspace{10pt} % 调整段落间距
+
+\subsection*{软件环境}
+软件环境需要的依赖库方面已经安装好，具体如下表所示：
+	\begin{table}[H]
+		\centering
+			\begin{tabular}{lll}
+			\hline
+			\textbf{库名称} & \textbf{版本} \\
+			\hline
+			openai & 最新版本 \\
+			sentence\_transformers & 最新版本 \\
+			torch & 1.13.1+cu117 \\
+			torchvision & 0.14.1+cu117 \\
+			torchaudio & 0.13.1 \\
+			gym & 0.23.1 \\
+			numpy & 1.21.6 \\
+			pygame & 2.3.0 \\
+			tqdm & 4.65.0 \\
+			pyyaml & 6.0 \\
+			matplotlib & 3.5.3 \\
+			opencv-python & 4.7.0.72 \\
+			pandas & 1.5.3 \\
+			seaborn & 0.12.2 \\
+			shapely & 1.8.5 \\
+			ephem & 4.1.4 \\
+			joblib & 1.2.0 \\
+			cpprb & 10.7.0 \\
+			pycocotools & 2.0.6 \\
+			moviepy & 1.0.3 \\
+			scikit-image & 0.19.3 \\
+			transformers & 最新版本 \\
+			setGPU & 最新版本 \\
+			\hline
+		\end{tabular}
+		\caption{项目依赖库及其版本}
+		\label{tab:dependencies}
+	\end{table}
+	
+\textbf{输入数据：} 本实验采用约20条自然语言描述作为输入样本，用于生成自动驾驶场景。这些描述覆盖多种交通情境和突发事件，例如：
+
+
+
+\begin{itemize}[leftmargin=20pt]
+	\item 自车在红绿灯前等待信号
+	\item 行人突然横穿街道
+	\item 道路上突现障碍物
+	\item The ego vehicle is driving on a straight road; the adversarial pedestrian appears from a driveway on the left and suddenly stop and walk diagonally.
+	\item The ego vehicle is driving on a straight road when a pedestrian suddenly crosses from the right front and suddenly stops as the ego vehicle approaches.
+\end{itemize}
+
+\vspace{10pt} % 调整段落间距
+
+\subsection*{场景生成流程}
+\begin{enumerate}[leftmargin=20pt]
 	\item 使用自然语言描述通过 ChatScene 项目生成对应的 CARLA 场景。
 	\item 将生成的场景导入 CARLA 仿真环境进行验证，确保场景符合预期。
 	\item 使用量化评估方法对生成的场景进行评估，分析碰撞率、响应时间、系统表现等指标。
 \end{enumerate}
+	
 
 \section{评估结果与分析}
 
 \subsection{语义保真度}
 通过人工评估方式对 30 个生成场景进行语义一致性评分，得分范围为 0–5，得分越高表明语义表达越准确。结果如下：
-\begin{figure}[h]
+	\begin{table}[htbp]
 	\centering
-	\includegraphics[width=0.8\textwidth]{"images/picture1.pdf"}
-	\caption{语义保真度评估结果}
-	\label{fig:semantic_fidelity}
-\end{figure}
+	\begin{tabular}{lll}
+		\hline
+		\textbf{评分区间} & \textbf{场景占比} \\
+		\hline
+		5分 & 0.62 \\
+		4分 & 0.25 \\
+		3分及一下 & 0.13 \\
+		\hline
+	\end{tabular}
+	\caption{}
+	\label{tab:dependencies}
+\end{table}
+
 
 平均得分为 4.38，说明生成系统在语义还原方面表现优异，能够较好地捕捉自然语言中的关键词及其空间/行为语义。
 
-\subsection{多样性分析}
+\subsection{准确率分析}
 在输入条件近似的情况下，系统生成了具有多样参与者布局与动作的场景。采用结构特征编码后计算场景间欧几里得距离，多样性指标（Diversity Score）平均为 0.78，说明系统具备良好的多样性能力。
 此外，通过对生成的截图进行视觉对比，发现系统在车辆类型、行驶方向、光照与天气等维度的变化也具备一定随机性与可控性。
+\begin{figure}[h]
+	\centering
+	\includegraphics[width=1.0\textwidth]{"images/result2.pdf"}
+	\caption{准确率分析}
+	\label{fig:accuracy_analysis}
+\end{figure}
+
+\begin{figure}[h]
+	\centering
+	\includegraphics[width=1.0\textwidth]{"images/result1.pdf"}
+	\caption{准确率分析}
+	\label{fig:accuracy_analysis}
+\end{figure}
 
 \subsection{效率分析}
 系统整体生成流程的平均时间如下：
-\begin{figure}[h]
-	\centering
-	\includegraphics[width=0.5\textwidth]{"images/picture2.pdf"}
-	\caption{系统生成过程时间分析}
-	\label{fig:efficiency_analysis}
-\end{figure}
+语义检索与匹配:0.9s,Scenic脚本生成:0.6s,Carla场景加载与截图:4.3s,总耗时：3.4s/条输入
 
-为验证系统在实际使用场景中的运行效率，本文对从自然语言输入到三维仿真场景生成全过程的响应时间进行了测量与分析。系统整体生成流程的平均时间如下所示：
 
-通过上述统计可以看出，本系统在标准硬件配置下可将一条自然语言指令完整转换为可视化交通场景的平均总耗时控制在7秒以内，具备较强的实时响应能力。在进行批量输入处理时，系统同样表现出良好的并发处理能力与稳定性。经实验验证，在一次性处理20条自然语言输入的情况下，系统可在不显著增加响应时间的前提下完成全部场景的构建与仿真，平均每个场景的处理时间波动控制在±0.7秒范围内。
+为了验证系统在实际使用场景当中的运行效率，本文对从自然语言输入到三维仿真场景生成全过程的响应时间开展了测量与分析，系统整体生成流程的平均时间如下所示，通过上述统计能够看出，本系统在标准硬件配置的状况下可把一条自然语言指令完整转换为可视化交通场景的平均总耗时控制在7秒以内，具备较强的实时响应能力，在进行批量输入处理的时候，系统同样表现出良好的并发处理能力与稳定性，经实验验证，在一次性处理20条自然语言输入的情形下，系统可在不显著增加响应时间的前提下完成全部场景的构建与仿真，平均每个场景的处理时间波动控制在±0.7秒范围内。
 
 这表明：
 \begin{itemize}
@@ -92,7 +158,7 @@
 	\item Scenic 与 CARLA 接口连接在高频调用场景下仍保持稳定。
 \end{itemize}
 
-总体而言，系统具备良好的响应效率和可扩展性，不仅支持单条交互式输入，也能满足批量生成需求，适用于大规模自动驾驶测试、仿真训练、或仿真场景库构建等实际应用任务。如需进一步提升效率，可通过以下途径优化：
+总体来说系统拥有良好响应效率和可扩展性，不但支持单条交互式输入方式，而且能够满足批量生成相关需求，适合大规模自动驾驶测试等实际应用任务，比如仿真训练或者仿真场景库构建等，若要进一步提升系统的运行效率，可通过以下这些途径来进行优化。
 \begin{itemize}
 	\item 引入本地轻量化大模型以减少云端调用延迟；
 	\item 对检索模块进行并行化改造，提升向量查找速度；
