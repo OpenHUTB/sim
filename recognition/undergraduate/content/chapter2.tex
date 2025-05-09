@@ -1,4 +1,5 @@
 %!TEX root = ../../csuthesis_main.tex
+
 \chapter{类脑视觉模型理论基础}
 
 \section{人类视觉系统启发机制}
@@ -10,7 +11,7 @@
 \begin{figure}[hbt]
 	\centering
 	\includegraphics[width=0.5\linewidth]{brain.png}
-	\caption{脑视觉区域}
+	\caption{人类视觉皮层信息流路径示意图}
 	\label{f.naoquyu}
 \end{figure}
 
@@ -71,29 +72,33 @@ CORnet-Z模型是这个模型系列中最基础的版本，它的架构包括四
 
 \begin{table}[htbp]
 	\centering
-	\caption{CORnet-Z 与 CORnet-S 模型结构对比}
-	\begin{tabular}{l|c|c}
+	\caption{CORnet系列模型结构对比}
+	\begin{tabular}{l|c|c|c}
 		\hline
-		   & CORnet-Z & CORnet-S \\
+		& CORnet-Z & CORnet-R & CORnet-S \\
 		\hline
 		V1 &
 		\begin{tabular}[c]{@{}c@{}}conv 7$\times$7/2 \\ maxpool 3$\times$3/2\end{tabular} &
+		\begin{tabular}[c]{@{}c@{}}conv 7$\times$7/4 \\ conv 3$\times$3\end{tabular} &
 		\begin{tabular}[c]{@{}c@{}}conv 7$\times$7/2 \\ maxpool 3$\times$3/2 \\ conv 3$\times$3\end{tabular} \\
 		\hline
 		V2 &
 		\begin{tabular}[c]{@{}c@{}}conv 3$\times$3 \\ maxpool 3$\times$3/2\end{tabular} &
+		\begin{tabular}[c]{@{}c@{}}conv 3$\times$3/2 \\ conv 3$\times$3\end{tabular} &
 		\begin{tabular}[c]{@{}c@{}}conv 1$\times$1 \\ conv 1$\times$1\\ conv 3$\times$3/2 \\ conv 1$\times$1\end{tabular} \\
 		\hline
 		V4 &
 		\begin{tabular}[c]{@{}c@{}}conv 3$\times$3/2 \\ maxpool 3$\times$3/2\end{tabular} &
+		\begin{tabular}[c]{@{}c@{}}conv 3$\times$3/2 \\ conv 3$\times$3\end{tabular} &
 		\begin{tabular}[c]{@{}c@{}}conv 1$\times$1 \\ conv 1$\times$1\\ conv 3$\times$3/2 \\ conv 1$\times$1\end{tabular} \\
 		\hline
 		IT &
 		\begin{tabular}[c]{@{}c@{}}conv 3$\times$3/2 \\ maxpool 3$\times$3/2\end{tabular} &
+		\begin{tabular}[c]{@{}c@{}}conv 3$\times$3/2 \\ conv 3$\times$3\end{tabular} &
 		\begin{tabular}[c]{@{}c@{}}conv 1$\times$1 \\ conv 1$\times$1\\ conv 3$\times$3/2 \\ conv 1$\times$1\end{tabular} \\
 		\hline
 	\end{tabular}
-	\label{tab:cornet_z_s_compare}
+	\label{tab:cornet_z_r_s_compare}
 \end{table}
 
 \subsection{CORnet模型的类脑设计理念与评价依据}
@@ -129,14 +134,12 @@ Brain-Score的设计逻辑建立在“大脑不同区域对视觉信息的层级
 	}
 	\label{eq:pearson}
 \end{equation}
-
 其中，$y_i$表示真实神经响应值，$\hat{y}_i$为模型预测值，$n$为图像样本数。对每个神经元单独计算相关系数后，Brain-Score 以所有神经元得分的平均值作为最终神经预测得分：
 
 \begin{equation}
 	\text{Brain-Score}_{\text{layer}} = \frac{1}{m} \sum_{j=1}^{m} r_j
 	\label{eq:brain_score}
 \end{equation}
-
 其中$m$为目标脑区中的神经元数量，$r_j$为第$j$个神经元的Pearson得分。
 
 在模型比较中，该得分范围为$[0, 1]$，得分越高表示模型越能模拟目标脑区的神经响应模式。目前，Brain-Score已成为国际上衡量类脑视觉模型标准化水平的主流指标体系，广泛应用于CNN、Transformer、类脑建模等多个领域的模型评估研究中，其数据集与评估标准仍在持续更新扩展，逐步推动类脑人工智能系统的跨学科发展。
@@ -151,7 +154,6 @@ Brain-Score假设模型特征$X \in \mathbb{R}^{n \times d}$与神经响应矩�
 	Y = XW + \varepsilon
 	\label{eq:linear_model}
 \end{equation}
-
 其中$W$为待学习的投影矩阵，$\varepsilon$为高斯噪声项。训练过程中，系统对$W$进行拟合，并通过交叉验证控制过拟合。最终，使用训练好的映射将测试集上的模型特征映射为神经预测值$\hat{Y}$，再计算其与真实神经响应$Y$的相关性。
 
 由于大多数深度神经网络中间层的维度远高于神经元采样数量（如模型特征维度为数千而神经元数量不足数百），直接进行线性映射容易导致过拟合或数值不稳定。因此，在实际操作中，常先对模型特征进行主成分分析（PCA）降维处理，保留90\%以上的累计贡献率。这样可在压缩特征维度的同时保持信息完整性，确保PLS映射过程的稳定性。
