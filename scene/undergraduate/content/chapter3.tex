@@ -45,7 +45,7 @@
 本模块负责接收自然语言输入并生成对应的Scenic场景描述。具体流程如下：
 \begin{itemize}
 	\item \textbf{输入}：自然语言形式的场景描述，例如“一个红色轿车在城市路口等待绿灯”。
-	\item \textbf{检索增强}：使用 \texttt{sentence-transformers} 中的 \texttt{sentence-t5-large} 模型对输入进行向量化表示，并在本地检索数据库（如 \texttt{retrieve/scenario\_descriptions.txt}）中查找相似描述作为参考样本。
+	\item \textbf{检索增强}：使用 \texttt{sentence-transformers} 中的 \texttt{sentence-t5-large} 模型对输入进行向量化表示，并在本地检索数据库\\（如 \texttt{retrieve/scenario\_descriptions.txt}）中查找相似描述作为参考样本。
 	\item \textbf{大语言模型解析}：采用预训练的大语言模型（如 GPT-4o），结合检索到的参考样本，生成符合输入语义的 Scenic 脚本。
 	\item \textbf{场景拼接机制}：根据场景复杂度，支持对多个子元素（如车辆、行人、环境条件）进行组织与拼接。
 \end{itemize}
