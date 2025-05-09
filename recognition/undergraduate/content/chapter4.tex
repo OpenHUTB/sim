@@ -1,4 +1,5 @@
 %!TEX root = ../../csuthesis_main.tex
+
 \chapter{基于通道注意力机制的CORnet-Z模型优化}
 
 \section{引入注意力机制的动因}
@@ -39,7 +40,6 @@ SE模块由Hu等人于2018年提出\cite{hu2018squeeze}，其核心思想就是�
 	\sum_{i=1}^{H} \sum_{j=1}^{W} x_c(i, j)
 	\label{eq:se_squeeze}
 \end{equation}
-
 其中，$x_c(i,j)$表示输入特征图第$c$个通道在位置$(i,j)$的值，$z_c$为池化后通道$c$的全局描述，$H$和$W$分别为特征图的空间尺寸大小。
 
 在excitation阶段，该通道向量$z$经过一个由两个全连接层组成的非线性变换，输出通道注意力权重向量$s$：
@@ -48,7 +48,6 @@ SE模块由Hu等人于2018年提出\cite{hu2018squeeze}，其核心思想就是�
 	s = \sigma \left( W_2 \cdot \text{ReLU} \left( W_1 \cdot z \right) \right)
 	\label{eq:se_excitation}
 \end{equation}
-
 其中，$W_1 \in \mathbb{R}^{\frac{C}{r} \times C}$和$W_2 \in \mathbb{R}^{C \times \frac{C}{r}}$是两层全连接层的权重矩阵，$r$为压缩比超参数，用于控制中间层维度大小；$\text{ReLU}(\cdot)$表示线性整流函数，$\sigma(\cdot)$ 为Sigmoid 激活函数，用于将权重归一化到$[0,1]$区间。
 
 最后，将注意力权重向量$s$与原始特征图逐通道相乘，完成对输入特征的加权重标定：
@@ -57,7 +56,6 @@ SE模块由Hu等人于2018年提出\cite{hu2018squeeze}，其核心思想就是�
 	\tilde{x}_c = s_c \cdot x_c
 	\label{eq:se_scale}
 \end{equation}
-
 其中，$\tilde{x}_c$表示重标定后的通道特征图，$s_c$为通道$c$的注意力系数。通过这一机制，SE模块能够提升模型对目标区域特征的响应能力，增强判别特性。
 
 在本文的实现中，使用PyTorch编写的\texttt{SEBlock}类对上述结构进行了复现。池化操作采用\texttt{nn.AdaptiveAvgPool2d(1)}，全连接层使用两层\texttt{Linear}模块分别对应压缩与激励过程，激活函数为ReLU和Sigmoid。参数初始化方面，前层使用\texttt{kaiming\_normal\_}，后层采用\texttt{normal\_}方法，以保证训练初期的稳定性。不同于原始论文中默认的压缩比$r=16$，本文选用更小的压缩比$r=8$，以减小信息损失并提高特征保持能力，使模块更适配于CORnet-Z这种浅层轻量模型结构。
