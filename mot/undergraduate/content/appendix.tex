@@ -12,7 +12,6 @@ x, y, t = row[1:4]
 if vehicle_id not in waypoints_by_vehicle:
 waypoints_by_vehicle[vehicle_id] = []
 waypoints_by_vehicle[vehicle_id].append((x, y, t))
-
 # 路径点插值平滑
 smoothed_waypoints_by_vehicle = {}
 for vehicle_id, waypoints in waypoints_by_vehicle.items():
@@ -28,7 +27,6 @@ interp_point = waypoints_np[i] + (waypoints_np[i + 1] - waypoints_np[i]) * (j / 
 wp_interp.append(interp_point)
 wp_interp.append(waypoints_np[-1])
 smoothed_waypoints_by_vehicle[vehicle_id] = wp_interp
-
 # 生成车辆并初始化控制器
 vehicles = []
 controllers = []
@@ -39,26 +37,20 @@ if vehicle:
 controller = Controller.Controller(waypoints, args.lateral_controller, args.longitudinal_controller)
 vehicles.append(vehicle)
 controllers.append(controller)
-
 # 仿真主循环
 for frame in range(FRAME_NUM):
 world.tick()  # 进行仿真步
 for i, vehicle in enumerate(vehicles):
 current_x, current_y, current_yaw = get_current_pose(vehicle)
 current_speed = vehicle.get_velocity().length()
-
 # 更新控制器状态
 controllers[i].update_waypoints(smoothed_waypoints_by_vehicle[vehicle_ids[i]])
 controllers[i].update_values(current_x, current_y, current_yaw, current_speed, frame)
 controllers[i].update_controls()
-
 # 获取控制指令
 throttle, steer, brake = controllers[i].get_commands()
-
 # 发送控制指令
 send_control_command(vehicle, throttle, steer, brake)
-
-
 # 仿真结束
 cleanup_resources(world)
 \end{lstlisting}
@@ -67,44 +59,32 @@ cleanup_resources(world)
 
 
 \begin{lstlisting}
-	
-
 # 雷达参数
 LIDAR_RANGE = 50
 POINT_SAVE_TIME = 3000
-
 # 保存点云数据和标签
 def save_data(radar_data, world, location, lidar_to_world_inv, sensor_queue):
 timestamp = world.get_snapshot().timestamp.elapsed_seconds
 current_frame = radar_data.frame
-
 # 获取雷达范围内的车辆
 vehicle_list = world.get_actors().filter("*vehicle*")
 vehicle_list = [v for v in vehicle_list if v.get_location().distance(location) < LIDAR_RANGE]
-
 labels = []
 for vehicle in vehicle_list:
 bbox = vehicle.bounding_box
 bbox_location = np.array([bbox.location.x, bbox.location.y, bbox.location.z, 1])
 bbox_location_lidar = lidar_to_world_inv @ bbox_location
 labels.append(bbox_location_lidar[:3])
-
 # 保存点云数据
 points = np.frombuffer(radar_data.raw_data, dtype=np.dtype('f4'))
 points = np.reshape(points, (len(points) // 4, 4))
 location = points[:, :3].astype(np.float64)
 intensity = points[:, 3].reshape(-1, 1).astype(np.float64)
-
-datalog = {
-	'PointCloud': {
-		'Location': location,
-		'Intensity': intensity
-	},
+datalog = {'PointCloud': {'Location': location,'Intensity': intensity},
 	'Labels': labels,
 	'Timestamp': timestamp
 }
 sensor_queue.put(datalog)
-
 # 设置雷达传感器
 def setup_sensors(world, transform, sensor_queue):
 lidar_bp = world.get_blueprint_library().find('sensor.lidar.ray_cast')
@@ -114,7 +94,6 @@ lidar_bp.set_attribute('rotation_frequency', '20')
 lidar = world.spawn_actor(lidar_bp, transform)
 lidar.listen(lambda data: save_data(data, world, transform.location, np.linalg.inv(np.array(transform.get_matrix())), sensor_queue))
 return lidar
-
 # 主函数
 def main():
 client = carla.Client('localhost', 2000)
@@ -124,44 +103,34 @@ settings = world.get_settings()
 settings.fixed_delta_seconds = 0.05
 settings.synchronous_mode = True
 world.apply_settings(settings)
-
 try:
 sensor_queue = Queue()
 lidar_transform = carla.Transform(carla.Location(x=-46, y=21, z=1.8), carla.Rotation(pitch=0, yaw=90, roll=0))
 lidar = setup_sensors(world, lidar_transform, sensor_queue)
-
 for _ in range(POINT_SAVE_TIME):
 world.tick()
 datalog = sensor_queue.get(True, 1.0)
 scipy.io.savemat(f"data/{_}.mat", {'datalog': datalog})
-
 finally:
 settings.synchronous_mode = False
 world.apply_settings(settings)
 if lidar:
 lidar.stop()
 lidar.destroy()
-
-
-	
 \end{lstlisting}
 
 
 \section{代码collect intersection camera lidar.py关键部分}
 
 \begin{lstlisting}
-
-
 # 雷达参数
 DATA_MUN = 500
 FUSION_DETECTION_ACTUAL_DIS = 25  # 多目标跟踪的实际检测距离
-
 # 创建文件夹
 def create_folder(folder_name):
 if not os.path.exists(folder_name):
 os.makedirs(folder_name)
 return folder_name
-
 # 保存车辆标签
 def save_point_label(world, location, lidar_to_world_inv, timestamp, all_vehicle_labels):
 vehicle_list = world.get_actors().filter("*vehicle*")
@@ -171,39 +140,25 @@ for vehicle in vehicle_list:
 bbox = vehicle.bounding_box
 bbox_location = np.array([bbox.location.x, bbox.location.y, bbox.location.z, 1])
 bbox_location_lidar = lidar_to_world_inv @ bbox_location
-label = [
-bbox_location_lidar[0],
-bbox_location_lidar[1],
-bbox_location_lidar[2] + 0.3,
-2 * bbox.extent.x,
-2 * bbox.extent.y,
-2 * bbox.extent.z
-]
+label = [bbox_location_lidar[0],bbox_location_lidar[1],bbox_location_lidar[2] + 0.3,
+2 * bbox.extent.x,2 * bbox.extent.y,2 * bbox.extent.z]
 vehicle_labels.append((timestamp, vehicle.id, label))
 all_vehicle_labels.append(vehicle_labels)
-
 # 保存雷达数据
 def save_radar_data(radar_data, world, ego_vehicle_transform, lidar_to_world_inv, all_vehicle_labels, junc, town_folder):
 timestamp = world.get_snapshot().timestamp.elapsed_seconds
 location = ego_vehicle_transform.location
 save_point_label(world, location, lidar_to_world_inv, timestamp, all_vehicle_labels)
-
 points = np.frombuffer(radar_data.raw_data, dtype=np.dtype('f4'))
 points = np.reshape(points, (len(points) // 4, 4))
 location = points[:, :3].astype(np.float64)
 intensity = points[:, 3].reshape(-1, 1).astype(np.float64)
-
 radar_folder = create_folder(f"{town_folder}/{junc}")
 file_name = os.path.join(radar_folder, f"{radar_data.frame}.mat")
-LidarData = {
-	'PointCloud': {
-		'Location': location,
-		'Intensity': intensity
-	},
+LidarData = {'PointCloud': {'Location': location,'Intensity': intensity},
 	'Timestamp': timestamp
 }
 scipy.io.savemat(file_name, {'LidarData': LidarData})
-
 # 设置传感器
 def setup_sensors(world, transform, sensor_queue):
 lidar_bp = world.get_blueprint_library().find('sensor.lidar.ray_cast')
@@ -214,7 +169,6 @@ lidar_bp.set_attribute('rotation_frequency', '20')
 lidar = world.spawn_actor(lidar_bp, transform)
 lidar.listen(lambda data: sensor_queue.put((data, "lidar")))
 return lidar
-
 # 生成自动驾驶车辆
 def spawn_autonomous_vehicles(world, tm, num_vehicles=70, random_seed=42):
 random.seed(random_seed)
@@ -231,7 +185,6 @@ vehicle.set_autopilot(True)
 tm.ignore_lights_percentage(vehicle, 100)
 vehicle_list.append(vehicle)
 return vehicle_list
-
 # 主函数
 def main():
 client = carla.Client('localhost', 2000)
@@ -243,7 +196,6 @@ settings.synchronous_mode = True
 world.apply_settings(settings)
 tm = client.get_trafficmanager(8000)
 tm.set_synchronous_mode(True)
-
 try:
 town_folder = create_folder("Town10HD_Opt")
 junc = "test_data_junc1"
@@ -251,18 +203,15 @@ ego_transform = carla.Transform(carla.Location(x=-46, y=21, z=1), carla.Rotation
 lidar_transform = carla.Transform(carla.Location(x=ego_transform.location.x, y=ego_transform.location.y, z=ego_transform.location.z + 0.82), ego_transform.rotation)
 lidar_to_world = np.array(lidar_transform.get_matrix())
 lidar_to_world_inv = np.linalg.inv(lidar_to_world)
-
 vehicles = spawn_autonomous_vehicles(world, tm, num_vehicles=50, random_seed=20)
 sensor_queue = Queue()
 lidar = setup_sensors(world, lidar_transform, sensor_queue)
 all_vehicle_labels = []
-
 for _ in range(DATA_MUN):
 world.tick()
 data, sensor_name = sensor_queue.get(True, 1.0)
 if sensor_name == "lidar":
 save_radar_data(data, world, ego_transform, lidar_to_world_inv, all_vehicle_labels, junc, town_folder)
-
 finally:
 settings.synchronous_mode = False
 world.apply_settings(settings)
@@ -271,22 +220,11 @@ lidar.stop()
 lidar.destroy()
 for vehicle in vehicles:
 vehicle.destroy()
-
-	
-
 \end{lstlisting}
 
 \section{代码collect reid dataset.py关键部分}
 
 \begin{lstlisting}
-	
-import carla
-import os
-import cv2
-import numpy as np
-import scipy.io
-from queue import Queue
-
 # 设置参数
 DROP_BUFFER_TIME = 60
 IMAGES_SAVE_TIME = 20
@@ -295,7 +233,6 @@ camera_location = [
 carla.Transform(carla.Location(x=-111, y=-2, z=2.800176), carla.Rotation(yaw=-90)),
 carla.Transform(carla.Location(x=-106, y=-25, z=2.800176), carla.Rotation(yaw=90))
 ]
-
 # 图像保存函数
 def save_image(image, folder_path):
 image_array = np.array(image.raw_data)
@@ -303,7 +240,6 @@ image_array = image_array.reshape((image.height, image.width, 4))[:, :, :3]
 current_frame = image.frame
 img_path = os.path.join(folder_path, f"{current_frame}.jpeg")
 cv2.imwrite(img_path, image_array)
-
 # 创建相机传感器
 def create_camera_sensor(world, transform):
 camera_bp = world.get_blueprint_library().find('sensor.camera.rgb')
@@ -312,37 +248,30 @@ camera_bp.set_attribute('image_size_y', '1080')
 camera_bp.set_attribute('fov', '90')
 camera = world.spawn_actor(camera_bp, transform)
 return camera
-
 # 生成车辆并拍摄图像
 def generate_vehicle_images(vehicle_type, folder_name, world, spawn_points, tm):
 folder_path = os.path.join(OUTPUT_DIR, folder_name)
 if not os.path.exists(folder_path):
 os.makedirs(folder_path)
-
 spawn_point = spawn_points[13]
 vehicle = world.try_spawn_actor(vehicle_type, spawn_point)
 vehicle.set_autopilot(True)
 tm.ignore_lights_percentage(vehicle, 100)
-
 cameras = []
 for cam_loc in camera_location:
 camera = create_camera_sensor(world, cam_loc)
 camera.listen(lambda image: save_image(image, folder_path))
 cameras.append(camera)
-
 for _ in range(DROP_BUFFER_TIME):
 world.tick()
 time.sleep(0.05)
-
 for _ in range(IMAGES_SAVE_TIME):
 world.tick()
 time.sleep(0.05)
-
 for cam in cameras:
 cam.stop()
 cam.destroy()
 vehicle.destroy()
-
 # 主函数
 def main():
 client = carla.Client('localhost', 2000)
@@ -354,267 +283,15 @@ settings.synchronous_mode = True
 world.apply_settings(settings)
 tm = client.get_trafficmanager(8000)
 tm.set_synchronous_mode(True)
-
 blueprint_library = world.get_blueprint_library()
 vehicle_blueprints = blueprint_library.filter('vehicle.*')
 vehicle_blueprints = [bp for bp in vehicle_blueprints if 'bike' not in bp.id]
 spawn_points = world.get_map().get_spawn_points()
-
 for folder_index, vehicle_bp in enumerate(vehicle_blueprints):
 folder_name = f"{folder_index + 1}"
 generate_vehicle_images(vehicle_bp, folder_name, world, spawn_points, tm)
-
 settings.synchronous_mode = False
 world.apply_settings(settings)
-
-if __name__ == "__main__":
-main()
-	
-	
-
-
-\end{lstlisting}
-
-\section{代码evaluator.py关键部分}
-
-
-\begin{lstlisting}
-
-import numpy as np
-from fastdtw import fastdtw
-
-# 计算轨迹重合度
-def trajectory_overlap_dtw(truth_trajectory, track_trajectory, threshold=0.5):
-truth_points = np.array([[point[0], point[1]] for point in truth_trajectory])
-track_points = np.array([[point[0], point[1]] for point in track_trajectory])
-min_length = min(len(truth_points), len(track_points))
-truth_points = truth_points[:min_length]
-track_points = track_points[:min_length]
-distance, _ = fastdtw(truth_points, track_points)
-max_distance = np.max(np.linalg.norm(truth_points - track_points, axis=1)) * min_length
-overlap_ratio = 1 - (distance / max_distance)
-return max(0, min(1, overlap_ratio))
-
-# 计算轨迹指标
-def trajectory_metrics(truth, track, threshold=0.5):
-total_error = 0.0
-total_max_error = 0.0
-total_tor = 0.0
-total_fpe = 0.0
-num_vehicles = 0
-total_points = 0
-
-for (truth_id, truth_trajectory), (track_id, track_trajectory) in zip(truth.items(), track.items()):
-min_length = min(len(truth_trajectory), len(track_trajectory))
-if min_length == 0:
-continue
-vehicle_error = 0.0
-vehicle_max_error = 0.0
-for i in range(min_length):
-truth_point = truth_trajectory[i]
-track_point = track_trajectory[i]
-error = np.sqrt((truth_point[0] - track_point[0]) ** 2 + (truth_point[1] - track_point[1]) ** 2)
-vehicle_error += error
-vehicle_max_error = max(vehicle_max_error, error)
-total_points += 1
-vehicle_tor = trajectory_overlap_dtw(truth_trajectory, track_trajectory, threshold)
-truth_end_point = truth_trajectory[-1]
-track_end_point = track_trajectory[-1]
-fpe = np.sqrt((truth_end_point[0] - track_end_point[0]) ** 2 + (truth_end_point[1] - track_end_point[1]) ** 2)
-total_error += vehicle_error
-total_max_error += vehicle_max_error
-total_tor += vehicle_tor
-total_fpe += fpe
-num_vehicles += 1
-
-mean_error = total_error / total_points if total_points > 0 else 0.0
-mean_max_error = total_max_error / num_vehicles if num_vehicles > 0 else 0.0
-mean_tor = total_tor / num_vehicles if num_vehicles > 0 else 0.0
-mean_fpe = total_fpe / num_vehicles if num_vehicles > 0 else 0.0
-return mean_tor, mean_error, mean_max_error, mean_fpe
-
-# 计算平均误差和延迟
-def mean_metrics(lateral_errors, longitudinal_errors, delays):
-total_lateral_error = 0.0
-total_longitudinal_error = 0.0
-total_delay = 0.0
-total_frames = 0
-
-for lateral_vehicle, longitudinal_vehicle, delay_vehicle in zip(lateral_errors, longitudinal_errors, delays):
-min_length = min(len(lateral_vehicle), len(longitudinal_vehicle), len(delay_vehicle))
-if min_length == 0:
-continue
-total_lateral_error += sum(abs(e) for e in lateral_vehicle[:min_length])
-total_longitudinal_error += sum(abs(e) for e in longitudinal_vehicle[:min_length])
-total_delay += sum(d for d in delay_vehicle[:min_length])
-total_frames += min_length
-
-if total_frames == 0:
-return 0.0, 0.0, 0.0
-mean_lateral_error = total_lateral_error / total_frames
-mean_longitudinal_error = total_longitudinal_error / total_frames
-mean_delay = total_delay / total_frames
-return mean_lateral_error, mean_longitudinal_error, mean_delay
-
-
-
-\end{lstlisting}
-
-
-\section{代码evaluator.py关键部分}
-
-
-\begin{lstlisting}
-	
-# 配置和初始化
-# 设置CARLA世界参数
-
-def setting_config(settings, world):
-settings.synchronous_mode = True
-settings.fixed_delta_seconds = 0.05
-world.apply_settings(settings)
-	
-	
-# 数据加载与处理
-# 读取车辆路径数据
-with open(waypoints_file, 'r', encoding='utf-8') as f:
-reader = csv.reader(f, delimiter=';')
-for row in reader:
-vehicle_id = int(row[0])
-t = row[2]
-inter = row[4]
-lane = int(row[5]) + 1
-direct = row[6]
-if vehicle_id in waypoints_by_vehicle:
-waypoints_by_vehicle[vehicle_id].append([inter, lane, direct])
-else:
-waypoints_by_vehicle[vehicle_id] = [[inter, lane, direct]]
-if vehicle_id in intersection_time:
-intersection_time[vehicle_id].append(t)
-else:
-intersection_time[vehicle_id] = [t]
-	
-	
-# 数据库交互
-# 查询车辆生成位置
-def query_location(waypoint, cursor):
-intersection = waypoint[0]
-lane = waypoint[1]
-direction = waypoint[2]
-intersection_id = query_id(intersection, cursor)
-query = '''
-SELECT x, y, z, yaw FROM zhongdianruanjianyuan
-WHERE IntersectionID = %s AND Lane = %s AND DirectionID = %s
-'''
-cursor.execute(query, (intersection_id, lane, direction))
-results = cursor.fetchall()
-loc_x, loc_y, loc_z, ro_yam = results[0]
-loc_x = float(loc_x)
-loc_y = float(loc_y)
-loc_z = float(loc_z) - RES_SPAWN
-ro_yaw = float(ro_yam)
-location = carla.Location(x=loc_x, y=loc_y, z=loc_z)
-return location, ro_yaw
-	
-# 车辆生成
-
-def spawn_vehicle(vehicle_id, waypoints_by_vehicle, vehicle_waypoint_offset, cursor, filtered_vehicle_blueprints,
-world, vehicle_list, vehicle_plate_list, agent_list, share_global_planner):
-first_waypoint = waypoints_by_vehicle[vehicle_id][0]
-location, ro_yaw = query_location(first_waypoint, cursor)
-transform = carla.Transform(location, carla.Rotation(yaw=ro_yaw))
-vehicle_bp = random.choice(filtered_vehicle_blueprints)
-vehicle = world.try_spawn_actor(vehicle_bp, transform)
-while vehicle is None:
-transform.location -= transform.get_forward_vector() * OFFSET_DISTANCE
-vehicle = world.try_spawn_actor(vehicle_bp, transform)
-vehicle_list[vehicle_id] = vehicle
-vehicle_plate_list.append(vehicle_id)
-agent = BehaviorAgent(vehicle, behavior='normal', grp_inst=share_global_planner)
-agent_list[vehicle_id] = agent
-agent.last_action_time = time.time()
-second_waypoint = waypoints_by_vehicle[vehicle_id][1]
-location, ro_yam = query_location(second_waypoint, cursor)
-agent.set_destination(location)
-vehicle_waypoint_offset[vehicle_id] = 2
-
-
-# 批量控制车辆
-def batch_control_vehicles(agent_list, world, client):
-batch_size = 20
-agents = list(agent_list.values())
-commands = []
-for i in range(0, len(agents), batch_size):
-batch = agents[i:i + batch_size]
-for agent in batch:
-vehicle = agent._vehicle
-if not agent.done():
-control = agent.run_step()
-commands.append(ApplyControl(vehicle, control))
-client.apply_batch(commands)
-commands.clear()
-world.tick()
-
-
-# 清理已销毁车辆的资源
-def clear_source(need_to_destroy, waypoints_by_vehicle, intersection_time, vehicle_list,
-vehicle_waypoint_offset, vehicle_plate_list, agent_list):
-for vehicle_id in need_to_destroy:
-del waypoints_by_vehicle[vehicle_id]
-del intersection_time[vehicle_id]
-del vehicle_list[vehicle_id]
-del vehicle_waypoint_offset[vehicle_id]
-del agent_list[vehicle_id]
-vehicle_plate_list.remove(vehicle_id)
-
-while len(vehicle_list) > 0:
-# 按时间顺序生成车辆
-if next_vehicle_num < len(start_time):
-this_stamp = get_timestamp(start_time[next_vehicle_num])
-during_to_next_vehicle = this_stamp - first_stamp
-this_system_stamp = world.get_snapshot().timestamp.elapsed_seconds
-during_system_time = this_system_stamp - first_system_stamp
-if during_system_time >= during_to_next_vehicle:
-num = start_time.count(start_time[next_vehicle_num])
-for vehicle_id in vehicle_id_list[next_vehicle_num:]:
-spawn_vehicle(vehicle_id, waypoints_by_vehicle, vehicle_waypoint_offset, cursor,
-filtered_vehicle_blueprints, world, vehicle_list, vehicle_plate_list, agent_list, share_global_planner)
-next_vehicle_num += 1
-if next_vehicle_num >= len(start_time):
-break
-first_stamp = this_stamp
-first_system_stamp = this_system_stamp
-
-# 控制车辆行为
-batch_control_vehicles(agent_list, world, client)
-
-# 检查车辆是否到达终点或需要销毁
-for vehicle_id, agent in agent_list.items():
-vehicle = vehicle_list[vehicle_id]
-if agent.done() and vehicle_waypoint_offset[vehicle_id] >= len(waypoints_by_vehicle[vehicle_id]):
-vehicle.destroy()
-need_to_destroy.append(vehicle_id)
-destroyed_vehicle_id.append(vehicle_id)
-
-# 清理已销毁车辆的资源
-if need_to_destroy:
-clear_source(need_to_destroy, waypoints_by_vehicle, intersection_time, vehicle_list,
-vehicle_waypoint_offset, vehicle_plate_list, agent_list)
-need_to_destroy.clear()
-
-
-
-
-
-# 车辆生命周期差异计算
-time_differences = calculate_vehicle_lifespan(vehicle_lifetimes, intersection_time)
-save_lifespan_to_csv(time_differences, csv_filename='vehicle_lifespan_differences.csv')
-plot_lifespan_differences_line(time_differences, image_filename='vehicle_lifespan_differences.png', limit=100)
-
-# 路径误差评估
-path_errors = evaluate_path_error(vehicle_middle_junctions, vehicle_actual_junctions)
-plot_path_errors(path_errors)
-	
 \end{lstlisting}
 
 
@@ -622,13 +299,11 @@ plot_path_errors(path_errors)
 
 
 \begin{lstlisting}
-	
 	%% 将生成的轨迹与外观特征绑定
 	%% 匹配轨迹之前，处理单个路口的轨迹id变化的情况
 	config;
 	townName = 'Town10';   % 可以修改城镇和；路口
 	dataSets = {'Town10HD_Opt\test_data_junc1', 'Town10HD_Opt\test_data_junc2', 'Town10HD_Opt\test_data_junc3', 'Town10HD_Opt\test_data_junc4', 'Town10HD_Opt\test_data_junc5'};
-	
 	dirParts = strsplit(dataSets{1}, '\');
 	townConfig = dataset.(townName);
 	for i = 1:length(dataSets)
@@ -650,16 +325,13 @@ plot_path_errors(path_errors)
 	data = load(fileName);
 	juncTrajCell{file} = data.juncVehicleTraj;
 	end
-	
 	%% 轨迹匹配，链接全部路口的轨迹
 	matchThreshold = 0.65;  % 车辆匹配阈值
 	traj = linkIdentities(juncTrajCell, matchThreshold);
-	
 	% 获取当前目录
 	currentFileDir = fileparts(mfilename('fullpath')); 
-	
 	% 保存 traj 到当前目录下的 traj.mat 文件
 	save(fullfile(currentFileDir, 'traj.mat'), 'traj');
-	
-	
 \end{lstlisting}
+
+
