@@ -34,7 +34,19 @@ Carla 的 API 支持从模拟行人获取真实骨架，该骨架由含根节点
 
 \begin{figure}[H]
     \centering
-    \includegraphics[width=0.8\textwidth]{images/crossing_path.pdf}
+    \begin{minipage}{0.8\textwidth} 
+        \centering
+        \includegraphics[width=\textwidth]{images/crossing_path1.pdf}
+        \caption{行人开始过马路}
+    \end{minipage}
+    
+    \vspace{0.5cm}  
+
+    \begin{minipage}{0.8\textwidth}
+        \centering
+        \includegraphics[width=\textwidth]{images/crossing_path2.pdf}
+        \caption{行人成功通过马路}
+    \end{minipage}
     \caption{行人单向行走与过马路示意图}
     \label{fig:crossing_path}
 \end{figure}
@@ -46,8 +58,50 @@ Carla 的 API 支持从模拟行人获取真实骨架，该骨架由含根节点
 
 \begin{figure}[H]
     \centering
-    \includegraphics[width=0.8\textwidth]{images/walking_back_and_forth.pdf}
-    \caption{行人来回走行为与来回过马路示意图}
+    \begin{minipage}{0.24\textwidth}
+        \centering
+        \includegraphics[width=\textwidth]{images/crossing_walking1.pdf}
+        \caption{行人从人行道右侧开始走}
+    \end{minipage}%
+    \begin{minipage}{0.24\textwidth}
+        \centering
+        \includegraphics[width=\textwidth]{images/crossing_walking2.pdf}
+        \caption{行人正在从右往左行走}
+    \end{minipage}%
+    \begin{minipage}{0.24\textwidth}
+        \centering
+        \includegraphics[width=\textwidth]{images/crossing_walking3.pdf}
+        \caption{行人从右侧走到路中间}
+    \end{minipage}%
+    \begin{minipage}{0.24\textwidth}
+        \centering
+        \includegraphics[width=\textwidth]{images/crossing_walking4.pdf}
+        \caption{行人即将走到人行道左侧}
+    \end{minipage}
+    
+    \vspace{0.5cm}  % 控制行间距
+    
+    \begin{minipage}{0.24\textwidth}
+        \centering
+        \includegraphics[width=\textwidth]{images/crossing_walking5.pdf}
+        \caption{行人走到左侧开始转向}
+    \end{minipage}%
+    \begin{minipage}{0.24\textwidth}
+        \centering
+        \includegraphics[width=\textwidth]{images/crossing_walking6.pdf}
+        \caption{行人正在从左往右行走}
+    \end{minipage}%
+    \begin{minipage}{0.24\textwidth}
+        \centering
+        \includegraphics[width=\textwidth]{images/crossing_walking7.pdf}
+        \caption{行人从左侧走到路中间}
+    \end{minipage}%
+    \begin{minipage}{0.24\textwidth}
+        \centering
+        \includegraphics[width=\textwidth]{images/crossing_walking8.pdf}
+        \caption{行人即将走到人行道右侧}
+    \end{minipage}
+    \caption{行人来回通过人行道示意图}
     \label{fig:walking_back_and_forth}
 \end{figure}
 
@@ -63,11 +117,18 @@ Carla 的 API 支持从模拟行人获取真实骨架，该骨架由含根节点
 
 具体实现过程包含以下步骤：通过 Pygame 库设置键盘事件监听功能使系统捕捉用户键盘操作并与行人运动方向精确映射，具体规则如图 \ref{fig:keyboard_control}所示，确保用户键盘输入的每一指令被系统准确识别执行；设计控制逻辑使用户输入指令后行人的 WalkerControl 模块实时响应，根据指令更新行人方向和速度，确保行人移动即时准确反映用户控制意图以实现精确控制；考虑行人运动安全性，系统加入碰撞检测与停止机制，当行人遇障碍物时内置碰撞传感器立即检测并触发碰撞事件，系统接收到事件后迅速反应停止行人运动，有效避免碰撞风险保障行人运动安全性。
 
-\begin{figure}[H]
+\begin{table}[H]
     \centering
-    \includegraphics[width=0.8\textwidth]{images/keyboard_control.pdf}
-    \caption{键盘控制行人规则}
-    \label{fig:keyboard_control}
-\end{figure}
+    \begin{tabular}{|c|c|}
+    \hline
+    控制说明 & 控制键 \\
+    \hline
+    WASD移动 & 空格跳跃 \\
+    \hline
+    Shift加速 & ESC退出 \\
+    \hline
+    \end{tabular}
+    \caption{键盘控制人规则}
+\end{table}
 
 键盘控制模块不仅能实现对行人的灵活操控，也为调试与实验分析提供了完善的交互与可视化支持，为后续引入 AI 控制与自动化策略奠定基础。
