@@ -1,4 +1,5 @@
 %!TEX root = ../../csuthesis_main.tex
+
 \chapter{CORnet-S模型复现与基线分析}
 
 \section{复现流程与实验配置}
@@ -88,9 +89,9 @@ Tiny-ImageNet-200是ImageNet数据集的轻量级衍生版本，包含200个类�
 
 \section{基线可视化分析}
 
-\subsection{Grad-CAM可视化激活图分析}
+\subsection{中间激活图可视化分析}
 
-Grad-CAM是一种基于梯度的类激活可视化方法，其核心思路是在给定目标类别的前提下，利用该类别在模型输出中的得分对中间特征图的梯度信息进行加权，从而生成一张热力图，直观反映模型在输入图像中“关注”的区域\cite{selvaraju2016grad}。
+为分析模型在各视觉皮层模拟层级的特征提取情况，本文使用forward hook方法提取了CORnet-S模型各层的中间激活图，并对典型通道的响应特征进行了可视化。
 
 \begin{figure}[hbt]
 	\centering
@@ -100,45 +101,51 @@ Grad-CAM是一种基于梯度的类激活可视化方法，其核心思路是在
 \end{figure}
 
 
-在本实验中，选择CORnet-S模型的IT层作为可视化目标层，对验证集中典型图像样本进行激活响应分析。图\ref{f.it_s_act}展示了该模型在IT层的六个典型通道的激活结果。
+在本实验中，选择CORnet-S模型的IT层作为可视化目标层，对验证集中典型图像样本进行激活响应分析。图\ref{f.cornet_s_jihuo}的(d)展示了该模型在IT层的六个典型通道的激活结果。
 
-\begin{figure}[hbt]
+\begin{figure}[!htb]
 	\centering
-	\includegraphics[width=0.8\linewidth]{IT_s_activations.png}
-	\caption{CORnet-S模型IT层激活图}
-	\label{f.it_s_act}
+	\begin{subfigure}[t]{0.8\linewidth}
+		\captionsetup{justification=centering}
+		\begin{minipage}[b]{1\linewidth}
+			\includegraphics[width=1\linewidth]{V1_s_activations.png}
+			\caption{V1层激活图}
+		\end{minipage}
+	\end{subfigure}\\
+	\begin{subfigure}[t]{0.8\linewidth}
+		\captionsetup{justification=centering}
+		\begin{minipage}[b]{1\linewidth}
+			\includegraphics[width=1\linewidth]{V2_s_activations.png}
+			\caption{V2层激活图}
+		\end{minipage}
+	\end{subfigure}\\
+	\begin{subfigure}[t]{0.8\linewidth}
+		\captionsetup{justification=centering}
+		\begin{minipage}[b]{1\linewidth}
+			\includegraphics[width=1\linewidth]{V4_s_activations.png}
+			\caption{V4层激活图}
+		\end{minipage}
+	\end{subfigure}\\
+	\begin{subfigure}[t]{0.8\linewidth}
+		\captionsetup{justification=centering}
+		\begin{minipage}[b]{1\linewidth}
+			\includegraphics[width=1\linewidth]{IT_s_activations.png}
+			\caption{IT层激活图}
+		\end{minipage}
+	\end{subfigure}
+	\caption{CORnet-S模型各层激活图}
+	\label{f.cornet_s_jihuo}
 \end{figure}
 
 观察图像可见，模型在多个通道中对图像主体区域（如摩托车轮廓、前轮等）产生了高响应，说明IT层能够聚焦于具有显著判别力的高阶语义特征。此外，部分通道对图像边缘或背景响应较弱，进一步印证该层在完成判别任务时具备一定的空间注意能力。
 
 \subsection{关键区域关注能力探讨}
 
-为进一步分析CORnet-S模型在不同层级的感知能力，图\ref{f.v1_s_act}至图\ref{f.v4_s_act}分别展示了模型在V1、V2和V4层的激活热力图。
+为进一步分析CORnet-S模型在不同层级的感知能力，图\ref{f.cornet_s_jihuo}的(a)至图\ref{f.cornet_s_jihuo}的(c)分别展示了模型在V1、V2和V4层的激活热力图。
 
-\begin{figure}[hbt]
-	\centering
-	\includegraphics[width=0.8\linewidth]{V1_s_activations.png}
-	\caption{CORnet-S模型V1层激活图}
-	\label{f.v1_s_act}
-\end{figure}
-
-\begin{figure}[hbt]
-	\centering
-	\includegraphics[width=0.8\linewidth]{V2_s_activations.png}
-	\caption{CORnet-S模型V2层激活图}
-	\label{f.v2_s_act}
-\end{figure}
-
-\begin{figure}[hbt]
-	\centering
-	\includegraphics[width=0.8\linewidth]{V4_s_activations.png}
-	\caption{CORnet-S模型V4层激活图}
-	\label{f.v4_s_act}
-\end{figure}
-
-从图\ref{f.v1_s_act}（V1 层）可见，激活图主要集中在边缘与纹理区域，这表现出V1层为对图像整体结构的低级响应，体现了模型底层的感知特性。图\ref{f.v2_s_act}（V2 层）中，响应区域虽仍零散，但开始聚焦于目标内部轮廓区域，初步展现出类别相关的空间感知。图\ref{f.v4_s_act}（V4 层）显示出更集中的激活分布，尤其在图像的中部主体区域有明显增强，说明模型已完成对部分中层语义信息的整合。
+从图\ref{f.cornet_s_jihuo}的(a)V1层可见，激活图主要集中在边缘与纹理区域，这表现出V1层为对图像整体结构的低级响应，体现了模型底层的感知特性。图\ref{f.cornet_s_jihuo}的(b)V2层中，响应区域虽仍零散，但开始聚焦于目标内部轮廓区域，初步展现出类别相关的空间感知。图\ref{f.cornet_s_jihuo}的(c)V4层显示出更集中的激活分布，尤其在图像的中部主体区域有明显增强，说明模型已完成对部分中层语义信息的整合。
 
 尽管整体趋势符合生物视觉系统的层级响应特征，但部分激活图仍存在注意力漂移现象，如V1层的通道2与V2层的通道六对背景产生了强响应。这可能反映出当前模型在缺乏显式注意机制的条件下，其选择性聚焦能力存在一定的偏移，尤其在目标边界模糊、遮挡或图像背景复杂的场景下。
 
-综上所述，Grad-CAM可视化结果表明，CORnet-S模型具有基本的空间关注能力和层级特征提取结构，但在判别区域的集中性与鲁棒性方面仍有改进空间。后续章节将尝试引入通道注意力机制，进一步优化模型对关键区域的响应特性。
+综上所述，激活图可视化结果表明，CORnet-S模型具有基本的空间关注能力和层级特征提取结构，但在判别区域的集中性与鲁棒性方面仍有改进空间。后续章节将尝试引入通道注意力机制，进一步优化模型对关键区域的响应特性。
 
