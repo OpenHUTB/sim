@@ -59,9 +59,9 @@ R_{\text{safety}} =
 \end{equation}
 其中：
 \begin{itemize}
-    \item \( \mathbb{I}_{\text{collision}} \) 表示碰撞事件，碰撞时给予-500的惩罚
-    \item \( d_{\text{obs}} \) 为障碍物的最小距离，若小于2米，则按距离反比例惩罚
-    \item \( \Delta v = v_{\text{prev}} - v_{\text{curr}} \) 为速度变化，若速度骤降超过1米每秒，则给予惩罚
+    \item \( \mathbb{I}_{\text{collision}} \) 表示碰撞事件，碰撞时给予-500的惩罚。
+    \item \( d_{\text{obs}} \) 为障碍物的最小距离，若小于2米，则按距离反比例惩罚。
+    \item \( \Delta v = v_{\text{prev}} - v_{\text{curr}} \) 为速度变化，若速度骤降超过1米每秒，则给予惩罚。
 \end{itemize}
 
 \subsection{运动模式优化}
@@ -84,7 +84,7 @@ R_{\text{time}} = -0.01 \cdot t_{\text{step}}
 \end{equation}
 其中：
 \begin{itemize}
-    \item 每一步都会施加一个固定的时间惩罚，以鼓励高效的路径规划
+    \item 每一步都会施加一个固定的时间惩罚，以鼓励高效的路径规划。
 \end{itemize}
 
 \subsection{终止条件奖励}
@@ -99,8 +99,8 @@ R_{\text{terminal}} =
 \end{equation}
 其中：
 \begin{itemize}
-    \item \( \theta_{\text{error}} = \left| \arctan\left(\frac{-\Delta y}{\Delta x}\right) - \theta_{\text{current}} \right| \) 表示当前朝向与目标方向之间的角度偏差
-    \item 双重终止条件确保目标点朝向正确性
+    \item \( \theta_{\text{error}} = \left| \arctan\left(\frac{-\Delta y}{\Delta x}\right) - \theta_{\text{current}} \right| \) 表示当前朝向与目标方向之间的角度偏差。
+    \item 双重终止条件确保目标点朝向正确性。
 \end{itemize}
 
 \subsection{综合奖励架构}
@@ -123,10 +123,10 @@ R_{\text{total}} = R_{\text{target}} + R_{\text{path}} + R_{\text{safety}} + R_{
 通过上述奖励函数的设计，行人导航系统能够有效地引导智能体在复杂环境中避开障碍物，迅速到达目标，并持续优化其决策策略，以实现最优路径规划。本节则描述了如何通过环境中的具体设置和传感器支持奖励的计算，实现导航。具体包括观测空间耦合、动态奖励系数、路径可视化等。
 
 \begin{itemize}
-    \item \textbf{观测空间耦合}：12维特征向量包含局部路径点坐标($x_{\text{wp}}, y_{\text{wp}}$)、障碍距离$d_{\text{obs}}$等
-    \item \textbf{动态奖励系数}：目标距离因子$1 - \frac{d}{100}$实现奖励强度自适应
-    \item \textbf{分层安全机制}：碰撞检测、障碍距离、速度变化三重防护
-    \item \textbf{路径可视化}：通过Carla调试接口实时渲染路径点
+    \item \textbf{观测空间耦合}：12维特征向量包含局部路径点坐标($x_{\text{wp}}, y_{\text{wp}}$)、障碍距离$d_{\text{obs}}$等。
+    \item \textbf{动态奖励系数}：目标距离因子$1 - \frac{d}{100}$实现奖励强度自适应。
+    \item \textbf{分层安全机制}：碰撞检测、障碍距离、速度变化三重防护。
+    \item \textbf{路径可视化}：通过Carla调试接口实时渲染路径点。
 \end{itemize}
 
 \section{路径规划与避障设计}
