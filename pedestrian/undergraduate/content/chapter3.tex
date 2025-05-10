@@ -214,6 +214,24 @@ Q(s_t,a_t) \leftarrow Q(s_t,a_t) + \alpha\left[r_t + \gamma \max_{a'}Q_{\text{ta
     \end{itemize}
 \end{itemize}
 
+\begin{algorithm}[H]
+    \caption{DQN训练算法}
+    \begin{algorithmic}[1]
+    \STATE 初始化环境与模型
+    \STATE 设置动作空间与状态空间
+    \WHILE{训练过程中}
+        \STATE 进行环境重置，获取初始观测$O_0$
+        \FOR{每个训练步骤}
+            \STATE 根据当前策略选择动作$a_t$
+            \STATE 执行动作$a_t$，获得新的观测$O_{t+1}$，奖励$R_t$
+            \STATE 存储经验$(O_t, a_t, R_t, O_{t+1})$
+            \STATE 从经验池中采样批量数据进行更新
+            \STATE 使用DQN算法更新Q网络
+        \ENDFOR
+    \ENDWHILE
+    \end{algorithmic}
+\end{algorithm}
+
 \subsection{算法优化策略}
 \begin{itemize}
     \item \textbf{目标值分离}
@@ -326,9 +344,26 @@ L(\theta) = L_{\text{clip}}(\theta) - c_1 L_{\text{VF}}(\theta) + c_2 S[\pi_{\th
     \item 第三项：策略熵（权重），鼓励探索。
 \end{itemize}
 
+\begin{algorithm}[H]
+    \caption{PPO训练算法}
+    \begin{algorithmic}[1]
+    \STATE 初始化环境与模型
+    \STATE 设置动作空间与状态空间
+    \WHILE{训练过程中}
+        \STATE 获取当前观测$O_t$
+        \FOR{每个训练步骤}
+            \STATE 根据当前策略选择动作$a_t$
+            \STATE 执行动作$a_t$，获得新的观测$O_{t+1}$，奖励$R_t$
+            \STATE 使用PPO算法计算优势函数$A_t$
+            \STATE 计算目标和损失，更新策略网络
+        \ENDFOR
+    \ENDWHILE
+    \end{algorithmic}
+\end{algorithm}
+
 \subsection{训练模型评估}
 在 \texttt{Carla\_Pedestrian\_PPO.py} 中，关键超参数配置如下：
-\begin{verbatim}
+\begin{lstlisting}[language=Python]
 model = PPO(
     "MlpPolicy",          # 多层感知机策略
     vec_env,              # 向量化环境
@@ -343,7 +378,7 @@ model = PPO(
     },
     device='auto'         # 自动选择 CPU/GPU
 )
-\end{verbatim}
+\end{lstlisting}
 
 训练得出了模型，此模式用于导航的使用，而下图 \ref{fig:path_planning} 则为行人智能体通过PPO算法进行路径规划与避障的示意图。
 
@@ -360,7 +395,7 @@ model = PPO(
 
 \subsection{算法特性对比}
 
-如表~\ref{tab:algorithm_comparison}所示，从控制方式、训练成本、环境适应性等维度进行系统对比：
+如表~\ref{tab:algorithm_comparison}所示，从控制方式、训练成本、环境适应性等维度对三种强化学习算法进行系统对比：
 
 \begin{table}[H]
   \centering
