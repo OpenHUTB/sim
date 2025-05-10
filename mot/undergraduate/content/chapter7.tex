@@ -13,7 +13,7 @@
 
 \begin{table}[h]
 	\centering
-	\caption{Trajectory Overlap Rate and Vehicle Control Indicators}
+	\caption{轨迹重叠率和车辆控制指标}
 	\label{tab:trajectory_c}
 	\resizebox{\textwidth}{!}{%
 		\begin{tabular}{|l|c|c|c|c|c|c|c|c|c|c|c|c|c|}
@@ -51,23 +51,23 @@
 \section{研究中的不足}
 
 
-该系统虽然最后在固定的Town10环境中实现了达到项目要求的效果，但由于数据集不够全面、模型更新不及时以及忽视了车辆行为分析。使得本系统的算法和框架在其他环境下的展示效果及性能大大降低，如下图\ref{fig:p34}便是具体分析：
+该系统虽然最后在固定的Town10环境中实现了达到项目要求的效果，但由于数据集不够全面、模型更新不及时以及忽视了车辆行为分析。使得本系统的算法和框架在其他环境下的展示效果及性能大大降低，如下图\ref{fig:p46}便是具体分析：
 
 
 
 
 \begin{figure}[htbp] % 可以是h（here），t（top），b（bottom），p（page of floats）
 	\centering
-	\includegraphics[width=1\textwidth]{p34} % 假设图片文件名为car.pdf或car.png等，位于当前工作目录
+	\includegraphics[width=1\textwidth]{p46} % 假设图片文件名为car.pdf或car.png等，位于当前工作目录
 	\caption{研究中的不足} % 图片标题
-	\label{fig:p34} % 用于引用的标签
+	\label{fig:p46} % 用于引用的标签
 \end{figure}
 
 
 
 \subsection{数据集的多样性不足}
 
-尽管本课题基于 CARLA 仿真平台 Town10 场景获得了大量的交通影像数 据，但是其数据生成环境有限——作为模拟的场景所构造的交通环境同真实道路场 景相比，在天气状况、光照强度变化以及目标外观形态等多个方面都有着天壤之别。CARLA 所生成数据光照状况大多为固定设定模式，缺少暴雨、逆光、夜晚强 光等极端光照环境场景；目标外观特性受限制于仿真模型库，车辆纹理等细节丰富度不够。
+尽管本课题基于 CARLA 仿真平台 Town10 场景获得了大量的交通影像数据，但是其数据生成环境有限——作为模拟的场景所构造的交通环境同真实道路场 景相比，在天气状况、光照强度变化以及目标外观形态等多个方面都有着天壤之别。CARLA 所生成数据光照状况大多为固定设定模式，缺少暴雨、逆光、夜晚强光等极端光照环境场景；目标外观特性受限制于仿真模型库，车辆纹理等细节丰富度不够。
 
 
 \subsection{模型的实时性有待提高}
