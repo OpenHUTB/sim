@@ -1,38 +1,28 @@
-# 本科毕业设计模板
+# 面向智慧交通场景的多目标跟踪算法和评测
 
-湖南工商大学本科毕业设计模板。
+湖南工商大学 人工智能2102熊雅轩 2123020078 本科毕业设计
 
-# 使用
-推荐使用 [texstudio](https://pan.baidu.com/s/1Is2-VR1z-tMYvmdinsVY_g?pwd=hutb) 或 [overleaf](https://cn.overleaf.com/) 进行论文撰写。
+# 运行操作步骤
 
-注：在 latex 2023 中编译成功，latex 2016 编译失败（需要更高的版本，其他版本的 latex 没试过）。
+一、点云数据
 
-# 贡献
-有任何对模板格式进行调整的可以提交 [Issues](https://github.com/OpenHUTB/undergraduate/issues) 或 [Pull Request](https://github.com/OpenHUTB/undergraduate/pulls) 。
+(1)收集点云数据，在CarlaUE4的Town10场景中，运行collect_lidar_dataset.py脚本收集点云训练集，包括点云数据和3D标签框，放在./multi_obj_track下。
 
-# 选题
-[选题列表](https://github.com/OpenHUTB/undergraduate/wiki/%E6%AF%95%E8%AE%BE%E9%80%89%E9%A2%98) 
+(2)处理数据，在Matlab2024b中，运行convertTrainPointCloudToPcd.m将点云训练集转换成PCD文件，运行convertTrainLabelToTableMat.m将全部帧的训练标签合成一个mat文件。
 
-
-## 要求
-1. 格式化、注释、文档翻译
-2. 运行
-3. 测试（例子通过）
+(3)运行pointPillarsTrain.m，训练模型，将训练好的模型保存在当前目录下。
 
 
-## 初始化
 
-1. 新建github工程
+二、追踪轨迹数据
 
-2. 运行`init_proj('PROJECT_NAME');`
+(1)激光雷达和摄像头数据的对象级融合。首先收集测试数据，在CarlaUE4的Town10场景中，运行collect_intersection_camera_lidar.py收集多目标跟踪的测试数据，收集每一帧的6个相机的场景图片和点云数据，放在./multi_obj_track下。再进入Matlab2024b运行demo.m它的功能是：获取3D标签和2D标签、可视化跟踪的车辆输出trackedData.mat和车辆轨迹坐标转换成CARLA场景中的轨迹。最后完成收集一个路口的轨迹数据，需要修改collect_intersection_camera_lidar.py中的road_intersection_1来修改路口完成五个路口数据轨迹收集。
 
-3. 分配开发者
+(2)ReID车辆再识别，首先使用collect_reid_dataset.py在相同的位置生成车辆，在车辆起点和终点位置分别放一个RGB相机和一个语义分割相机，获取每一帧的车辆头部和尾部方向的图片以及2D标签。再运行cropReIDDataSet.m将前后视角的车辆图片根据2D标签进行裁剪，并且将同一类型车辆两个视角的图片整合到一起。然后运行reIDNetworkTrain.m用resnet50 模型进行训练。接着测试，将路口1位置跟踪到的车辆车辆图片和路口2位置该视角相机的图片放在一起进行再识别reIdentification.m， 也就是说第一张图是要重新识别的对象，在下个路口进行识别，进而整合二者的轨迹。最后运行loadAllTraj.m用于生成指定路口轨迹，包括该轨迹对应车辆的外观特征。
 
 
-## 使用
-克隆仓库
-```shell
-git clone --recursive https://github.com/OpenHUTB/undergraduate.git
-```
 
-# 贡献者
+三、复现轨迹
+
+五个路口全部轨迹，运行DEMO生成一个.mat文件，运行generate_trajectories.py生成waypoints.txt文件最后运行Drive。
+

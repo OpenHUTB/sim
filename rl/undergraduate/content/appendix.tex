@@ -1,7 +1,354 @@
 %!TEX root = ../csuthesis_main.tex
 % \begin{appendixs} % 无章节编号
 \chapter{附录代码}
+\section{PPO算法Python描述}
+\begin{lstlisting}
+# 测试模式
+if train is False: 
+# 创建PPO智能体实例（使用初始动作标准差参数）
+agent = PPOAgent(town, action_std_init)
+# 加载预训练模型参数
+agent.load()
+# 冻结旧策略网络参数（测试时不需要梯度更新）
+for params in agent.old_policy.actor.parameters():
+params.requires_grad = False
 
+# 训练模式
+else:  
+# 恢复训练逻辑
+if checkpoint_load:
+print("resume:checkpoint_load")
+# 获取检查点目录下文件数量（减1得到最新编号）
+chkt_file_nums = len(next(os.walk(f'checkpoints/PPO/{town}'))[2]) - 1
+# 构建检查点文件路径
+chkpt_file = f'checkpoints/PPO/{town}/checkpoint_ppo_' + str(chkt_file_nums) + '.pickle'
 
+# 加载检查点数据
+with open(chkpt_file, 'rb') as f:
+data = pickle.load(f)
+episode = data['episode']          # 恢复训练回合数
+timestep = data['timestep']        # 恢复时间步计数
+cumulative_score = data['cumulative_score']  # 恢复累计得分
+action_std_init = data['action_std_init']    # 恢复当前动作标准差
 
+# 使用恢复的参数创建新智能体
+agent = PPOAgent(town, action_std_init)
+agent.load()  # 加载模型参数
+else:
+# 全新训练初始化
+agent = PPOAgent(town, action_std_init)
+
+# 训练主循环
+if train:
+print("-----------------Carla_PPO Train-------------------")
+# 总时间步控制循环
+while timestep < total_timesteps:
+# 环境重置并获取初始观察值
+observation = env.reset()
+# 对原始观察进行编码处理
+observation = encode.process(observation)
+
+current_ep_reward = 0  # 当前回合累计奖励
+t1 = datetime.now()    # 记录回合开始时间
+
+# 单回合循环（最大长度由参数控制）
+for t in range(args.episode_length):
+# 通过策略网络选择动作（训练模式启用探索）
+action = agent.get_action(observation, train=True)
+
+# 执行动作，获取环境反馈
+observation, reward, done, info = env.step(action)
+if observation is None:  # 异常处理
+break
+# 处理新观察值
+observation = encode.process(observation)
+# 存储奖励和终止标志到经验池
+agent.memory.rewards.append(reward)
+agent.memory.dones.append(done)
+
+timestep += 1  # 全局时间步计数
+current_ep_reward += reward  # 回合奖励累计
+
+# 定期衰减动作标准差（降低探索率）
+if timestep % action_std_decay_freq == 0:
+action_std_init = agent.decay_action_std(action_std_decay_rate, min_action_std)
+
+# 训练结束时保存最终模型
+if timestep == total_timesteps - 1:
+agent.save()
+
+# 回合提前终止处理
+if done:
+episode += 1  # 全局回合计数
+# 计算回合持续时间
+t2 = datetime.now()
+t3 = t2 - t1
+episodic_length.append(abs(t3.total_seconds()))
+break
+\end{lstlisting}
+
+\section{DQN算法Python描述}
+\begin{lstlisting}
+	
+# ============================== 智能体初始化部分 ==============================
+if train is False:  # 测试模式
+# 创建DQN智能体实例（指定城镇和动作空间维度）
+agent = DQNAgent(town, n_actions)
+# 加载预训练模型参数
+agent.load_model()
+# 冻结评估网络参数（测试不需要梯度更新）
+for params in agent.q_network_eval.parameters():
+params.requires_grad = False
+# 冻结目标网络参数
+for params in agent.q_network_target.parameters():
+params.requires_grad = False
+else:  # 训练模式
+if checkpoint_load:  # 从检查点恢复
+agent = DQNAgent(town, n_actions)
+agent.load_model()  # 加载模型参数
+if exp_name == 'ddqn':  # 如果是双DQN算法
+# 加载训练状态数据
+with open(f'checkpoints/DDQN/{town}/checkpoint_ddqn.pickle', 'rb') as f:
+data = pickle.load(f)
+epoch = data['epoch']  # 恢复训练轮次
+cumulative_score = data['cumulative_score']  # 恢复累计得分
+agent.epsilon = data['epsilon']  # 恢复当前探索率
+else:  # 全新训练初始化
+agent = DQNAgent(town, n_actions)
+
+# =========================== 经验回放预填充（仅DDQN） ===========================
+if exp_name == 'ddqn' and checkpoint_load:
+# 用随机策略填充经验回放缓冲区
+while agent.replay_buffer.counter < agent.replay_buffer.buffer_size:
+observation = env.reset()
+observation = encode.process(observation)  # 编码初始状态
+done = False
+while not done:
+# 生成随机动作（0到n_actions-1之间的整数）
+action = random.randint(0, n_actions - 1)
+# 执行随机动作
+new_observation, reward, done, _ = env.step(action)
+new_observation = encode.process(new_observation)
+# 保存转移样本到经验池
+agent.save_transition(observation, action, reward, new_observation, int(done))
+observation = new_observation  # 更新当前状态
+
+# ================================ 训练主循环 ================================
+if args.train:
+print("-----------------Carla_DQN Train-------------------")
+# 从恢复的epoch开始继续训练
+for step in range(epoch + 1, EPISODES + 1):
+done = False  # 回合终止标志
+observation = env.reset()  # 重置环境
+observation = encode.process(observation)  # 状态编码
+current_ep_reward = 0  # 当前回合奖励累计
+
+t1 = datetime.now()  # 记录回合开始时间
+
+while not done:  # 单回合循环
+# 通过ε-greedy策略选择动作（训练模式启用探索）
+action = agent.get_action(args.train, observation)
+# 执行动作并获取环境反馈
+new_observation, reward, done, info = env.step(action)
+
+if new_observation is None:  # 异常处理
+break
+new_observation = encode.process(new_observation)  # 编码新状态
+current_ep_reward += reward  # 累计即时奖励
+
+# 保存经验元组（当前状态，动作，奖励，新状态，终止标志）
+agent.save_transition(observation, action, reward, new_observation, int(done))
+
+# 当经验池达到预热阈值后开始学习
+if agent.get_len_buffer() > WARMING_UP:
+agent.learn()  # 执行Q网络更新（每一步都学习）
+
+observation = new_observation  # 状态转移
+timestep += 1  # 全局时间步计数
+if done:
+episode += 1  # 全局回合计数
+
+# ============================ 回合结束处理 ============================
+t2 = datetime.now()
+t3 = t2 - t1
+episodic_length.append(abs(t3.total_seconds()))  # 记录回合时长
+
+# 收集性能指标
+deviation_from_center += info[1]  # 累计道路中心偏离量
+distance_covered += info[0]       # 累计行驶距离
+
+scores.append(current_ep_reward)  # 记录回合奖励
+
+# 计算移动平均奖励
+if checkpoint_load:
+cumulative_score = ((cumulative_score * (episode - 1)) + current_ep_reward) / (episode)
+else:
+cumulative_score = np.mean(scores)
+
+# 输出训练信息
+print('Starting Episode: ', episode, 
+', Epsilon Now:  {:.3f}'.format(agent.epsilon),  # 当前探索率
+'Reward:  {:.2f}'.format(current_ep_reward), 
+', Average Reward:  {:.2f}'.format(cumulative_score))
+
+# 保存当前最佳模型（根据回合奖励）
+agent.save_model(current_ep_reward, step)
+
+# ============================ 定期保存与日志 ============================
+if episode % 100 == 0:
+# 保存训练状态检查点
+data_obj = {
+	'cumulative_score': cumulative_score,
+	'epsilon': agent.epsilon,  # 当前探索率
+	'epoch': step  # 当前训练轮次
+}
+with open(f'checkpoints/DDQN/{town}/checkpoint_ddqn.pickle', 'wb') as handle:
+pickle.dump(data_obj, handle)
+
+if episode % 10 == 0:
+# 记录TensorBoard指标
+writer.add_scalar("Cumulative Reward/info", cumulative_score, episode)
+writer.add_scalar("Epsilon/info", agent.epsilon, episode)  # 探索率衰减曲线
+writer.add_scalar("Episodic Reward/episode", scores[-1], episode)
+writer.add_scalar("Reward/(t)", current_ep_reward, timestep)
+writer.add_scalar("Episode Length (s)/info", np.mean(episodic_length), episode)
+writer.add_scalar("Average Deviation from Center/episode", deviation_from_center / 10, episode)
+writer.add_scalar("Average Distance Covered (m)/episode", distance_covered / 10, episode)
+
+# 重置性能统计量
+episodic_length = list()
+deviation_from_center = 0
+distance_covered = 0
+
+print("Terminating the run.")
+sys.exit()
+
+\end{lstlisting}
+
+\section{SAC算法Python描述}
+\begin{lstlisting}
+	
+def main():
+# ============================== 参数解析与环境初始化 ==============================
+args = parse_args()  # 解析命令行参数
+utils.set_seed_everywhere(args.seed)  # 设置全局随机种子
+
+# 创建Carla环境实例
+env = CarlaEnv(
+render_display=args.render,        # 是否渲染显示（本地调试用）
+display_text=args.render,          # 是否显示调试文本
+changing_weather_speed=0.1,        # 天气变化速度（0表示静态天气）
+rl_image_size=args.image_size,      # 输入图像的尺寸
+max_episode_steps=2000,            # 单回合最大步数（对于导航任务可调整）
+frame_skip=args.action_repeat,     # 动作重复帧数（类似Atari的帧跳过）
+port=args.port,                    # Carla服务器端口
+trafficManagerPort=args.trafficManagerPort,  # 交通管理器端口
+scenarios=args.scenarios,          # 训练场景配置
+algorithm=args.agent               # 使用的算法类型
+)
+eval_env = env  # 评估环境副本（此处暂未实现评估逻辑）
+
+# ============================== 帧堆叠处理（像素输入时） ==============================
+if args.encoder_type.startswith('pixel'):
+# 将连续多帧堆叠为输入（通常4帧）
+env = utils.FrameStack(env, k=args.frame_stack)
+eval_env = utils.FrameStack(eval_env, k=args.frame_stack)
+
+# ============================== 工作目录与路径管理 ==============================
+# 创建带时间戳的工作目录
+work_dir = args.work_dir + '/' + args.scenarios + "_" + args.agent + "_seed_{}_".format(args.seed) + time.strftime("%Y-%m-%d-%H-%M-%S")
+utils.make_dir(work_dir)  # 创建主目录
+
+# 创建子目录
+video_dir = utils.make_dir(os.path.join(work_dir, 'video'))  # 视频保存路径
+model_dir = utils.make_dir(os.path.join(work_dir, 'model'))  # 模型保存路径
+buffer_dir = utils.make_dir(os.path.join(work_dir, 'buffer'))  # 经验回放缓存路径
+res_dir = utils.make_dir(os.path.join(work_dir, 'res_dir'))  # 结果文件路径
+
+video = VideoRecorder(video_dir if args.save_video else None)  # 视频记录器
+
+# 保存参数配置到JSON文件
+with open(os.path.join(work_dir, 'args.json'), 'w') as f:
+json.dump(vars(args), f, sort_keys=True, indent=4)
+
+# ============================== 设备初始化与动作空间验证 ==============================
+device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')  # 自动选择设备
+
+# 验证动作空间标准化（确保动作值在[-1,1]范围内）
+assert env.action_space.low.min() >= -1
+assert env.action_space.high.max() <= 1
+
+# ============================== 经验回放缓冲区配置 ==============================
+if args.agent == "ddqn":  # 双深度Q网络特殊处理
+replay_buffer = utils.ReplayBuffer_DDQN(
+obs_shape=env.observation_space.shape,  # 观测空间形状
+action_shape=env.action_space.shape,    # 动作空间形状
+capacity=args.replay_buffer_capacity,   # 缓冲区容量（通常1e6）
+batch_size=args.batch_size,             # 采样批次大小
+device=device                          # 存储设备
+)
+else:  # 其他算法的标准缓冲区
+replay_buffer = utils.ReplayBuffer(
+obs_shape=env.observation_space.shape,
+action_shape=env.action_space.shape,
+capacity=args.replay_buffer_capacity,
+batch_size=args.batch_size,
+device=device
+)
+
+# ============================== 智能体初始化 ==============================
+agent = make_agent(
+obs_shape=env.observation_space.shape,  # 观测空间维度
+action_shape=env.action_space.shape,    # 动作空间维度
+args=args,                             # 配置参数
+device=device                          # 计算设备
+)
+
+# ============================== 日志系统初始化 ==============================
+L = Logger(work_dir, use_tb=args.save_tb)  # 创建日志记录器（可选TensorBoard）
+
+# ============================== 训练主循环 ==============================
+episode, episode_reward, done = 0, 0, True  # 初始化训练指标
+expl_noise = 0.1  # 探索噪声系数（用于某些算法的动作扰动）
+start_time = time.time()  # 训练计时开始
+
+# 开始训练迭代
+for step in range(args.num_train_steps):
+if done:  # 回合结束处理
+# 逆模型解码器的特殊处理（清空历史观测）
+if args.decoder_type == 'inverse':
+for i in range(1, args.k):
+replay_buffer.k_obses[replay_buffer.idx - i] = 0
+
+# 日志记录与模型保存
+if step > 0:
+L.log('train/duration', time.time() - start_time, step)  # 记录回合耗时
+start_time = time.time()  # 重置计时器
+L.dump(step)  # 写入日志文件
+
+# 模型保存逻辑
+if args.save_model:
+agent.save_best(model_dir, episode_reward)  # 保存当前最佳模型
+
+# 记录当前回合奖励
+L.log('train/episode_reward', episode_reward, step)
+
+# 将训练日志写入文本文件
+train_log_filepath = os.path.join(res_dir, "train_log.txt")
+train_log_txt_formatter = "{step}:{episode_reward}\n"
+with open(train_log_filepath, "a") as f:
+f.write(f"{step}:{episode_reward}\n")
+
+# 环境重置与新回合初始化
+obs = env.reset()
+done = False
+episode_reward = 0
+episode_step = 0
+episode += 1
+reward = 0
+
+L.log('train/episode', episode, step)  # 记录当前回合数
+\end{lstlisting}
+	
 % \end{appendixs}
+

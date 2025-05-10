@@ -2,108 +2,218 @@
 % \begin{appendixs} % 无章节编号
 \chapter{附录代码}
 
-附录部分用于存放这里用来存放不适合放置在正文的大篇幅内容、典型如代码、图纸、完整数学证明过程等内容。
-
-\section{堆溢出检测算法}
-
-\begin{algorithm}[h]
-    \caption{堆溢出检测算法}\label{alg:ovf}
-    \begin{algorithmic}[1]
-        \IF {$\beta \in \mathbb{N^{*}} \land \Delta_\beta = \Delta_{\beta - 1} \land \beta < S$}
-            \STATE 正常写入
-        \ELSIF {$\beta \in \mathbb{N^{*}} \land \Delta_\beta \neq \Delta_{\beta - 1} \land \beta \geq S$}
-            \STATE 发生堆溢出
-        \ENDIF
-    \end{algorithmic}
-\end{algorithm}
-
-\section{KMP算法C++描述}
+\section{CORnet-Z+SE算法Python描述}
 
 % \begin{minted}[linenos]{c}
 \begin{lstlisting}
-    const int maxn=2e5+5; 
-    int nt[maxn];
-    int aa[maxn],bb[maxn];
-    int a[maxn],b[maxn];
-    int n;
-    //参数为模板串和next数组
-    //字符串均从下标0开始
-    void kmpGetNext(int *s,int *Next)
-    {
-        Next[0]=0;
-    //    int len=strlen(s);
-        for(int i=1,j=0;i<n;i++)
-        {
-            while(j&&s[i]!=s[j]) j=Next[j];
-            if(s[i]==s[j]) j++;
-            Next[i+1]=j;
-        }
-    //    Next[len]=0;
-    }
-    int kmp(int *ss,int *s,int *Next)
-    {
-        kmpGetNext(s,Next);
-    //  调试输出Next数组
-    //	int len=strlen(s);
-    //	for(int i=0;i<=n;i++)
-    //		cout<<Next[i]<<" ";
-    //	cout<<endl; 
+from collections import OrderedDict
+from torch import nn
     
-    //    int ans=0;
-    //    int len1=strlen(ss);
-    //    int len2=strlen(s);
-        for(int i=0,j=0;i<2*n;i++)  //倍长 
-        {
-            while(j&&ss[i%n]!=s[j])j=Next[j];
-            if(ss[i%n]==s[j]) j++;
-            if(j==n){
-                return 1;
-            }
-               
-        }
-        return 0;
-    }
-    int main(void)
-    {
-        while(cin>>n)
-        {
-            memset(a,0,sizeof(a));
-            memset(b,0,sizeof(b));
-            rep(i,0,n) cin>>aa[i];
-            rep(i,0,n) cin>>bb[i];
-            sort(aa,aa+n);
-            sort(bb,bb+n);
-            rep(i,0,n-1){
-                a[i]=aa[i+1]-aa[i];
-                b[i]=bb[i+1]-bb[i];
-            }
-            a[n-1]=360000+aa[0]-aa[n-1];
-    //		rep(i,0,n) cout<<a[i]<<" ";
-    //		cout<<endl;
-            b[n-1]=360000+bb[0]-bb[n-1];
-    //		rep(i,0,n) cout<<b[i]<<" ";
-    //		cout<<endl;
-            if(kmp(a,b,nt))
-                cout<<"possible"<<endl;
-            else cout<<"impossible"<<endl;
-        }
-        return 0;
-    }
+HASH = 'cornet-z-se'
+    
+class SEBlock(nn.Module):
+    def __init__(self, channel, reduction=8): # 减小reduction比例
+    	super().__init__()
+    	self.avg_pool = nn.AdaptiveAvgPool2d(1)
+    	self.fc = nn.Sequential(
+            nn.Linear(channel, channel // reduction),
+            nn.ReLU(inplace=True),
+            nn.Linear(channel // reduction, channel),
+            nn.Sigmoid()
+    	)
+    	# 新增初始化方法
+    	for m in self.modules():
+            if isinstance(m, nn.Linear):
+            nn.init.kaiming_normal_(m.weight, mode='fan_out', nonlinearity='relu')
+            nn.init.constant_(m.bias, 0)
+    
+    def forward(self, x):
+    	b, c, _, _ = x.size()
+    	y = self.avg_pool(x).view(b, c)
+    	y = self.fc(y).view(b, c, 1, 1)
+    	return x * y
+    
+class Flatten(nn.Module):
+    def forward(self, x):
+        return x.view(x.size(0), -1)
+    
+class Identity(nn.Module):
+    def forward(self, x):
+        return x
+    
+class CORblock_Z(nn.Module):
+    # 修改初始化函数
+    def __init__(self, in_channels, out_channels, kernel_size=3, stride=1, use_se=True):
+        super().__init__()
+        self.conv = nn.Conv2d(in_channels, out_channels, kernel_size=kernel_size,stride=stride, padding=kernel_size // 2)
+    
+        # 添加SE模块
+        self.se = SEBlock(out_channels) if use_se else nn.Identity()
+    
+        self.nonlin = nn.ReLU(inplace=True)
+        self.pool = nn.MaxPool2d(kernel_size=3, stride=2, padding=1)
+        self.output = Identity()
+    
+    def forward(self, inp):
+    	x = self.conv(inp)
+    	x = self.nonlin(x)    # 先激活
+    	x = self.se(x)        # 后接SE
+    	x = self.pool(x)
+    	x = self.output(x)
+    	return x
+    
+def CORnet_Z():
+    model = nn.Sequential(OrderedDict([
+    	# 为每个模块启用SE
+    	('V1', CORblock_Z(3, 64, kernel_size=7, stride=2, use_se=True)),
+    	('V2', CORblock_Z(64, 128, use_se=True)),
+    	('V4', CORblock_Z(128, 256, use_se=True)),
+    	('IT', CORblock_Z(256, 512, use_se=True)),
+    	('decoder', nn.Sequential(OrderedDict([
+            ('avgpool', nn.AdaptiveAvgPool2d(1)),
+            ('flatten', Flatten()),
+            ('linear', nn.Linear(512, 1000)),
+            ('output', Identity())
+    	])))
+    ]))
+    # 修改初始化部分
+    for m in model.modules():
+    	if isinstance(m, (nn.Conv2d, nn.Linear)):
+            nn.init.xavier_uniform_(m.weight)
+            if m.bias is not None:
+                nn.init.constant_(m.bias, 0)
+    	elif isinstance(m, nn.BatchNorm2d):
+            m.weight.data.fill_(1)
+            m.bias.data.zero_()
+    	# 新增SE模块的初始化
+    	elif isinstance(m, SEBlock):
+            nn.init.kaiming_normal_(m.fc[0].weight, mode='fan_out')
+            nn.init.constant_(m.fc[0].bias, 0)
+            nn.init.normal_(m.fc[2].weight, mean=0, std=0.01)
+            nn.init.constant_(m.fc[2].bias, 0)
+    return model
 \end{lstlisting}
 % \end{minted}
 
-\chapter{康托尔辩辞录：数学的自由与制约}
+\section{CORnet-Z+SE模型的Brain-Score接口封装代码}
+\begin{lstlisting}
+import torch
+import os
+import numpy as np
+from PIL import Image
+from torchvision import transforms
+from brainscore_vision.model_helpers.activations.pytorch import PytorchWrapper  # brainscore提供的PyTorch模型包装器
+from brainscore_vision.model_interface import BrainModel  # brainscore定义的模型接口
+from brainio.assemblies import DataAssembly  # brainscore用于构造神经响应结果结构的类
+from tqdm import tqdm  # 进度条库
+from cornet_z_se import CORnet_Z  # 导入定义的模型
 
-（录自康托尔：《一般集合论基础》，1883）
+# 图像预处理函数：将输入图像转为模型接受的格式
+def imagenet_preprocess(img: Image.Image):
+    transform = transforms.Compose([
+        transforms.Resize(224),  # 缩放至短边为224
+        transforms.CenterCrop(224),  # 中心裁剪为224×224
+        transforms.ToTensor(),  # 转为tensor
+        transforms.Normalize(mean=[0.485, 0.456, 0.406],  # 标准化
+                            std=[0.229, 0.224, 0.225])
+    ])
+    return transform(img)
 
-数学在其发展中是完全自由的，它只受下述自明的关注所制约，即它的概念既要内在地不存在矛盾，还要参与确定与此前形成的，已经存在着地和已被证明地概念之关系（借助定义贯串起来）。特别地，在引入新数时，数学只遵循：在给出它们地定义时使之具有某种确定性，并且在某些情况下，使之与老数有某种关系，在特定地场合中这种关系一定会使它们（新数和老数）互相区别开来，只要一个数满足这些条件，数学只能而且必须把它看作是存在的和实在的东西，这正是我……关于为什么必须把有理数、无理数和复数看作与有限正整数一样是实在的所建议的理由。
+# 构造 brainscore 标准接口模型类，继承自 BrainModel
+class CORnetZZBrainModel(BrainModel):
+    def __init__(self):
+        model = CORnet_Z()  # 加载 CORnet-Z+SE 模型
+        model.eval()  # 进入评估模式
 
-我相信，没有必要害怕，许多人是害怕，这些原则含有对于科学的危险，一方面，实行造出新数的自由必须服从所设计的条件，但这些条件给任意性留下的活动空间是非常小的。而且，每一数学概念在其自身之中也带有必要的矫正物；如果它没有收获也不合适（它的无用很快就会表明这一点），那么它将由于没有成功而被丢弃。另一方面，在我看来，对于数学研究工作的任何多余的限制只会随之而带来更大的危险，由于实际上并没有任何理由可说明它是由科学的本质推断出来的，它的危险就更大了，而数学的本质恰恰在于它的自由。
+        # 用 brainscore 的包装器封装模型和预处理
+        self._wrapper = PytorchWrapper(
+            identifier='cornet-zz',
+            model=model,
+            preprocessing=imagenet_preprocess
+        )
 
-如果高斯、柯西、阿贝尔、雅可比、狄利克雷、魏尔斯特拉斯、埃尔米特和黎曼总是被束缚而拿他们的新想法去臣服于形而上学的控制，那么，我们今日就不可能为现代函数论的雄伟建筑而高兴，现代函数论的设计和矗立是完全自由的，毫无短视的瞬间目的……。如果福克斯、庞加莱和其他许多杰出的智者受外来影响所包围和限制，我们就会见不到他们带给微分方程论的巨大的推动，还有，如果枯莫尔不是斗胆地（大有仿效者）把所谓的“理想”数引入数论，我们今天也无从去羡慕钦佩克罗内克和戴德金在代数和算术上十分重要和杰出的工作。
+        # 定义层名称到大脑区域的映射关系
+        self._region_layer_map = {
+	        'V1': 'V1.output',
+	        'V2': 'V2.output',
+        	'V4': 'V4.output',
+        	'IT': 'IT.output',
+        }
 
-因此，如已说明的，数学是要脱离形而上学的桎梏而完全自由地发展 \dots
+        self._recording_layers = None  # 当前待提取的层
+        self._image_path = os.path.expanduser("~/.brainio/image_dicarlo_hvm-public")  # 图像根目录路径
+        self._preprocess = imagenet_preprocess  # 图像预处理函数
 
+    # 指定要记录的层（如 V4.output）
+    def start_recording(self, target, *args, **kwargs):
+        self._recording_layers = [self._region_layer_map[target]]
 
+    # 处理输入图像并提取激活，构造成 DataAssembly 返回
+    def look_at(self, stimuli, number_of_trials=1):
+        filenames = stimuli['filename'].values  # 读取stimuli中图像文件名
+        full_paths = [os.path.join(self._image_path, name) for name in filenames]  # 生成完整路径
+        images = [self._preprocess(Image.open(path).convert('RGB')) for path in tqdm(full_paths, desc="Preprocessing")]
+        images = torch.stack(images)  # 转为一个batch的tensor
+
+        # 提取指定层的激活
+        activations_dict = self._wrapper.get_activations(images, layer_names=self._recording_layers)
+        layer_name = self._recording_layers[0]
+        activations = activations_dict[layer_name]
+
+        # 将Tensor转为numpy数组
+        if isinstance(activations, torch.Tensor):
+            activations = activations.detach().cpu().numpy()
+
+        # 如果是二维 [batch_size, features]
+        if isinstance(activations, np.ndarray) and activations.ndim == 2:
+            activation_array = activations
+
+        # 如果是四维 [batch_size, channels, H, W]，做全局平均池化
+        elif isinstance(activations, np.ndarray) and activations.ndim == 4:
+            activation_array = activations.mean(axis=(2, 3))
+
+        # 其他格式抛出异常
+        else:
+            raise ValueError(f"Unexpected activation shape or type: {type(activations)}, shape: {getattr(activations, 'shape', None)}")
+
+        # 构造神经元和刺激的标签
+        neuroid_ids = list(range(activation_array.shape[1]))
+        stimulus_ids = stimuli['stimulus_id'].values
+
+        # 构建 DataAssembly：用于 brainscore 后续评估
+        assembly = DataAssembly(
+            data=activation_array,
+            coords={
+                'stimulus_id': ('presentation', stimulus_ids),
+                'presentation': np.arange(len(stimulus_ids)),
+                'neuroid': ('neuroid', neuroid_ids),
+                'layer': ('neuroid', self._recording_layers * activation_array.shape[1]),
+                'region': ('neuroid', [self._region_from_layer(l) for l in self._recording_layers] * activation_array.shape[1]),
+                'object_name': ('presentation', list(stimuli['object_name'])),
+            },
+            dims=['presentation', 'neuroid']
+        )
+        assembly.name = layer_name
+        return assembly
+
+    # 根据层名推断脑区名
+    def _region_from_layer(self, layer):
+        return layer.split('.')[0]
+
+    # 提取指定层的所有中间激活（非 look_at 格式）
+    def extract_layers(self, image):
+        return self._wrapper.extract_layers(image, layers=self._recording_layers)
+
+    # 图像在视觉角度下的大小（单位 degree，Brain-Score 用）
+    @property
+    def visual_degrees(self):
+        return 8
+
+    # 模型标识符
+    @property
+    def identifier(self):
+        return self._wrapper.identifier
+
+\end{lstlisting}
 
 % \end{appendixs}
