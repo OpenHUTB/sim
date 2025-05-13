@@ -1,0 +1,150 @@
+	\section{chatscene步骤与代码}
+	
+	Step 1: Setup conda environment
+	
+	\begin{verbatim}
+		conda create -n chatscene python=3.8
+		conda activate chatscene
+	\end{verbatim}
+	
+	Step 2: Clone this git repo in an appropriate folder
+	
+	\begin{verbatim}
+		git clone git@github.com:javyduck/ChatScene.git
+	\end{verbatim}
+	
+	Step 3: Enter the repo root folder and install the packages:
+	
+	\begin{verbatim}
+		cd ChatScene
+		pip install -r requirements.txt
+		pip install decorator==5.1.1
+		pip install -e .
+		(you can ignore the error after installing the decorator)
+	\end{verbatim}
+	
+	Step 4: Install the Scenic package:
+	
+	\begin{verbatim}
+		cd Scenic
+		python -m pip install -e .
+	\end{verbatim}
+	
+	Step 5: Download our CARLA\_0.9.13 and extract it to your folder.
+	
+	Step 6: Run sudo apt install libomp5 as per this git issue.
+	
+	Step 7: Add the python API of CARLA to the PYTHONPATH environment variable. You can add the following commands to your \textasciitilde/.bashrc:
+	
+	\begin{verbatim}
+		export CARLA_ROOT={path/to/your/carla}
+		export PYTHONPATH=$PYTHONPATH:${CARLA_ROOT}/PythonAPI/carla/dist/carla-0.9.13-py3.8-linux-x86_64.egg
+		export PYTHONPATH=$PYTHONPATH:${CARLA_ROOT}/PythonAPI/carla/agents
+		export PYTHONPATH=$PYTHONPATH:${CARLA_ROOT}/PythonAPI/carla
+		export PYTHONPATH=$PYTHONPATH:${CARLA_ROOT}/PythonAPI
+	\end{verbatim}
+	
+	Then, do source \textasciitilde/.bashrc to update the environment variable.
+	
+	1. Desktop Users
+	Enter the CARLA root folder, launch the CARLA server and run our platform with
+	
+	\begin{verbatim}
+		# Launch CARLA
+		./CarlaUE4.sh -prefernvidia -windowed -carla-port=2000
+	\end{verbatim}
+	
+	2. Remote Server Users
+	Enter the CARLA root folder, launch the CARLA server with headless mode, and run our platform with
+	
+	\begin{verbatim}
+		# Launch CARLA
+		./CarlaUE4.sh -prefernvidia -RenderOffScreen -carla-port=2000
+	\end{verbatim}
+	
+	(Optional) You can also visualize the pygame window using TurboVNC. First, launch CARLA with headless mode, and run our platform on a virtual display.
+	
+	\begin{verbatim}
+		# Launch CARLA
+		./CarlaUE4.sh -prefernvidia -RenderOffScreen -carla-port=2000
+		
+		# Run a remote VNC-Xserver. This will create a virtual display "8".
+		/opt/TurboVNC/bin/vncserver :8 -noxstartup
+	\end{verbatim}
+	
+	You can use the TurboVNC client on your local machine to connect to the virtual display.
+	
+	\begin{verbatim}
+		# Use the built-in SSH client of TurboVNC Viewer
+		/opt/TurboVNC/bin/vncviewer -via user@host localhost:n
+		
+		# Or you can manually forward connections to the remote server by
+		ssh -L fp:localhost:5900+n user@host
+		# Open another terminal on local machine
+		/opt/TurboVNC/bin/vncviewer localhost::fp
+	\end{verbatim}
+	
+	where user@host is your remote server, fp is a free TCP port on the local machine, and n is the display port specified when you started the VNC server on the remote server ("8" in our example).
+	
+	ChatScene
+	In ChatScene, we ensure a fair comparison with the baselines by using the same eight scenarios, sampling five behaviors for each scenario from the database. The corresponding generated complete Scenic files, with some modifications, have been provided in safebench/scenario/scenario\_data/scenic\_data (with some manual modifications to use the same fixed 10 routes for the ego agent to ensure fair comparison with the baselines).
+	
+	The ego agent is controlled by a default RL model, while the surrounding adversarial agent is controlled by Scenic.
+	
+	The agent configuration is provided in safebench/agent/config/adv\_scenic.yaml. By default, it loads a pretrained RL model from Safebench-v1.
+	
+	Modes in ChatScene:
+	train\_scenario: Select the most challenging scenes for the same behavior under the same scenario.
+	
+	Configuration can be found in safebench/scenario/config/train\_agent\_scenic.yaml.
+	
+	The sample\_num = 50, opt\_step = 10, select\_num = 2 settings in the file mean we sample 50 scenes and select the 2 most challenging ones for evaluation. The default setting is to choose scenes that lead to a collision of the ego agent and provide the lowest overall score. We optimize the range of parameters, like speed, every 10 steps based on collision statistics from previously sampled scenes.
+	
+	Example command for optimizing the scene:
+	
+	\begin{verbatim}
+		python scripts/run_train.py --agent_cfg=adv_scenic.yaml --scenario_cfg=train_scenario_scenic.yaml --mode train_scenario --scenario_id 1
+	\end{verbatim}
+	
+	Use the following command if you are using a TurboVNC client on your local machine to connect to the virtual display:
+	
+	\begin{verbatim}
+		DISPLAY=:8 python scripts/run_train.py --agent_cfg=adv_scenic.yaml --scenario_cfg=train_scenario_scenic.yaml --mode train_scenario --scenario_id 1
+	\end{verbatim}
+	
+	The IDs for the final selected scenes will be stored in safebench/scenario/scenario\_data/scenic\_data/scenario\_1/scenario\_1.json.
+	
+	train\_agent: Train the agent based on the selected challenging scenes:
+	
+	\begin{verbatim}
+		python scripts/run_train.py --agent_cfg=adv_scenic.yaml --scenario_cfg=train_agent_scenic.yaml --mode train_agent --scenario_id 1
+	\end{verbatim}
+	
+	We have a total of 10 routes for each scenario. We use the first 8 for training and the last 2 for testing (route IDs: [0,1,2,3,4,5,6,7]). The configuration, including scenario\_1.json, will train the agent based on the most challenging scenes (the ones leading to a collision of the ego agent).
+	
+	eval: Evaluate the trained agent on the last 2 routes (route IDs: [8,9]), the test\_epoch is for loading a finetuned model after a specific training epoch:
+	
+	\begin{verbatim}
+		python scripts/run_eval.py --agent_cfg=adv_scenic.yaml --scenario_cfg=eval_scenic.yaml --mode eval --scenario_id 1 --test_epoch -1
+	\end{verbatim}
+	
+	The -1 here is for loading our provided fine-tuned agent in each scenario based on our Scenic scenarios in safebench/agent/model\_ckpt/adv\_train/sac/scenic/scenario\_1/model.sac.-001.torch.
+	
+	Dynamic Mode
+	The above part ensures using the same scenario and routes for fair comparison with baselines. However, ChatScene can generate scenarios and scenes freely without any constraints. Simply provide a text description, such as "The ego vehicle is driving on a straight road; the adversarial pedestrian suddenly crosses the road from the right front and suddenly stops in front of the ego." is enough for the training. We are currently integrating our database with GPT-4o for generating more diverse scenarios based on our pre-built retrieval database, and will upload both soonly.
+	
+	Please first install openai and sentence\_transformers packages following the requirements.
+	
+	Put your description under file retrieve/scenario\_descriptions.txt
+	
+	run python retrieve.py to get the corresponding scenic code under safebench/scenario/scenario\_data/scenic\_data/dynamic\_scenario
+	
+	Then, for running the dynamic scenarios, just replace the run\_train.py or run\_eval.py with run\_train\_dynamic.py or run\_eval\_dynamic.py, and use dynamic\_scenic.yaml (please specify your settings there), an example could be:
+	
+	\begin{verbatim}
+		python scripts/run_train_dynamic.py --agent_cfg=adv_scenic.yaml --scenario_cfg=dynamic_scenic.yaml --mode train_scenario
+	\end{verbatim}
+	
+	Integrate GPT-4o with our retrieval database (v1) and commit to the dynamic mode. Some mechanisms have been changed based on the previous version to incorporate more adversarial behavior, geometry, and spawn point definitions. Currently, it is still in beta. If you encounter any problems, please submit an issue, and I will address potential errors in the new retrieval pipeline.
+	Some snippets are still under cleaning of the updated framework (i.e., incorprating GPT-4o to generate more diverse scenarios), the new retrieve database v2 will be pushed based on the new design.
+	Finetune an LLM for generating snippets end-to-end based on the data constructed from our database.

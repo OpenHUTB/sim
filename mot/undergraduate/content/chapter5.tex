@@ -53,7 +53,7 @@
 这次设计使用 CARLA 的雷达和相机进行数据融合进行车辆跟踪，获得相对自己车的车辆轨迹，因此需要对 CARLA 的雷达数据集进行 pointPillars 网络训练。本次设计在收集轨迹跟踪数据时，在 Town10 场景中执行 collect lidar dataset.py脚本采集点云训练集,训练集的数据含有点云和3D标签框，都在./multi obj track 目录下便于后期维护管理。脚本首先分别建立存放雷达数据、标签数据文件夹，筛除自行车等非追踪车辆的蓝图,将车分“car ”和“truck”。再获取雷达检测区域内车的信息，并变换到雷达坐标系下，保存为matlab 格式的标签文件，将雷达点云数据转换为 NumPy 数组，并保存为 MATLAB 可以读取的格式，后配置并启动激光雷达传感器，绑定回调 函数用于保存数据，最后销毁传感器和车辆。
 
 \subsubsection{点云数据预处理}
-在MATLAB中运行 ‘convertTrainPointCloudToPcd.m‘脚本，首先 获取并确保相关文件夹的路径正确，然后获取数据文件夹下的.mat文件列表， 再逐一读取这些文件，提取点云数据形成pointCloud对象，然后再根据激光 雷达参数重新组该点云数据，最后将重新组织后的点云数据以ASCII格式的 PC文件保存，将点云训练集转化为PCD格式文件；与此同时运行‘convertTrainLabelToTableMat.m‘脚本，先是初始化空表格，再获取、确保相关文件夹的路径正确，然后获取数据文件夹下的.mat文件列表，再一读取这些文件，从中提取汽车和卡车的标签数据并转化为表格行加入到主表格中，最后将主表格保存为CarlaSetLidarGroundTruth.mat 文件，将所有帧的训练标签合并成一个MAT文件。最后会得到如图\ref{fig:p10}展示的数据文件。
+在MATLAB中运行"convertTrainPointCloudToPcd.m"脚本，首先 获取并确保相关文件夹的路径正确，然后获取数据文件夹下的.mat文件列表， 再逐一读取这些文件，提取点云数据形成pointCloud对象，然后再根据激光 雷达参数重新组该点云数据，最后将重新组织后的点云数据以ASCII格式的 PC文件保存，将点云训练集转化为PCD格式文件；与此同时运行‘convertTrainLabelToTableMat.m‘脚本，先是初始化空表格，再获取、确保相关文件夹的路径正确，然后获取数据文件夹下的.mat文件列表，再一读取这些文件，从中提取汽车和卡车的标签数据并转化为表格行加入到主表格中，最后将主表格保存为CarlaSetLidarGroundTruth.mat 文件，将所有帧的训练标签合并成一个MAT文件。最后会得到如图\ref{fig:p10}展示的数据文件。
 
 
 
@@ -132,16 +132,16 @@ multiObjectTracking.m 对跟踪车辆进行可视化。首先设置路径并加�
 获得的轨迹是以自车的坐标，但是本次设计假设自车是静止在十字路口中心（实际 并不存在），而雷达和摄像机都是安装在自车上的，即对自车都有一个相对的位置，在该 示例中雷达对于汽车的相对位置是[0, 0, 0],但是在本课题中雷达高出一定的高度。convertTrackToCarla-Coordinate.m将坐标转化成了CARLA场景中的轨迹，用的是相对 的自车坐标的，所以(x,y)是对的。
 
 
-通过以上的(1)(4)步，可以收集到 500 帧的轨迹跟踪视频，如图\ref{fig:p13}所示（在 collect intersection camera lidar.py 中设定的参数 DATA MUN = 500）。
+通过以上的(1)(4)步，可以收集到 500 帧的轨迹跟踪视频，如图\ref{fig:p42}所示（在 collect intersection camera lidar.py 中设定的参数 DATA MUN = 500）。
 
 
 
 
 \begin{figure}[htbp] % 可以是h（here），t（top），b（bottom），p（page of floats）
 	\centering
-	\includegraphics[width=1\textwidth]{p13} % 假设图片文件名为car.pdf或car.png等，位于当前工作目录
+	\includegraphics[width=1\textwidth]{p42} % 假设图片文件名为car.pdf或car.png等，位于当前工作目录
 	\caption{收集轨迹跟踪视频其中一帧} % 图片标题
-	\label{fig:p13} % 用于引用的标签
+	\label{fig:p42} % 用于引用的标签
 \end{figure}
 
 
@@ -211,17 +211,11 @@ loadAllTraj.m 用于生成特定路口轨迹以及对应车辆的外貌特征。
 \subsection{重复上述步骤}
 
 
-由于本课题中规定的是多路口目标跟踪检测，而上述步骤仅仅只有 road intersec- tion 1 路口的数据。同时 Town10 场景有 6 个路口，因此需要返回激光雷达摄像头数 据对象级融合的第一步采集轨迹跟踪数据重新运行 collect intersection cameralidar.py，并在该脚本中将 road intersection1改为road intersection 2(后期可改为3或者4或5)进行其余路口的收集数据。最终收集全部数据如图\ref{fig:p18}所示。
+由于本课题中规定的是多路口目标跟踪检测，而上述步骤仅仅只有 road intersec- tion 1 路口的数据。同时 Town10 场景有 6 个路口，因此需要返回激光雷达摄像头数 据对象级融合的第一步采集轨迹跟踪数据重新运行 collect intersection cameralidar.py，并在该脚本中将 road intersection1改为road intersection 2(后期可改为3或者4或5)进行其余路口的收集数据。
 
 
 
 
-\begin{figure}[htbp] % 可以是h（here），t（top），b（bottom），p（page of floats）
-	\centering
-	\includegraphics[width=1\textwidth]{p18} % 假设图片文件名为car.pdf或car.png等，位于当前工作目录
-	\caption{五个路口数据} % 图片标题
-	\label{fig:p18} % 用于引用的标签
-\end{figure}
 
 
 
@@ -285,17 +279,11 @@ return:平均横向误差、平均纵l向误差和平均延迟的元组(mean lat
 
 
 
-在 DEMO.m脚本下把五个路口的全部轨迹都放进去，并运行。DEMO.m 脚本首先加载轨迹数据，对于每个路口的数据集路径，调用 loadAllTraj 函数来加载该十字路口的所有轨迹数据，通过循环所有.mat 如图\ref{fig:p19}(test data junc1 traj 、test data junc2  traj 、test data junc3 traj 、test   data junc4 traj 、test data junc5 traj)文件，然后加载每个文件用来识别不同路口中的轨迹是否为同一辆车的，做完这一步后会调用 linkIdentities 函数，将整个路口的所有轨迹进行关联匹配，形成全局唯一的车辆轨迹。最后将匹配好的轨迹数据保存至 traj.mat 文件中。
+在 DEMO.m脚本下把五个路口的全部轨迹都放进去，并运行。DEMO.m 脚本首先加载轨迹数据，对于每个路口的数据集路径，调用 loadAllTraj 函数来加载该十字路口的所有轨迹数据，通过循环所有.mat (test data junc1 traj 、test data junc2  traj 、test data junc3 traj 、test   data junc4 traj 、test data junc5 traj)文件，然后加载每个文件用来识别不同路口中的轨迹是否为同一辆车的，做完这一步后会调用 linkIdentities 函数，将整个路口的所有轨迹进行关联匹配，形成全局唯一的车辆轨迹。最后将匹配好的轨迹数据保存至 traj.mat 文件中。
 
 总体上这一段代码是对多个路口的车辆轨迹进行匹配关联，形成全局唯一的轨迹便于后面对车辆轨迹的还原。
 
 
-\begin{figure}[htbp] % 可以是h（here），t（top），b（bottom），p（page of floats）
-	\centering
-	\includegraphics[width=1\textwidth]{p19} % 假设图片文件名为car.pdf或car.png等，位于当前工作目录
-	\caption{五个路口数据} % 图片标题
-	\label{fig:p19} % 用于引用的标签
-\end{figure}
 
 
 
@@ -305,15 +293,9 @@ return:平均横向误差、平均纵l向误差和平均延迟的元组(mean lat
 \subsubsection{转化轨迹数据格式}
 上述步骤得到的5个路口车辆轨迹坐标数据，还不符合本课题车辆轨迹的复现需要，在Drive.py脚本中，在进行车辆轨迹复现的同时，读取的是名为Waypoints.txt文件夹中的数据。因此，我们需要将上述得到的5个路口车辆轨迹坐标数据转换为int（float或double）类型的坐标数据存储到Waypoints.txt中。
 
-首先，对小车的轨迹进行处理，从traj.mat文件中读取车辆的行驶轨迹信息，一条轨迹有三维坐标点以及时间戳 。检测轨迹起始点,如果距离较远则剔除。对于同一条车辆轨迹在多个路口出现的情况，则通过 Carla 路径规划方法生成过渡路线并用插值法保证时间戳的连续性。采用fastdtw算法计算追踪轨迹与真实轨迹的最佳匹配,评价指标包括平均位置误差,最大定位误差,最后位置误差和轨迹覆盖率。最后,将处理后的汽车轨迹按时间戳升序排列，并保存到 Waypoints.txt文件，如图\ref{fig:p20}所示。
+首先，对小车的轨迹进行处理，从traj.mat文件中读取车辆的行驶轨迹信息，一条轨迹有三维坐标点以及时间戳 。检测轨迹起始点,如果距离较远则剔除。对于同一条车辆轨迹在多个路口出现的情况，则通过 Carla 路径规划方法生成过渡路线并用插值法保证时间戳的连续性。采用fastdtw算法计算追踪轨迹与真实轨迹的最佳匹配,评价指标包括平均位置误差,最大定位误差,最后位置误差和轨迹覆盖率。最后,将处理后的汽车轨迹按时间戳升序排列，并保存到 Waypoints.txt文件。
 
 
-\begin{figure}[htbp] % 可以是h（here），t（top），b（bottom），p（page of floats）
-	\centering
-	\includegraphics[width=0.5\textwidth]{p20} % 假设图片文件名为car.pdf或car.png等，位于当前工作目录
-	\caption{小车坐标轨迹数据} % 图片标题
-	\label{fig:p20} % 用于引用的标签
-\end{figure}
 
 
 
@@ -325,14 +307,14 @@ return:平均横向误差、平均纵l向误差和平均延迟的元组(mean lat
 
 \subsection{开始复现}
 
-经过以上的准备，项目已具备预测小车在两个路口到另一个路口之间的轨 迹能力，包括小车可能未在路口转弯或未直行的情况。因此，在通过evaluator.py程序优化和预测小车位置数据的前提下，执行Drived.py脚本，调用Waypoints .txt 中的数据重现小车轨迹如图\ref{fig:p21}所示，图片仅是本次的设计重制视频当中的一个镜头，从而使得小车的基线已经达到了项目要求5\%以上的标准。
+经过以上的准备，项目已具备预测小车在两个路口到另一个路口之间的轨 迹能力，包括小车可能未在路口转弯或未直行的情况。因此，在通过evaluator.py程序优化和预测小车位置数据的前提下，执行Drived.py脚本，调用Waypoints .txt 中的数据重现小车轨迹如图\ref{fig:p43}所示，图片仅是本次的设计重制视频当中的一个镜头，从而使得小车的基线已经达到了项目要求5\%以上的标准。
 
 
 \begin{figure}[htbp] % 可以是h（here），t（top），b（bottom），p（page of floats）
 	\centering
-	\includegraphics[width=1\textwidth]{p21} % 假设图片文件名为car.pdf或car.png等，位于当前工作目录
+	\includegraphics[width=1\textwidth]{p43} % 假设图片文件名为car.pdf或car.png等，位于当前工作目录
 	\caption{小车轨迹的复现} % 图片标题
-	\label{fig:p21} % 用于引用的标签
+	\label{fig:p43} % 用于引用的标签
 \end{figure}
 
 
@@ -429,7 +411,7 @@ Recall：召回率。
 
 \begin{table}[h]
 	\centering
-	\caption{Trajectory Overlap Rate and Vehicle Control Indicators}
+	\caption{轨迹重叠率和车辆控制指标}
 	\label{tab:trajectory_com}
 	\resizebox{\textwidth}{!}{%
 		\begin{tabular}{|l|c|c|c|c|c|c|c|c|c|c|c|c|c|}
@@ -454,7 +436,7 @@ Recall：召回率。
 
 \begin{table}[htbp]
 	\centering
-	\caption{Multi-objective Tracking Evaluation Comparison}
+	\caption{多目标跟踪评估比较}
 	\label{tab:tracking_comparison}
 	\begin{tabular}{@{}llcccccc@{}}
 		\toprule
@@ -505,7 +487,7 @@ Recall：召回率。
 
 \begin{table}[h]
 	\centering
-	\caption{Trajectory Overlap Rate and Vehicle Control Indicators}
+	\caption{轨迹重叠率和车辆控制指标}
 	\label{tab:trajectory_comparisons}
 	\resizebox{\textwidth}{!}{%
 		\begin{tabular}{|c|c|c|c|c|c|}
@@ -524,7 +506,7 @@ Recall：召回率。
 
 \begin{table}[htbp]
 	\centering
-	\caption{Trajectory Tracking Performance Comparison}
+	\caption{轨迹跟踪性能比较}
 	\label{tab:trajectory_comparison}
 	\begin{tabular}{@{}lcccccc@{}}
 		\toprule
@@ -550,12 +532,6 @@ Recall：召回率。
 
 结果：
 在注重轨迹重合度(TOR)与最终位置误差(FPE)的同时，优化之前的Town10的TT-DT场景效果更佳。在注重平均位置误差(MPE)，最大位置误差(MaxPE)及最终位置误差(FPE)的时候，优化后的Town10的TT-GT场景的效果更好 。
-
-
-
-
-
-
 
 
 
