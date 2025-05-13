@@ -1,824 +1,44 @@
 \chapter{附录代码}
 
-\section{PID控制代码}
-
-以下是基于PID控制的行人环境的代码实现：
-
 \begin{lstlisting}[language=Python]
-import carla
-import numpy as np
-import random
+
+\section{基于强化学习PPO算法的行人导航系统}
+import sys
 import time
-import threading
-import cv2
-
-class PIDController:
-    """PID控制器实现"""
-
-    def __init__(self, kp, ki, kd, max_output):
-        self.kp = kp
-        self.ki = ki
-        self.kd = kd
-        self.max_output = max_output
-        self.integral = 0.0
-        self.previous_error = 0.0
-
-    def reset(self):
-        self.integral = 0.0
-        self.previous_error = 0.0
-
-    def compute(self, error, dt):
-        self.integral += error * dt
-        derivative = (error - self.previous_error) / dt if dt > 0 else 0.0
-        output = self.kp * error + self.ki * self.integral + self.kd * derivative
-        output = np.clip(output, -self.max_output, self.max_output)
-        self.previous_error = error
-        return output
-
-
-class PIDPedestrianEnv:
-    """基于PID控制的行人环境"""
-
-    def __init__(self, target_location=carla.Location(x=180, y=120, z=1)):
-        # ==== 初始化关键属性 ====
-        self.last_lidar_points = np.array([])  # 初始化为空数组
-        self.min_obstacle_distance = 10.0  # 初始默认值更大
-        self.target_location = target_location
-        self.collision_occurred = False
-        self.obstacle_clusters = []
-        self.current_speed = 0.0
-        self.sensors = []
-        self.dynamic_obstacles = []
-        self.last_display = time.time()
-        self.img_lock = threading.Lock()
-        self.lidar_lock = threading.Lock()
-        # 初始化方向向量
-        self.target_direction = carla.Vector3D(0, 0, 0)
-        self.avoidance_direction = carla.Vector3D(0, 0, 0)
-        self.combined_direction = carla.Vector3D(0, 0, 0)
-        self.obstacle_detected = False
-
-        # ==== PID控制器 ====
-        self.steering_pid = PIDController(kp=0.8, ki=0.001, kd=0.2, max_output=30)
-        self.speed_pid = PIDController(kp=0.5, ki=0.01, kd=0.1, max_output=3.0)
-
-        # ==== Carla连接配置 ====
-        self.client = carla.Client("localhost", 2000)
-        self.client.set_timeout(30.0)
-        self._connect_to_server()
-
-        # ==== 初始化Carla组件 ====
-        self._preload_assets()
-        self._setup_spectator()
-        self._spawn_pedestrian()
-        self._attach_sensors()
-        self._spawn_dynamic_obstacles(num_vehicles=2, num_walkers=1)
-
-    def _connect_to_server(self):
-        """强制使用Town01地图并设置良好的天气"""
-        for retry in range(5):
-            try:
-                self.world = self.client.load_world("Town01")
-                if "Town01" in self.world.get_map().name:
-                    # 设置更好的天气
-                    weather = carla.WeatherParameters(
-                        cloudiness=10.0,
-                        precipitation=0.0,
-                        sun_altitude_angle=70.0,  # 较高的太阳角度
-                        fog_density=0.0,
-                        wetness=0.0
-                    )
-                    self.world.set_weather(weather)
-                    print("成功连接Carla服务器")
-                    return
-            except Exception as e:
-                print(f"连接失败（尝试 {retry + 1}/5）: {str(e)}")
-                time.sleep(2)
-        raise ConnectionError("无法连接到Carla服务器")
-
-    def _preload_assets(self):
-        """预加载蓝图"""
-        self.blueprint_library = self.world.get_blueprint_library()
-        self.walker_bps = self.blueprint_library.filter('walker.pedestrian.*')
-        self.controller_bp = self.blueprint_library.find('controller.ai.walker')
-        self.vehicle_bps = self.blueprint_library.filter('vehicle.*')
-        self.collision_bp = self.blueprint_library.find('sensor.other.collision')
-        self.lidar_bp = self._configure_lidar()
-        self.camera_bp = self._configure_camera()
-
-    def _configure_lidar(self):
-        lidar = self.blueprint_library.find('sensor.lidar.ray_cast')
-        # 增加检测范围和精度
-        lidar.set_attribute('range', '15.0')  # 增加检测范围
-        lidar.set_attribute('points_per_second', '50000')  # 增加点云密度
-        lidar.set_attribute('rotation_frequency', '20')  # 增加旋转频率
-        lidar.set_attribute('upper_fov', '10')  # 上视场角
-        lidar.set_attribute('lower_fov', '-30')  # 下视场角，增加对地面和低障碍物的检测
-        lidar.set_attribute('channels', '64')  # 增加通道数提高分辨率
-        return lidar
-
-    def _configure_camera(self):
-        camera = self.blueprint_library.find('sensor.camera.rgb')
-        # 提高分辨率到1280x720（高清）
-        camera.set_attribute('image_size_x', '1280')
-        camera.set_attribute('image_size_y', '720')
-        # 增加视野范围
-        camera.set_attribute('fov', '100')
-        return camera
-
-    def _setup_spectator(self):
-        try:
-            spectator = self.world.get_spectator()
-            transform = carla.Transform(
-                carla.Location(x=160, y=138, z=50),
-                carla.Rotation(pitch=-90)
-            )
-            spectator.set_transform(transform)
-        except Exception as e:
-            print(f"视角设置失败: {str(e)}")
-
-    def _spawn_pedestrian(self):
-        """生成受控行人"""
-        for _ in range(3):
-            try:
-                spawn_point = carla.Transform(
-                    carla.Location(x=160, y=138, z=1.0),
-                    carla.Rotation(yaw=random.randint(0, 360))
-                )
-                self.pedestrian = self.world.spawn_actor(
-                    random.choice(self.walker_bps),
-                    spawn_point)
-                break
-            except Exception as e:
-                print(f"行人生成失败: {str(e)}")
-                time.sleep(0.5)
-
-    def _attach_sensors(self):
-        """附加传感器"""
-        try:
-            # 碰撞传感器
-            collision_sensor = self.world.spawn_actor(
-                self.collision_bp,
-                carla.Transform(),
-                attach_to=self.pedestrian)
-            collision_sensor.listen(lambda event: self._on_collision(event))
-
-            # 激光雷达
-            lidar_transform = carla.Transform(carla.Location(z=2.5))
-            lidar_sensor = self.world.spawn_actor(
-                self.lidar_bp,
-                lidar_transform,
-                attach_to=self.pedestrian)
-            lidar_sensor.listen(lambda data: self._process_lidar(data))
-
-            # 摄像头 - 调整位置和角度
-            camera_transform = carla.Transform(
-                carla.Location(x=0.5, z=1.6),  # 更接近真实人眼位置
-                carla.Rotation(pitch=-5)  # 稍微向下的角度，更自然
-            )
-            camera_sensor = self.world.spawn_actor(
-                self.camera_bp,
-                camera_transform,
-                attach_to=self.pedestrian)
-            camera_sensor.listen(lambda image: self._process_image(image))
-
-            self.sensors = [collision_sensor, lidar_sensor, camera_sensor]
-        except Exception as e:
-            print(f"传感器初始化失败: {str(e)}")
-            self._cleanup_actors()
-            raise
-
-    def _spawn_dynamic_obstacles(self, num_vehicles, num_walkers):
-        """生成动态障碍物"""
-        vehicle_spawn_points = [
-            p for p in self.world.get_map().get_spawn_points()
-            if p.location.distance(self.pedestrian.get_location()) > 20.0
-        ]
-        for _ in range(num_vehicles):
-            try:
-                vehicle = self.world.spawn_actor(
-                    random.choice(self.vehicle_bps),
-                    random.choice(vehicle_spawn_points))
-                vehicle.set_autopilot(True)
-                self.dynamic_obstacles.append(vehicle)
-            except:
-                print("生成车辆失败，继续尝试")
-
-        for _ in range(num_walkers):
-            try:
-                walker = self.world.spawn_actor(
-                    random.choice(self.walker_bps),
-                    carla.Transform(self._random_destination()))
-                controller = self.world.spawn_actor(
-                    self.controller_bp,
-                    carla.Transform(),
-                    attach_to=walker)
-                controller.start()
-                controller.go_to_location(self._random_destination())
-                self.dynamic_obstacles.extend([walker, controller])
-            except:
-                print("生成行人失败，继续尝试")
-
-    def _random_destination(self):
-        return carla.Location(
-            x=random.uniform(120, 200),
-            y=random.uniform(100, 160),
-            z=1.0)
-
-    def _on_collision(self, event):
-        self.collision_occurred = True
-
-\end{lstlisting}
-
-\section{强化学习行人环境与DQN训练脚本}
-
-\begin{lstlisting}[language=Python]
 import carla
 import gymnasium as gym
 import numpy as np
 import random
-import time
-import threading
-import cv2
-import torch
-from gymnasium import spaces
-from stable_baselines3 import DQN
-from stable_baselines3.common.vec_env import DummyVecEnv
-import matplotlib.pyplot as plt
-from collections import deque
-
-# 动作空间定义
-ACTION_DICT = {
-    0: (0.0, 0.0),  # 停止
-    1: (0.0, 1.0),  # 直行
-    2: (-30.0, 0.8),  # 左转
-    3: (30.0, 0.8),  # 右转
-    4: (0.0, 2.0)  # 奔跑
-}
-
-
-class EnhancedPedestrianEnv(gym.Env):
-    """强化学习行人环境完整实现"""
-
-    def __init__(self, target_location=carla.Location(x=180, y=120, z=1)):
-        super().__init__()
-
-        # ==== 初始化关键属性 ====
-        self.target_location = target_location
-        self.model = None
-        self.episode_count = 0
-        self.last_reward = 0.0
-        self.previous_speed = 0.0
-        self.current_speed = 0.0
-        self.collision_occurred = False
-        self.min_obstacle_distance = 5.0
-        self.previous_target_distance = 0.0
-        self.episode_step = 0
-        self.dynamic_obstacles = []
-        self.sensors = []
-
-        # ==== 线程安全锁 ====
-        self.img_lock = threading.Lock()
-        self.lidar_lock = threading.Lock()
-        self.last_display = time.time()
-
-        # ==== Carla连接配置 ====
-        self.client = carla.Client("localhost", 2000)
-        self.client.set_timeout(30.0)
-        self._connect_to_server()
-
-        # ==== 空间定义 ====
-        self.action_space = spaces.Discrete(len(ACTION_DICT))
-        self.observation_space = spaces.Box(
-            low=np.array([-1.0] * 8 + [0.0, -1.0]),
-            high=np.array([1.0] * 8 + [3.0, 1.0]),
-            dtype=np.float32
-        )
-
-        # ==== 初始化Carla组件 ====
-        self._preload_assets()
-        self._setup_spectator()
-
-    def _connect_to_server(self):
-        """强制使用Town01地图的连接方法"""
-        for retry in range(5):
-            try:
-                # 强制加载Town01地图
-                self.world = self.client.load_world("Town01")
-                map_name = self.world.get_map().name
-                if "Town01" in map_name:
-                    print(f"成功加载Town01地图 (Carla v{self.client.get_server_version()})")
-                    return
-                else:
-                    print(f"地图加载异常，获取到：{map_name}")
-            except RuntimeError as e:
-                print(f"地图加载失败（尝试 {retry + 1}/5）：{str(e)}")
-                try:
-                    # 如果无法加载，尝试启动离线服务器
-                    if not self.client.get_client_version():  # 检查客户端连接
-                        self.client.start()
-                        print("已启动离线Carla服务器")
-                    time.sleep(2)
-                except Exception as inner_e:
-                    print(f"服务器启动失败：{str(inner_e)}")
-                    time.sleep(2)
-            except Exception as e:
-                print(f"意外错误：{str(e)}")
-                time.sleep(2)
-
-        # 最终检查
-        try:
-            final_map = self.client.get_world().get_map().name
-            raise ConnectionError(f"最终连接失败，当前地图：{final_map}（应使用Town01）")
-        except:
-            raise ConnectionError("无法连接到Carla服务器，请检查：\n1. Carla服务器是否运行\n2. 端口2000是否可用")
-
-    def _preload_assets(self):
-        """预加载蓝图资产"""
-        self.blueprint_library = self.world.get_blueprint_library()
-        self.walker_bps = self.blueprint_library.filter('walker.pedestrian.*')
-        self.controller_bp = self.blueprint_library.find('controller.ai.walker')
-        self.vehicle_bps = self.blueprint_library.filter('vehicle.*')
-        self.camera_bp = self._configure_camera()
-        self.lidar_bp = self._configure_lidar()
-        self.collision_bp = self.blueprint_library.find('sensor.other.collision')
-
-    def _configure_camera(self):
-        """配置RGB摄像头"""
-        camera_bp = self.blueprint_library.find('sensor.camera.rgb')
-        camera_bp.set_attribute('image_size_x', '960')  # 降低分辨率
-        camera_bp.set_attribute('image_size_y', '540')
-        camera_bp.set_attribute('fov', '90')
-        return camera_bp
-
-    def _configure_lidar(self):
-        """配置激光雷达"""
-        lidar_bp = self.blueprint_library.find('sensor.lidar.ray_cast')
-        lidar_bp.set_attribute('range', '10.0')
-        lidar_bp.set_attribute('points_per_second', '10000')  # 降低点云密度
-        return lidar_bp
-
-    def _setup_spectator(self):
-        """设置观察视角"""
-        try:
-            spectator = self.world.get_spectator()
-            transform = carla.Transform(
-                carla.Location(x=160, y=138, z=50),
-                carla.Rotation(pitch=-90)
-            )
-            spectator.set_transform(transform)
-        except Exception as e:
-            print(f"视角设置失败: {str(e)}")
-
-    def reset(self, **kwargs):
-        """重置环境状态"""
-        # 清理旧Actor
-        self._cleanup_actors()
-        time.sleep(0.5)  # 增加清理间隔
-
-        # 初始化状态变量
-        self.episode_step = 0
-        self.collision_occurred = False
-        self.last_reward = 0.0
-        self.previous_speed = 0.0
-        self.current_speed = 0.0
-        self.min_obstacle_distance = 5.0
-        self.previous_target_distance = 0.0
-
-        # 生成新行人
-        self._spawn_pedestrian()
-
-        # 附加传感器
-        self._attach_sensors()
-
-        # 生成障碍物（初始数量较少）
-        self._spawn_dynamic_obstacles(num_vehicles=2, num_walkers=1)
-
-        return self._get_obs(), {}
-
-    def _spawn_pedestrian(self):
-        """生成受控行人"""
-        for _ in range(3):
-            try:
-                spawn_point = carla.Transform(  # 修复此处括号
-                    carla.Location(x=160, y=138, z=1.0),
-                    carla.Rotation(yaw=random.randint(0, 360))
-                )  # 补全括号
-                self.pedestrian = self.world.spawn_actor(
-                    random.choice(self.walker_bps),
-                    spawn_point
-                )
-                break
-            except Exception as e:
-                print(f"行人生成失败: {str(e)}")
-                time.sleep(0.5)
-
-        # 添加AI控制器
-        self.controller = self.world.spawn_actor(
-            self.controller_bp,
-            carla.Transform(),
-            attach_to=self.pedestrian,
-            attachment_type=carla.AttachmentType.Rigid
-        )
-        self.controller.start()
-
-    def _attach_sensors(self):
-        """附加传感器"""
-        try:
-            # 碰撞传感器
-            collision_sensor = self.world.spawn_actor(
-                self.collision_bp,
-                carla.Transform(),
-                attach_to=self.pedestrian
-            )
-            collision_sensor.listen(lambda event: self._on_collision(event))
-
-            # 激光雷达
-            lidar_transform = carla.Transform(carla.Location(z=2.5))
-            lidar_sensor = self.world.spawn_actor(
-                self.lidar_bp,
-                lidar_transform,
-                attach_to=self.pedestrian
-            )
-            lidar_sensor.listen(lambda data: self._process_lidar(data))
-
-            # 摄像头（降低帧率）
-            camera_transform = carla.Transform(
-                carla.Location(x=0.8, z=1.7),
-                carla.Rotation(pitch=-10)
-            )
-            camera_sensor = self.world.spawn_actor(
-                self.camera_bp,
-                camera_transform,
-                attach_to=self.pedestrian
-            )
-            camera_sensor.listen(lambda image: self._process_image(image))
-
-            self.sensors = [collision_sensor, lidar_sensor, camera_sensor]
-        except Exception as e:
-            print(f"传感器初始化失败: {str(e)}")
-            self._cleanup_actors()
-            raise
-
-    def _spawn_dynamic_obstacles(self, num_vehicles, num_walkers):
-        """生成动态障碍物"""
-        try:
-            # 生成车辆
-            vehicle_spawn_points = [
-                p for p in self.world.get_map().get_spawn_points()
-                if p.location.distance(self.pedestrian.get_location()) > 20.0
-            ]
-            for _ in range(num_vehicles):
-                vehicle = self.world.spawn_actor(
-                    random.choice(self.vehicle_bps),
-                    random.choice(vehicle_spawn_points)
-                )
-                vehicle.set_autopilot(True)
-                self.dynamic_obstacles.append(vehicle)
-
-                # 生成行人障碍物
-                for _ in range(num_walkers):
-                    walker = self.world.spawn_actor(
-                        random.choice(self.walker_bps),
-                        carla.Transform(self._random_destination()))
-
-                controller = self.world.spawn_actor(
-                    self.controller_bp,
-                    carla.Transform(),
-                    attach_to=walker,
-                    attachment_type=carla.AttachmentType.Rigid)
-                controller.start()
-                controller.go_to_location(self._random_destination())
-                self.dynamic_obstacles.extend([walker, controller])
-        except Exception as e:
-            print(f"障碍物生成失败: {str(e)}")
-
-    def _random_destination(self):
-        """生成随机目的地"""
-        return carla.Location(
-            x=random.uniform(120, 200),
-            y=random.uniform(100, 160),
-            z=1.0)
-
-    def _on_collision(self, event):
-        """碰撞事件处理"""
-        self.collision_occurred = True
-
-    def _process_lidar(self, data):
-        """处理激光雷达数据"""
-        try:
-            points = np.frombuffer(data.raw_data, dtype=np.float32).reshape(-1, 4)
-            with self.lidar_lock:
-                if len(points) > 0:
-                    distances = np.sqrt(points[:, 0] ** 2 + points[:, 1] ** 2)
-                    self.min_obstacle_distance = np.min(distances)
-                else:
-                    self.min_obstacle_distance = 5.0
-        except Exception as e:
-            print(f"激光雷达处理错误: {str(e)}")
-
-    def _process_image(self, image):
-        """处理摄像头图像"""
-        with self.img_lock:
-            try:
-                # 降低处理频率
-                if time.time() - self.last_display < 0.1:  # 10FPS
-                    return
-
-                array = np.frombuffer(image.raw_data, dtype=np.uint8)
-                array = array.reshape((image.height, image.width, 4))
-                img_bgr = cv2.cvtColor(array[:, :, :3], cv2.COLOR_RGB2BGR)
-
-                # 显示基本信息
-                cv2.putText(img_bgr, f"Reward: {self.last_reward:.2f}",
-                            (10, 30), cv2.FONT_HERSHEY_SIMPLEX, 0.6, (255, 255, 255), 1)
-
-                # 新增DQN算法指标
-                cv2.putText(img_bgr, f"Epsilon: {self.model.exploration_rate:.2f}",
-                            (10, 60), cv2.FONT_HERSHEY_SIMPLEX, 0.6, (255, 255, 255), 1)
-                cv2.putText(img_bgr, f"Episode: {self.episode_count}",
-                            (10, 90), cv2.FONT_HERSHEY_SIMPLEX, 0.6, (255, 255, 255), 1)
-
-                # 显示处理后的图像
-                cv2.imshow('Pedestrian View', cv2.resize(img_bgr, (960, 480)))
-                cv2.waitKey(1)
-                self.last_display = time.time()
-            except Exception as e:
-                print(f"图像处理错误: {str(e)}")
-
-    def _get_obs(self):
-        """获取观测数据"""
-        try:
-            transform = self.pedestrian.get_transform()
-            current_loc = transform.location
-            current_rot = transform.rotation
-
-            # 计算目标方向
-            target_vector = self.target_location - current_loc
-            target_distance = target_vector.length()
-            target_dir = target_vector.make_unit_vector() if target_distance > 0 else carla.Vector3D()
-
-            # 转换到局部坐标系
-            yaw = np.radians(current_rot.yaw)
-            rotation_matrix = np.array([
-                [np.cos(yaw), np.sin(yaw)],
-                [-np.sin(yaw), np.cos(yaw)]
-            ])
-            local_target = rotation_matrix @ np.array([target_dir.x, target_dir.y])
-
-            # 获取障碍物距离
-            with self.lidar_lock:
-                obstacle_dist = self.min_obstacle_distance
-
-            return np.array([
-                current_loc.x / 200.0 - 1.0,
-                current_loc.y / 200.0 - 1.0,
-                local_target[0],
-                local_target[1],
-                np.clip(obstacle_dist / 5.0, 0.0, 1.0),
-                self.current_speed / 3.0,
-                (self.current_speed - self.previous_speed) / 3.0,
-                np.sin(yaw),
-                np.cos(yaw),
-                target_distance / 100.0
-            ], dtype=np.float32)
-        except Exception as e:
-            print(f"获取观测数据失败: {str(e)}")
-            return np.zeros(self.observation_space.shape)
-
-    def step(self, action_idx):
-        """执行动作（安全版本）"""
-        try:
-            self.episode_step += 1
-
-            # 解析动作
-            yaw_offset, speed_ratio = ACTION_DICT[action_idx]
-
-            # 平滑转向
-            current_yaw = self.pedestrian.get_transform().rotation.yaw
-            target_yaw = current_yaw + yaw_offset * 0.3
-            self.pedestrian.set_transform(carla.Transform(
-                self.pedestrian.get_location(),
-                carla.Rotation(yaw=target_yaw)))
-
-            # 速度控制
-            base_speed = 1.5 + 1.5 * speed_ratio
-            safe_speed = min(base_speed, 3.0) if self.min_obstacle_distance > 2.0 else 0.8
-            self.previous_speed = self.current_speed
-            self.current_speed = safe_speed
-
-            # 应用控制
-            control = carla.WalkerControl(
-                direction=carla.Vector3D(1, 0, 0),
-                speed=safe_speed)
-            self.pedestrian.apply_control(control)
-
-            # 推进仿真
-            self.world.tick()
-
-            # 计算奖励
-            new_obs = self._get_obs()
-            current_target_dist = new_obs[-1] * 100.0
-            progress = self.previous_target_distance - current_target_dist
-            speed_reward = min(safe_speed / 3.0, 0.5)
-            collision_penalty = 10.0 if self.collision_occurred else 0.0
-            time_penalty = 0.05
-            reward = progress * 2.0 + speed_reward - time_penalty - collision_penalty
-            self.last_reward = reward
-            self.previous_target_distance = current_target_dist
-
-            # 终止条件
-            done = False
-            if self.collision_occurred:
-                done = True
-                reward -= 20.0
-            elif current_target_dist < 2.0:
-                done = True
-                reward += 20.0
-
-            return new_obs, reward, done, False, {}
-        except Exception as e:
-            print(f"执行步骤时发生错误: {str(e)}")
-            return np.zeros(self.observation_space.shape), 0, True, False, {}
-
-    def _cleanup_actors(self):
-        """增强版资源清理"""
-        destroy_list = []
-
-        # 主行人及控制器
-        if hasattr(self, 'pedestrian') and self.pedestrian.is_alive:
-            destroy_list.append(self.pedestrian)
-        if hasattr(self, 'controller') and self.controller.is_alive:
-            destroy_list.append(self.controller)
-
-        # 传感器
-        for sensor in self.sensors:
-            if sensor.is_alive:
-                destroy_list.append(sensor)
-
-        # 动态障碍物
-        for obstacle in self.dynamic_obstacles:
-            if obstacle.is_alive:
-                destroy_list.append(obstacle)
-
-        # 批量销毁
-        if destroy_list:
-            try:
-                self.client.apply_batch([carla.command.DestroyActor(x) for x in destroy_list])
-                time.sleep(0.5)  # 等待销毁完成
-            except Exception as e:
-                print(f"销毁Actor时发生错误: {str(e)}")
-
-        self.sensors = []
-        self.dynamic_obstacles = []
-
-    def close(self):
-        """关闭环境"""
-        self._cleanup_actors()
-        cv2.destroyAllWindows()
-
-class TrainingMonitor:
-    """训练指标可视化模块"""
-    def __init__(self, window_size=100):
-        self.rewards = deque(maxlen=window_size)
-        self.fig, self.ax = plt.subplots(figsize=(8, 4))
-        plt.ion()  # 启用交互模式
-        self.lines = self.ax.plot([], [])
-        self.ax.set_title("DQN Training - Moving Average Reward")
-        self.ax.set_xlabel("Episode")
-        self.ax.set_ylabel("Reward")
-
-    def update(self, reward):
-        """更新可视化数据"""
-        self.rewards.append(reward)
-        self.lines[0].set_data(np.arange(len(self.rewards)), self.rewards)
-        self.ax.relim()
-        self.ax.autoscale_view()
-        self.fig.canvas.draw()
-        self.fig.canvas.flush_events()
-
-class TrainingWrapper(gym.Wrapper):
-    """训练包装器"""
-
-    def __init__(self, env):
-        super().__init__(env)
-        self.episode_count = 0
-        self.success_history = []
-        self.model = None
-        self.monitor = TrainingMonitor()  # 初始化监控器
-
-    def step(self, action):
-        try:
-            obs, reward, terminated, truncated, info = self.env.step(action)
-            info['episode'] = {'r': reward, 'l': self.episode_count}
-
-            # 更新监控数据
-            self.monitor.update(reward)
-
-            return obs, reward, terminated, truncated, info
-        except Exception as e:
-            print(f"训练步骤错误: {str(e)}")
-            return np.zeros(self.env.observation_space.shape), 0, True, False, {}
-
-    def reset(self, **kwargs):
-        self.episode_count += 1
-        # 确保每次重置时同步最新模型
-        if self.model is not None:
-            self.env.model = self.model
-            self.env.episode_count = self.episode_count
-        return self.env.reset(**kwargs)
-
-    def save_checkpoint(self):
-        """安全保存检查点"""
-        if self.model is not None:
-            try:
-                timestamp = time.strftime("%Y%m%d-%H%M%S")
-                self.model.save(f"pedestrian_model_{timestamp}")
-                print(f"检查点已保存：pedestrian_model_{timestamp}")
-            except Exception as e:
-                print(f"保存检查点失败: {str(e)}")
-
-
-if __name__ == "__main__":
-    # 初始化环境
-    env = EnhancedPedestrianEnv()
-    wrapped_env = TrainingWrapper(env)
-    vec_env = DummyVecEnv([lambda: wrapped_env])
-
-    # 配置DQN模型（调整参数）
-    model = DQN(
-        "MlpPolicy",
-        vec_env,
-        verbose=1,
-        learning_rate=1e-4,          # 通常DQN使用更小的学习率
-        buffer_size=100000,          # 经验回放缓冲区大小
-        learning_starts=1000,        # 开始学习前的随机步数
-        batch_size=128,
-        tau=1.0,                     # 目标网络更新参数
-        gamma=0.99,
-        target_update_interval=1000, # 目标网络更新间隔
-        exploration_fraction=0.2,    # 探索率衰减周期占比
-        exploration_initial_eps=1.0, # 初始探索率
-        exploration_final_eps=0.05,  # 最终探索率
-        policy_kwargs={
-            "net_arch": [256, 256],  # DQN网络结构
-            "activation_fn": torch.nn.ReLU
-        },
-        device='auto'
-    )
-    wrapped_env.model = model
-
-    try:
-        # 分阶段训练
-        print("开始第一阶段训练（50k steps）...")
-        model.learn(total_timesteps=50000)
-
-        print("开始第二阶段训练（150k steps）...")
-        model.learn(total_timesteps=150000, reset_num_timesteps=False)
-
-    finally:
-        model.save("pedestrian_dqn")
-        vec_env.close()
-        print("训练完成，最终模型已保存。")
-\end{lstlisting}
-
-\section{基于强化学习PPO算法的行人导航代码}
-
-\begin{lstlisting}[language=Python]
-import carla
-import gymnasium as gym
-import numpy as np
-import random
-import time
 import threading
 import torch
 import gc
+from PyQt5.QtWidgets import (QApplication, QMainWindow, QWidget, QVBoxLayout, QHBoxLayout,
+                             QPushButton, QLabel, QTextEdit, QLineEdit, QGroupBox,
+                             QSpinBox, QDoubleSpinBox, QFileDialog, QProgressBar, QMessageBox)
+from PyQt5.QtCore import Qt, QThread, pyqtSignal, QMutex
+from PyQt5.QtGui import QFont
 from gymnasium import spaces
 from stable_baselines3 import PPO
 from stable_baselines3.common.vec_env import DummyVecEnv
-
+# ======================== 核心导航系统 ========================
 ACTION_DICT = {
-    0: (0.0, 0.0),   # 停止
-    1: (0.0, 1.0),   # 直行
-    2: (25.0, 0.8),  # 左转（Carla坐标系Y轴右为正，需正角度）
-    3: (-25.0, 0.8), # 右转
-    4: (0.0, 2.0)    # 奔跑
+    0: (0.0, 0.0),  # 停止
+    1: (0.0, 1.0),  # 直行
+    2: (25.0, 0.8),  # 左转
+    3: (-25.0, 0.8),  # 右转
+    4: (0.0, 2.0)  # 奔跑
 }
 
 def reset_environment(env):
-    """重置环境，确保每次运行时环境被清理并初始化"""
-    print("正在重置环境...")
     try:
-        env.close()  # 确保关闭上次的环境
-        env.reset()  # 重置环境
-        print("环境已重置")
+        env.close()
+        env.reset()
     except Exception as e:
-        print(f"重置环境时发生错误: {str(e)}")
+        print(f"重置环境错误: {str(e)}")
 
 class EnhancedPedestrianEnv(gym.Env):
     def __init__(self, target_location=carla.Location(x=202, y=65, z=0)):
         super().__init__()
-
         # 初始化关键属性
         self.planned_waypoints = []
         self.pedestrian = None
@@ -839,18 +59,16 @@ class EnhancedPedestrianEnv(gym.Env):
         self.sensors = []
         self.target_actor = None
         self.cleanup_lock = threading.Lock()
-
         # Carla连接配置
         self.client = carla.Client("localhost", 2000)
         self.client.set_timeout(30.0)
         self._connect_to_server()
-
         # 空间定义
         self.action_space = spaces.Discrete(len(ACTION_DICT))
         # 观测空间定义（12个特征）
         self.observation_space = spaces.Box(
             low=np.array([
-                -1.0,  # current_loc.x /200 -1
+                -1.0,
                 -1.0,  # current_loc.y /200 -1
                 -1.0,  # local_target.x
                 -1.0,  # local_target.y
@@ -926,12 +144,15 @@ class EnhancedPedestrianEnv(gym.Env):
     def _update_spectator_view(self):
         """更新俯视视角"""
         try:
-            if hasattr(self, 'pedestrian') and self.pedestrian.is_alive:
+            # 空值检查
+            if self.pedestrian is not None and self.pedestrian.is_alive:
                 ped_loc = self.pedestrian.get_transform().location
                 self.spectator.set_transform(carla.Transform(
                     carla.Location(x=ped_loc.x, y=ped_loc.y, z=20),
                     carla.Rotation(pitch=-90)
                 ))
+            else:
+                print("警告：行人未生成或已销毁，无法更新视角")
         except Exception as e:
             print(f"视角更新失败: {str(e)}")
 
@@ -951,14 +172,19 @@ class EnhancedPedestrianEnv(gym.Env):
             time.sleep(0.5)
 
             # 显式停止控制器
-            if hasattr(self, 'controller') and self.controller is not None and self.controller.is_alive:
+            if self.controller and self.controller.is_alive:
                 self.controller.stop()
 
             # 生成新实例
-            self._spawn_pedestrian()  # 先生成行人
+            self._spawn_pedestrian()
             self._attach_sensors()
             self._spawn_target_marker()
-            self._update_spectator_view()
+
+            # 确保行人存在后再更新视角
+            if self.pedestrian and self.pedestrian.is_alive:
+                self._update_spectator_view()
+            else:
+                print("重置失败：行人未生成")
 
             # 重置状态变量
             self.episode_step = 0
@@ -991,8 +217,15 @@ class EnhancedPedestrianEnv(gym.Env):
             except Exception as e:
                 print(f"行人生成失败: {str(e)}")
                 time.sleep(0.5)
-        else:  # 如果三次尝试都失败
-            raise RuntimeError("无法生成行人，请检查Carla服务器状态")
+                # 清理残留对象
+                if self.pedestrian and self.pedestrian.is_alive:
+                    self.pedestrian.destroy()
+            else:
+                raise RuntimeError("无法生成行人，请检查Carla服务器状态")
+
+                # 添加控制器前检查行人对象
+            if self.pedestrian is None:
+                raise RuntimeError("行人对象未正确初始化")
 
         # 添加控制器
         self.controller = self.world.spawn_actor(
@@ -1147,8 +380,8 @@ class EnhancedPedestrianEnv(gym.Env):
                     life_time=100.0,
                     color=carla.Color(255, 0, 0)
                 )
-                print(
-                    f"生成路径点数量: {len(self.planned_waypoints)}，起点到终点距离: {start_loc.distance(end_loc):.1f}m")
+            print(
+                f"生成路径点数量: {len(self.planned_waypoints)}，起点到终点距离: {start_loc.distance(end_loc):.1f}m")
 
         except Exception as e:
             print(f"路径生成失败: {str(e)}")
@@ -1312,33 +545,75 @@ class EnhancedPedestrianEnv(gym.Env):
             return np.zeros(self.observation_space.shape), 0, True, False, {}
 
     def _cleanup_actors(self):
-        """清理所有Actor"""
+        """同步清理所有Actor并确保彻底销毁"""
         destroy_list = []
-        try:
-            if self.pedestrian and self.pedestrian.is_alive:
-                destroy_list.append(self.pedestrian)
-            if hasattr(self, 'pedestrian') and self.pedestrian is not None and self.pedestrian.is_alive:
-                destroy_list.append(self.pedestrian)
-            if hasattr(self, 'controller') and self.controller is not None and self.controller.is_alive:
-                destroy_list.append(self.controller)
-            for sensor in self.sensors:
-                if sensor.is_alive:
-                    destroy_list.append(sensor)
-            if self.target_actor and self.target_actor.is_alive:
-                destroy_list.append(self.target_actor)
 
-            if destroy_list:
-                # 使用异步销毁并等待完成
-                self.client.apply_batch([carla.command.DestroyActor(x) for x in destroy_list])
-                for _ in range(10):  # 等待最多1秒
-                    self.world.tick()
-                    time.sleep(0.1)
+        try:
+            # 清理传感器（强制同步解除监听）
+            for sensor in self.sensors:
+                try:
+                    if sensor.is_alive:
+                        sensor.stop()  # 先停止监听
+                        sensor.destroy()  # 同步销毁
+                        print(f"传感器 {sensor.id} 已销毁")
+                except Exception as e:
+                    print(f"传感器销毁失败: {str(e)}")
+            self.sensors = []  # 立即清空列表
+
+            # 清理控制器（必须显式停止）
+            if hasattr(self, 'controller') and self.controller is not None:
+                try:
+                    if self.controller.is_alive:
+                        self.controller.stop()  # 先停止AI控制
+                        time.sleep(0.1)
+                        self.controller.destroy()
+                        print("控制器已销毁")
+                except Exception as e:
+                    print(f"控制器销毁失败: {str(e)}")
+                finally:
+                    self.controller = None
+
+            # 清理行人（同步销毁）
+            if hasattr(self, 'pedestrian') and self.pedestrian is not None:
+                try:
+                    if self.pedestrian.is_alive:
+                        # 解除所有可能绑定的组件
+                        self.pedestrian.apply_control(carla.WalkerControl())  # 清除控制指令
+                        time.sleep(0.1)
+                        self.pedestrian.destroy()
+                        print("行人已销毁")
+                except Exception as e:
+                    print(f"行人销毁失败: {str(e)}")
+                finally:
+                    self.pedestrian = None
+
+            # 清理目标标记
+            if self.target_actor and self.target_actor.is_alive:
+                try:
+                    self.target_actor.destroy()
+                    print("目标标记已销毁")
+                except Exception as e:
+                    print(f"目标标记销毁失败: {str(e)}")
+                finally:
+                    self.target_actor = None
+
+            # 等待确保销毁完成
+            for _ in range(10):
+                self.world.tick()
+                time.sleep(0.1)
+
+            # 触发垃圾回收
+            gc.collect()
+            print("所有Actor清理完成")
 
         except Exception as e:
-            print(f"清理Actor时发生错误: {str(e)}")
+            print(f"清理过程中发生严重错误: {str(e)}")
         finally:
+            # 确保所有引用置空
             self.sensors = []
-            gc.collect()
+            self.controller = None
+            self.pedestrian = None
+            self.target_actor = None
 
     def close(self):
         """关闭环境"""
@@ -1390,13 +665,31 @@ class TrainingWrapper(gym.Wrapper):
             except Exception as e:
                 print(f"保存失败: {str(e)}")
 
+class TrainingWrapper(gym.Wrapper):
+    def __init__(self, env):
+        super().__init__(env)
+        self.episode_count = 0
+        self.episode_rewards = []
 
-def run_navigation_demo(model_path, episodes=1):
-    """运行导航演示"""
-    env = None
+    def step(self, action):
+        obs, reward, terminated, truncated, info = super().step(action)
+        self.episode_rewards.append(reward)
+        info.update({
+            'current_speed': self.env.current_speed,
+            'min_obstacle_distance': self.env.min_obstacle_distance,
+            'target_distance': self.env.previous_target_distance
+        })
+        return obs, reward, terminated, truncated, info
+
+    def reset(self, **kwargs):
+        self.episode_count += 1
+        self.episode_rewards = []
+        return self.env.reset(**kwargs)
+
+
+def run_navigation_demo(model_path, episodes=1, gui_callback=None):
     try:
         env = EnhancedPedestrianEnv()
-        # 强制同步模式（与训练一致）
         settings = env.world.get_settings()
         settings.synchronous_mode = True
         settings.fixed_delta_seconds = 0.05
@@ -1404,130 +697,284 @@ def run_navigation_demo(model_path, episodes=1):
         model = PPO.load(model_path)
 
         for episode in range(episodes):
-            # 调用 reset_environment 来确保每次导航前重置环境
             reset_environment(env)
-
+            obs, _ = env.reset()
             done = False
-            total_reward = 0
             step_count = 0
 
-            print(f"\n=== 第 {episode + 1}/{episodes} 次导航演示 ===")
-            print("初始位置:", env.pedestrian.get_transform().location)
-            print("目标位置:", env.target_location)
-
-            # 转换初始观测值
-            obs, _ = env.reset()
-            if isinstance(obs, dict):
-                obs = obs['observation']
-            obs = np.array(obs).flatten().astype(np.float32)
-
-            while not done and step_count < 100000:
-                # 确保观测值维度正确
-                if obs.ndim == 1:
-                    obs = obs.reshape(1, -1)
-
+            while not done and step_count < 1000:
                 action, _ = model.predict(obs, deterministic=True)
-
-                # 转换动作类型
-                if isinstance(action, np.ndarray):
-                    action = int(action.item())
-                else:
-                    action = int(action)
-
                 obs, reward, done, _, _ = env.step(action)
-
-                # 更新观测值
-                if isinstance(obs, dict):
-                    obs = obs['observation']
-                obs = np.array(obs).flatten().astype(np.float32)
-
-                # 显示导航信息
                 current_loc = env.pedestrian.get_transform().location
-                target_dist = np.linalg.norm([current_loc.x - env.target_location.x,
-                                              current_loc.y - env.target_location.y])
-                print(f"步骤 {step_count}: 当前位置({current_loc.x:.1f}, {current_loc.y:.1f}) "
-                      f"剩余距离: {target_dist:.1f}m 当前速度: {env.current_speed:.1f}m/s 当前奖励: {reward:.2f}")
+                target_dist = current_loc.distance(env.target_location)
 
-                total_reward += reward
+                if gui_callback:
+                    msg = (f"步骤 {step_count}: 位置({current_loc.x:.1f}, {current_loc.y:.1f}) "
+                           f"剩余距离: {target_dist:.1f}m 速度: {env.current_speed:.1f}m/s")
+                    gui_callback.emit("log", msg)
+
                 step_count += 1
                 time.sleep(0.05)
 
-            print(f"演示结束！累计奖励: {total_reward:.2f}")
-            print("最终位置:", current_loc)
-            print("=" * 50)
-
+        return True
     except Exception as e:
-        print(f"导航演示发生严重错误: {str(e)}")
+        if gui_callback:
+            gui_callback.emit("error", f"演示错误: {str(e)}")
+        return False
     finally:
         if env:
             env.close()
-        torch.cuda.empty_cache()
-        gc.collect()
-        time.sleep(2)
+
+
+# ======================== 图形用户界面 ========================
+class TrainingThread(QThread):
+    update_signal = pyqtSignal(str, str)
+    progress_signal = pyqtSignal(int)
+    finished_signal = pyqtSignal(bool, str)
+
+    def __init__(self, env_params, train_params):
+        super().__init__()
+        self.env_params = env_params
+        self.train_params = train_params
+        self._is_running = True
+        self.mutex = QMutex()
+
+    def run(self):
+        try:
+            self.update_signal.emit("status", "正在初始化训练环境...")
+            env = EnhancedPedestrianEnv(**self.env_params)
+            reset_environment(env)
+            wrapped_env = TrainingWrapper(env)
+            vec_env = DummyVecEnv([lambda: wrapped_env])
+
+            model = PPO(
+                policy="MlpPolicy",
+                env=vec_env,
+                learning_rate=self.train_params["learning_rate"],
+                n_steps=self.train_params["n_steps"],
+                batch_size=self.train_params["batch_size"],
+                policy_kwargs=self.train_params["policy_kwargs"],
+                verbose=0
+            )
+
+            total_steps = self.train_params["total_steps"]
+            self.progress_signal.emit(0)
+
+            for step in range(0, total_steps, self.train_params["n_steps"]):
+                self.mutex.lock()
+                if not self._is_running:
+                    break
+                self.mutex.unlock()
+
+                model.learn(self.train_params["n_steps"])
+                progress = min(step + self.train_params['n_steps'], total_steps)
+                self.update_signal.emit("log",
+                                        f"已训练 {progress}/{total_steps} 步 | "
+                                        f"平均奖励: {np.mean(wrapped_env.episode_rewards[-10:]) if wrapped_env.episode_rewards else 0:.1f}")
+                self.progress_signal.emit(progress)
+
+            model_path = "pedestrian_ppo"
+            model.save(model_path)
+            self.finished_signal.emit(True, model_path)
+
+        except Exception as e:
+            self.finished_signal.emit(False, f"训练失败: {str(e)}")
+        finally:
+            try:
+                vec_env.close()
+                env.close()
+            except:
+                pass
+            gc.collect()
+            torch.cuda.empty_cache()
+
+    def stop(self):
+        self.mutex.lock()
+        self._is_running = False
+        self.mutex.unlock()
+
+
+class CarlaPedestrianGUI(QMainWindow):
+    def __init__(self):
+        super().__init__()
+        self.training_thread = None
+        self.demo_thread = None
+        self.current_model = None
+        self.init_ui()
+
+    def init_ui(self):
+        self.setWindowTitle("Carla 行人导航系统 v3.0")
+        self.setGeometry(200, 200, 1000, 800)
+
+        main_widget = QWidget()
+        self.setCentralWidget(main_widget)
+        main_layout = QVBoxLayout(main_widget)
+
+        # 控制面板
+        control_group = QGroupBox("系统控制")
+        control_layout = QHBoxLayout()
+        self.btn_init = QPushButton("初始化环境")
+        self.btn_train = QPushButton("开始训练")
+        self.btn_demo = QPushButton("运行演示")
+        self.btn_stop = QPushButton("终止进程")
+        self.btn_load = QPushButton("加载模型")
+        control_layout.addWidget(self.btn_init)
+        control_layout.addWidget(self.btn_train)
+        control_layout.addWidget(self.btn_demo)
+        control_layout.addWidget(self.btn_stop)
+        control_layout.addWidget(self.btn_load)
+        control_group.setLayout(control_layout)
+
+        # 参数配置
+        param_group = QGroupBox("训练参数")
+        param_layout = QHBoxLayout()
+        self.lr_spin = QDoubleSpinBox()
+        self.lr_spin.setRange(1e-6, 1e-2)
+        self.lr_spin.setValue(1e-4)
+        self.lr_spin.setPrefix("学习率: ")
+        self.steps_spin = QSpinBox()
+        self.steps_spin.setRange(1000, 1000000)
+        self.steps_spin.setValue(100000)
+        self.steps_spin.setSuffix(" 步")
+        self.batch_spin = QSpinBox()
+        self.batch_spin.setRange(64, 2048)
+        self.batch_spin.setValue(256)
+        self.batch_spin.setSuffix(" 批大小")
+        param_layout.addWidget(QLabel("训练参数:"))
+        param_layout.addWidget(self.lr_spin)
+        param_layout.addWidget(self.steps_spin)
+        param_layout.addWidget(self.batch_spin)
+        param_group.setLayout(param_layout)
+
+        # 状态显示
+        status_group = QGroupBox("系统状态")
+        status_layout = QVBoxLayout()
+        self.log_area = QTextEdit()
+        self.log_area.setReadOnly(True)
+        self.log_area.setFont(QFont("Consolas", 10))
+        self.progress_bar = QProgressBar()
+        self.progress_bar.setAlignment(Qt.AlignCenter)
+        self.status_label = QLabel("就绪")
+        self.status_label.setStyleSheet("font-weight: bold; color: #444;")
+        status_layout.addWidget(self.log_area)
+        status_layout.addWidget(self.progress_bar)
+        status_layout.addWidget(self.status_label)
+        status_group.setLayout(status_layout)
+
+        main_layout.addWidget(control_group)
+        main_layout.addWidget(param_group)
+        main_layout.addWidget(status_group)
+
+        # 信号连接
+        self.btn_init.clicked.connect(self.init_environment)
+        self.btn_train.clicked.connect(self.start_training)
+        self.btn_demo.clicked.connect(self.start_demo)
+        self.btn_stop.clicked.connect(self.stop_all)
+        self.btn_load.clicked.connect(self.load_model)
+        self.toggle_controls(True)
+
+    def toggle_controls(self, ready):
+        self.btn_init.setEnabled(ready)
+        self.btn_train.setEnabled(ready and self.current_model is None)
+        self.btn_demo.setEnabled(ready and self.current_model is not None)
+        self.btn_load.setEnabled(ready)
+        self.btn_stop.setEnabled(not ready)
+
+    def log_message(self, msg_type, message):
+        if msg_type == "error":
+            self.log_area.append(f'<span style="color: red;">[ERROR] {message}</span>')
+            QMessageBox.critical(self, "错误", message)
+        elif msg_type == "status":
+            self.status_label.setText(message)
+            self.log_area.append(f'[STATUS] {message}')
+        else:
+            self.log_area.append(f'[INFO] {message}')
+
+    def init_environment(self):
+        try:
+            self.log_message("status", "正在连接Carla服务器...")
+            test_env = EnhancedPedestrianEnv()
+            reset_environment(test_env)
+            test_env.close()
+            self.log_message("status", "环境初始化成功！")
+            QMessageBox.information(self, "成功", "Carla连接成功！")
+        except Exception as e:
+            self.log_message("error", f"连接失败: {str(e)}")
+
+    def start_training(self):
+        if self.training_thread and self.training_thread.isRunning():
+            return
+
+        train_params = {
+            "learning_rate": self.lr_spin.value(),
+            "n_steps": 1024,
+            "batch_size": self.batch_spin.value(),
+            "total_steps": self.steps_spin.value(),
+            "policy_kwargs": {
+                "net_arch": {"pi": [128, 128], "vf": [128, 128]},
+                "activation_fn": torch.nn.ReLU,
+                "ortho_init": True
+            }
+        }
+
+        self.training_thread = TrainingThread({}, train_params)
+        self.training_thread.update_signal.connect(self.log_message)
+        self.training_thread.progress_signal.connect(lambda v: self.progress_bar.setValue(v))
+        self.training_thread.finished_signal.connect(self.training_finished)
+        self.progress_bar.setRange(0, train_params["total_steps"])
+        self.toggle_controls(False)
+        self.training_thread.start()
+
+    def training_finished(self, success, message):
+        self.toggle_controls(True)
+        if success:
+            self.current_model = message
+            self.log_message("status", f"训练完成！模型路径: {message}")
+        else:
+            self.log_message("error", message)
+
+    def start_demo(self):
+        if not self.current_model:
+            QMessageBox.warning(self, "警告", "请先加载或训练模型！")
+            return
+
+        self.demo_thread = QThread()
+        self.demo_thread.run = lambda: run_navigation_demo(
+            self.current_model,
+            gui_callback=self.log_message
+        )
+        self.demo_thread.finished.connect(lambda: self.toggle_controls(True))
+        self.toggle_controls(False)
+        self.demo_thread.start()
+
+    def load_model(self):
+        path, _ = QFileDialog.getOpenFileName(self, "选择模型文件", "", "ZIP Files (*.zip)")
+        if path:
+            try:
+                PPO.load(path)
+                self.current_model = path
+                self.log_message("status", f"模型加载成功: {path}")
+            except Exception as e:
+                self.log_message("error", f"加载失败: {str(e)}")
+
+    def stop_all(self):
+        if self.training_thread and self.training_thread.isRunning():
+            self.training_thread.stop()
+            self.training_thread.quit()
+            self.log_message("status", "训练已终止")
+        if self.demo_thread and self.demo_thread.isRunning():
+            self.demo_thread.quit()
+            self.log_message("status", "演示已停止")
+        self.toggle_controls(True)
+
+    def closeEvent(self, event):
+        self.stop_all()
+        event.accept()
 
 
 if __name__ == "__main__":
-    # 训练阶段
-    env = EnhancedPedestrianEnv()
-    reset_environment(env)  # 每次开始训练前重置环境
-
-    wrapped_env = TrainingWrapper(env)
-    vec_env = DummyVecEnv([lambda: wrapped_env])
-
-    model = PPO(
-        policy="MlpPolicy",
-        env=vec_env,
-        # 核心参数调整
-        learning_rate=1e-4,  # 降低学习率
-        n_steps=1024,  # 减小批大小
-        batch_size=256,
-        gamma=0.99,
-        gae_lambda=0.95,
-        clip_range=0.2,  # 增大剪切范围
-        clip_range_vf=0.2,
-        ent_coef=0.02,  # 增强探索
-        target_kl=0.05,  # 放宽KL阈值
-
-        # 网络结构调整
-        policy_kwargs={
-            "net_arch": {
-                "pi": [128, 128],  # 简化网络
-                "vf": [128, 128]
-            },
-            "activation_fn": torch.nn.ReLU,
-            "ortho_init": True,
-            "log_std_init": -0.3,  # 调整初始标准差
-        },
-
-        # 设备强制使用GPU
-        device='cuda',
-        verbose=1
-    )
-    wrapped_env.model = model
-
-    try:
-        print("=== 开始训练 ===")
-        print("第一阶段训练（100k steps）...")
-        model.learn(100000)
-        print("第二阶段训练（150k  steps）...")
-        model.learn(150000, reset_num_timesteps=False)
-
-        # 保存最终模型
-        model.save("pedestrian_ppo")
-        print("\n训练完成，模型已保存为 pedestrian_ppo.zip")
-
-    finally:
-        vec_env.close()
-
-    # 导航演示阶段
-    try:
-        print("\n=== 开始导航演示 ===")
-        run_navigation_demo("pedestrian_ppo", episodes=1)
-    except Exception as e:
-        print(f"导航演示发生错误: {str(e)}")
-    finally:
-        # 确保彻底关闭环境
-        env.close()
-        time.sleep(2)
-
+    app = QApplication(sys.argv)
+    window = CarlaPedestrianGUI()
+    window.show()
+    sys.exit(app.exec_())
 \end{lstlisting}
