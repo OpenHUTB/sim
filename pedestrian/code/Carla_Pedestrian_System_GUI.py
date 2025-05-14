@@ -1,8 +1,3 @@
-\chapter{附录代码}
-
-\begin{lstlisting}[language=Python]
-
-\section{基于强化学习PPO算法的行人导航系统}
 import sys
 import time
 import carla
@@ -977,4 +972,3 @@ if __name__ == "__main__":
     window = CarlaPedestrianGUI()
     window.show()
     sys.exit(app.exec_())
-\end{lstlisting}
