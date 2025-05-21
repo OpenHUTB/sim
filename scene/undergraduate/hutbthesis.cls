@@ -761,7 +761,7 @@
 		\vspace{40pt}
 		\begingroup
 		% 做系统的用“毕业设计”，做算法的用毕业论文
-		\fontsize{50.0}{50}\selectfont 毕业设计 \par
+		\fontsize{50.0}{50}\selectfont 毕业设计(论文) \par
 		% 45磅，黑体
 		\endgroup
 		\vspace*{6pt}
