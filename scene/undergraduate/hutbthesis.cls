@@ -750,7 +750,8 @@
 	\begin{center}
 		\vspace*{0pt}
 		\begin{figure}[hbt]
-			\noindent
+			% \noindent 表示logo靠左对齐j
+			\centering  % logo居中对齐
 			\ifhutb@type@print
 			\includegraphics[width=0.7\textwidth]{hutb_and_log.png}
 			\else
@@ -760,7 +761,7 @@
 		\vspace{40pt}
 		\begingroup
 		% 做系统的用“毕业设计”，做算法的用毕业论文
-		\fontsize{50.0}{50}\selectfont 毕业设计(论文) \par
+		\fontsize{50.0}{50}\selectfont 毕业设计 \par
 		% 45磅，黑体
 		\endgroup
 		\vspace*{6pt}
@@ -783,7 +784,7 @@
 		\linespread{1.3}
 		\zihao{-2} 
 		\songti
-		\begin{tabular}{ll}
+		\begin{tabular}{ll} % 实线是 \underline
 			\hspace{12pt} \makebox[4em][s]{\textbf{题\qquad 目}} & \underline{\parbox[b][][c]{250pt}{\center \kaishu \@titlecn}} \\
 			\hspace{12pt} \makebox[4em][s]{\textbf{学生姓名}} & \underline{\makebox[250pt][c]{\kaishu \@author}} \\
 			\hspace{12pt} \makebox[4em][s]{\textbf{学\qquad 号}} & \underline{\makebox[250pt][c]{\kaishu \@studentid}}  \\
@@ -1137,8 +1138,9 @@ chapter = {%
 	afterskip    = {40pt},
 	% afterskip    = {\ifhutb@type@graduate 30pt\else 20pt\fi},
 },
+% 二级标题
 section = {%
-	format       = \zihao{-4} \heiti,
+	format       = \zihao{4} \bfseries \songti,
 	afterindent  = true,
 	% beforeskip 默认为 3.5ex plus 1ex minus .2ex 适当缩减
 	% beforeskip   = {20pt},
@@ -1146,15 +1148,17 @@ section = {%
 	% afterskip 默认为 2.3ex plus .2ex 适当缩减
 	afterskip    = {1ex \@plus .2ex},
 },
+% 三级标题
 subsection = {%
-	format       = \zihao{-4} \bfseries \songti,
+	format       = \zihao{-4} \songti,
 	afterindent  = true,
 	% afterskip 默认为 2.3ex plus .2ex 适当缩减
 	afterskip    = {1ex \@plus .2ex},
 	%fixskip      = true,
 },
+% 四级标题
 subsubsection = {%
-	format       = \zihao{-4} \normalfont,
+	format       = \zihao{-4} \songti,
 	afterindent  = true,
 	afterskip    = {1ex \@plus .2ex},
 	%fixskip      = true,

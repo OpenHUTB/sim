@@ -5,13 +5,15 @@
 在自动驾驶技术快速发展的背景下，自动驾驶系统的测试与验证变得特别重要，传统测试方法通常依靠手动构建场景，这种方式不仅耗费时间精力，而且难以覆盖复杂交通场景，为提高测试效率和覆盖度，本研究提出基于自然语言描述的三维智能驾驶场景生成系统，该系统能自动把用户输入的自然语言场景描述，转化为可执行的仿真场景并在CARLA仿真平台验证。
 
 本系统的一大核心优势是能利用生成的智能驾驶场景，为自动驾驶技术提供高效且低成本的测试平台，传统人工构建测试场景的方法不仅耗时还费力，并且难以覆盖复杂的交通场景，使得测试成本高昂且效率非常低下，相比之下本系统借助自然语言输入和自动化场景生成技术，能够快速生成多样化的驾驶场景，显著提高了测试效率，用户只需通过简单的自然语言描述来输入，系统就可自动生成对应的三维智能驾驶场景，并在CARLA仿真平台上进行验证，这种自动化流程大大减少了人工干预，有效降低了测试成本，此外系统支持多种语义表达和场景组合，能够生成丰富的测试用例，满足不同阶段自动驾驶技术测试需求，通过这种方式本系统不仅能加速智能驾驶技术的开发和验证过程，还能为研究人员和工程师提供灵活可扩展的测试工具，推动智能驾驶技术不断发展。
+\subsection{自然语言驱动的场景生成优势与实现}
 
+自然语言作为人类最直观的表达方式能极大降低自动驾驶测试场景构建门槛，系统运用先进的自然语言处理技术可对用户文本描述进行深入语义理解，能自动解析其中场景元素、交通参与者、环境条件及其动态行为，基于解析结果系统调用预设场景模板与动态生成模块自动构建符合描述的高保真三维驾驶场景，这种基于自然语言的自动生成方式提高了场景设计的灵活性和多样性还支持复杂场景快速搭建，像不同天气、道路结构、交通密度等多样化条件都能满足，同时系统与CARLA平台无缝集成实现场景即时仿真和验证方便测试人员及时调整和优化测试用例，该方法有效缩短测试准备周期提升测试质量有助于覆盖更多复杂和极端驾驶情境，为自动驾驶系统的安全性和鲁棒性提供坚实保障。
 
 \section{系统总体架构设计}
-系统整体采用模块化分层设计，主要分为三个核心模块，每个模块分有几个子模块分别负责不同阶段的处理任务，构成完整的自然语言驱动智能驾驶场景生成流程:
+系统整体采用模块化分层设计，包括展示层、中间层、数据层，其中本文核心重点在中间层，其主要分为三个核心模块，每个模块分有几个子模块分别负责不同阶段的处理任务，构成完整的自然语言驱动智能驾驶场景生成流程:
 \begin{figure}[H]
 	\centering
-	\includegraphics[width=1.0\textwidth]{images/系统架构图.pdf}
+	\includegraphics[width=1.0\textwidth]{images/系统架构图1.png}
 	\caption{系统架构}
 	\label{fig:system-architecture}
 \end{figure}
@@ -27,13 +29,43 @@
 结构生成模块作为本系统连接语义理解和仿真执行的核心环节，其主要任务是把语义检索得到的场景结构模板和自然语言输入内容进行融合，进而自动生成符合Scenic语法规范的结构化场景脚本也就是.scenic文件，该模块不但要对场景中的交通参与者及其属性进行表达，还需要描述它们的行为逻辑、空间约束以及触发机制，以此保证场景具备完整性、可执行性和可控性。
 
 在实际进行实现的时候，系统维护着一组参数化 Scenic 模板脚本，模板里面预先设置了车辆、行人、道路、红绿灯等典型交通元素的结构框架与行为函数，要是用户输入“自车前方有行人突然横穿马路并停在车前”这样的内容，系统会匹配到“横穿 - 阻挡”场景模板，还会结合输入语义给其中的参数插槽自动赋值，像横穿速度、横穿位置、停止距离等。
-如图:
-\begin{figure}[H]
-	\centering
-	\includegraphics[width=1.0\textwidth]{images/scenic脚本示例1.png}
-	\caption{Scenic 脚本示例}
-	\label{fig:scenic-example1}
-\end{figure}
+如下:
+\begin{lstlisting}
+	""" The ego vehicle is driving on a straight road; the adversarial pedestrian suddenly crosses the road from the right front and suddenly stops in front of the ego.
+	"""
+	Town = globalParameters.town
+	EgoSpawnPt = globalParameters.spawnPt
+	yaw = globalParameters.yaw
+	egoTrajectory = PolylineRegion(globalParameters.waypoints)
+	param map = localPath(f'../maps/{Town}.xodr') 
+	param carla_map = Town
+	model scenic.simulators.carla.model
+	EGO_MODEL = "vehicle.carlamotors.carlacola"
+	
+	behavior AdvBehavior():
+	do CrossingBehavior(ego, globalParameters.OPT_ADV_SPEED, globalParameters.OPT_ADV_DISTANCE) until (distance from self to egoTrajectory) < globalParameters.OPT_STOP_DISTANCE
+	while True:
+	take SetWalkingSpeedAction(0)
+	
+	param OPT_GEO_X_DISTANCE = Range(2, 8)
+	param OPT_GEO_Y_DISTANCE = Range(15, 50)
+	param OPT_ADV_SPEED = Range(0, 5)
+	param OPT_ADV_DISTANCE = Range(0, 15)
+	param OPT_STOP_DISTANCE = Range(0, 1)
+	
+	ego = Car at EgoSpawnPt,
+	with heading yaw,
+	with regionContainedIn None,
+	with blueprint EGO_MODEL
+	
+	IntSpawnPt = OrientedPoint following roadDirection from EgoSpawnPt for globalParameters.OPT_GEO_Y_DISTANCE
+	AdvAgent = Pedestrian right of IntSpawnPt by globalParameters.OPT_GEO_X_DISTANCE,
+	with heading IntSpawnPt.heading + 90 deg,
+	with regionContainedIn None,
+	with behavior AdvBehavior()
+	
+	require (distance from AdvAgent to intersection) > 10
+\end{lstlisting}
 
 
 

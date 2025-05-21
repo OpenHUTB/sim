@@ -1,4 +1,3 @@
-
 \chapter{系统设计与实现}
 \section{开发环境}
 \subsection{硬件环境}
@@ -59,7 +58,7 @@
 本模块负责接收自然语言输入并生成对应的Scenic场景描述。具体流程如下：
 
 输入：自然语言形式的场景描述，例如“The ego vehicle is driving on a straight road; the adversarial pedestrian suddenly appears from behind a parked car on the right front and suddenly stop.”。
-检索增强：使用 \texttt{sentence-transformers} 中的 \texttt{sentence-t5-large} 模型对输入进行向量化表示，并在本地检索数据库（如 \texttt{retrieve/scenario\_descriptions.\\txt}）中查找相似描述作为参考样本。
+检索增强：使用 \texttt{sentence-transformers} 中的 \texttt{sentence-t5-large} 模型对输入进行向量化表示，并在本地检索数据库（如 \texttt{retrieve/scenario\_descrip\\tions.txt}）中查找相似描述作为参考样本。
 大语言模型解析：采用预训练的大语言模型（如 GPT-4o），结合检索到的参考样本，生成符合输入语义的 Scenic 脚本。
 场景拼接机制：根据场景复杂度，支持对多个子元素（如车辆、行人、环境条件）进行组织与拼接。
 
@@ -89,12 +88,46 @@ Scenic解析：本系统会先借助Scenic内置的语法与语义分析器来�
 
 （4）The ego vehicle is driving on a straight road when a pedestrian suddenly crosses from the right front and suddenly stops as the ego vehicle approaches.
 
+下面我用一个具体的例子展示我是如何实现carla场景生成的，
+\textbf{场景描述：} 自车在直路上行驶时，一名行人突然从右前方穿出
+
+\indent （自然语言输入）The ego vehicle is driving on a straight road when a pedestrian suddenly crosses from the right front and suddenly stops as the ego vehicle approaches.\\
+\begin{lstlisting}[language=Python, caption={场景关键代码示例}, label={lst:scenic_key}, numbers=left, xleftmargin=2em]
+	behavior AdvBehavior():
+	do CrossingBehavior(ego, globalParameters.OPT_ADV_SPEED, globalParameters.OPT_ADV_DISTANCE) 
+	until (distance from self to egoTrajectory) < globalParameters.OPT_STOP_DISTANCE
+	while True:
+	take SetWalkingSpeedAction(0)
+	
+	ego = Car at EgoSpawnPt,
+	with heading yaw,
+	with regionContainedIn None,
+	with blueprint EGO_MODEL
+	
+	IntSpawnPt = OrientedPoint following roadDirection from EgoSpawnPt 
+	for globalParameters.OPT_GEO_Y_DISTANCE
+	AdvAgent = Pedestrian right of IntSpawnPt by globalParameters.OPT_GEO_X_DISTANCE,
+	with heading IntSpawnPt.heading + 90 deg,
+	with regionContainedIn None,
+	with behavior AdvBehavior()
+	
+	require (distance from AdvAgent to intersection) > 10
+\end{lstlisting}
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=0.8\textwidth]{"images/场景5.pdf"}
+	\caption{场景截图}
+	\label{}
+\end{figure}
+调用生成的scenic代码，实现仿真模拟脚本，以及场景保存。
 \subsection{场景评估与展示模块}
 
 场景评估与展示模块的目的是对生成的三维仿真场景做可视化呈现和定量分析，此模块方便研究人员直观了解场景生成具体效果，也为后续性能比较、模型调优以及系统验证提供评估依据，该模块包含下面几个关键功能：
 
 
-可视化展示：在仿真进行的过程当中系统能够自动截取关键帧的截图，或者录制完整的仿真过程视频并保存成图像或视频文件，这些可供研究人员用来做人工审阅、可视化报告展示以及用户研究评估，截图一般会选择交通事件发生点像刹车、避障、碰撞等情况，或者特定的时序节点，以此确保所展示信息具备代表性与丰富性，视频部分可以借助CARLA原生录制功能或者集成第三方渲染引擎来实现，并且支持多角度、多摄像机的可视观察，从而进一步增强场景调试与验证方面的可操作性。
+可视化展示：在仿真进行的过程当中系统能够自动截取关键帧的截图，或者录制完整的仿真过程视频并保存成图像或视频文件，截图一般会选择交通事件发生点像刹车、避障、碰撞等情况，或者特定的时序节点，以此确保所展示信息具备代表性与丰富性，视频部分可以借助CARLA原生录制功能或者集成第三方渲染引擎来实现，并且支持多角度、多摄像机的可视观察，从而进一步增强场景调试与验证方面的可操作性。
+
+评价指标主要涵盖安全性、驾驶性能、场景语义一致性和系统鲁棒性等多个方面，安全性指标包含碰撞次数、闯红灯次数、交通规则违章等内容，用来衡量系统的安全保障能力，驾驶性能指标诸如轨迹偏差、车道保持率和速度控制平稳性，反映车辆行驶的准确性和舒适度，场景语义一致性指标评估生成场景与自然语言描述的匹配度及多样性，系统鲁棒性指标关注系统在异常情况下的恢复能力及对复杂环境的适应性，综合这些指标能够全面量化自动驾驶系统在不同测试场景中的表现并指导系统优化与改进。
 
 量化评估：本系统是在自动化生成以及仿真的基础之上，进一步引入多维度的量化评估指标，以此对场景生成的有效性、合理性和多样性进行定量测量，具体涵盖的内容有：
 
@@ -105,10 +138,35 @@ Scenic解析：本系统会先借助Scenic内置的语法与语义分析器来�
 
 （3）驾驶性能指标（Driving Performance）：为了评估生成场景对自动驾驶系统测试价值，本模块支持在生成场景里运行预设自动驾驶控制系统，像基于CARLA的自动驾驶Agent并记录其表现，关键评估维度包含碰撞率也就是单位场景中发生碰撞的比例、任务成功率即是否成功完成任务或驶出场景、路径偏离率指与理想路径的偏差程度等，这些数据能够用于评估生成场景的挑战性与安全测试覆盖度，是场景质量评估的重要依据。
 
-评估结果展示与导出：系统将展示代码运行出的评估结果用列出的形式来做可视化展示，这样方便研究人员开展对比分析以及生成结果报告，所有截图、评估指标还有分析数据都可以导出成标准格式文件，例如CSV、JSON、PNG等，可用于论文撰写、模型调试或者进一步的数据挖掘。
+评估结果展示与导出：系统将展示代码运行出的评估结果用列出的形式来做可视化展示，所有截图、评估指标还有分析数据都可以导出成标准格式文件，例如CSV、JSON、PNG等，可用于论文撰写、模型调试或者进一步的数据挖掘。
 
+\begin{table}[H]
+	\centering
+	\caption{系统评估结果}
+	\label{tab:evaluation_results}
+	\begin{tabular}{lc}
+		\toprule
+		指标名称 & 数值 \\
+		\midrule
+		碰撞率 (collision\_rate) & 0.0 \\
+		红灯违规频率 (avg\_red\_light\_freq) & 0.0 \\
+		停车标志违规频率 (avg\_stop\_sign\_freq) & 0.0 \\
+		出路面长度 (out\_of\_road\_length) & 0.0 \\
+		路线跟踪稳定性 (route\_following\_stability) & 0.806 \\
+		路线完成度 (route\_completion) & 0.93 \\
+		平均时间消耗 (avg\_time\_spent) & 4.5 \\
+		平均加速度 (avg\_acceleration) & 0.32 \\
+		平均偏航角速度 (avg\_yaw\_velocity) & 0.0 \\
+		车道入侵频率 (avg\_lane\_invasion\_freq) & 0.0 \\
+		安全操作得分 (safety\_os) & 1.0 \\
+		任务完成得分 (task\_os) & 0.802 \\
+		舒适度得分 (comfort\_os) & 1.0 \\
+		最终综合得分 (final\_score) & 0.941 \\
+		\bottomrule
+	\end{tabular}
+\end{table}
 
-
+在这个示例评估当中系统表现出了较高安全性，碰撞率和交通违规频率两个数据都为零，这说明系统在基础安全保障方面表现良好，路线跟踪稳定性达到了大约0.81这个数值，显示出系统具备着较好的路径跟踪能力，路线完成度上可能意味着也有不错的按预定路线行驶，安全操作和舒适度的得分都拿到了满分，表明车辆运行状态平稳且符合安全标准，最终综合得分是0.94这个成绩，整体表现算得上优秀但仍存在提升空间，特别是在任务完成度这一方面。
 
 
 
