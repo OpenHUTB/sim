@@ -1,0 +1,130 @@
+\contentsline {chapter}{\numberline {第1章\hspace {.3em}}绪论}{1}{chapter.1}%
+\contentsline {section}{\numberline {1.1}研究背景和研究意义}{1}{section.1.1}%
+\contentsline {subsection}{\numberline {1.1.1}研究背景}{1}{subsection.1.1.1}%
+\contentsline {subsection}{\numberline {1.1.2}研究意义}{2}{subsection.1.1.2}%
+\contentsline {section}{\numberline {1.2}国内外研究动态}{3}{section.1.2}%
+\contentsline {subsection}{\numberline {1.2.1}国外研究动态}{3}{subsection.1.2.1}%
+\contentsline {subsection}{\numberline {1.2.2}国内研究动态}{4}{subsection.1.2.2}%
+\contentsline {section}{\numberline {1.3}研究内容与方法}{5}{section.1.3}%
+\contentsline {chapter}{\numberline {第2章\hspace {.3em}}相关文献综述}{6}{chapter.2}%
+\contentsline {section}{\numberline {2.1}多目标跟踪技术发展历程}{6}{section.2.1}%
+\contentsline {subsection}{\numberline {2.1.1}早期的多目标跟踪方法}{6}{subsection.2.1.1}%
+\contentsline {subsection}{\numberline {2.1.2}基于数据关联的多目标跟踪方法}{6}{subsection.2.1.2}%
+\contentsline {subsection}{\numberline {2.1.3}基于深度学习的多目标跟踪方法}{6}{subsection.2.1.3}%
+\contentsline {subsubsection}{\numberline {(1)}基于检测的跟踪（TBD）：检测-关联的深度增强}{6}{subsubsection.2.1.3.1}%
+\contentsline {subsubsection}{\numberline {(2)}端到端跟踪：一体化建模的前沿探索}{7}{subsubsection.2.1.3.2}%
+\contentsline {section}{\numberline {2.2}智慧交通系统中的多目标跟踪应用}{7}{section.2.2}%
+\contentsline {subsection}{\numberline {2.2.1}交通流量监测}{7}{subsection.2.2.1}%
+\contentsline {subsubsection}{\numberline {(1)}交通参数实时监测与数据驱动决策}{7}{subsubsection.2.2.1.1}%
+\contentsline {subsubsection}{\numberline {(2)}智能信号控制与通行效率优化}{7}{subsubsection.2.2.1.2}%
+\contentsline {subsection}{\numberline {2.2.2}智能驾驶辅助}{8}{subsection.2.2.2}%
+\contentsline {subsection}{\numberline {2.2.3}交通事件预警}{9}{subsection.2.2.3}%
+\contentsline {section}{\numberline {2.3}现在多目标跟踪算法的优缺点分析}{9}{section.2.3}%
+\contentsline {subsection}{\numberline {2.3.1}优点}{9}{subsection.2.3.1}%
+\contentsline {subsection}{\numberline {2.3.2}缺点}{10}{subsection.2.3.2}%
+\contentsline {chapter}{\numberline {第3章\hspace {.3em}}研究方法}{11}{chapter.3}%
+\contentsline {section}{\numberline {3.1}数据收集与预处理}{11}{section.3.1}%
+\contentsline {subsection}{\numberline {3.1.1}基于仿真场景Town10的交通场景视频收集}{11}{subsection.3.1.1}%
+\contentsline {subsubsection}{\numberline {(1)}仿真环境搭建}{11}{subsubsection.3.1.1.1}%
+\contentsline {subsubsection}{\numberline {(2)}视频数据收集}{11}{subsubsection.3.1.1.2}%
+\contentsline {subsection}{\numberline {3.1.2}从模拟器中获取Ground Truth数据}{12}{subsection.3.1.2}%
+\contentsline {subsubsection}{\numberline {(1)}Ground Truth数据提取}{12}{subsubsection.3.1.2.1}%
+\contentsline {subsubsection}{\numberline {(2)}数据预处理}{13}{subsubsection.3.1.2.2}%
+\contentsline {section}{\numberline {3.2}处理轨迹数据}{13}{section.3.2}%
+\contentsline {subsection}{\numberline {3.2.1}收集轨迹坐标数据}{13}{subsection.3.2.1}%
+\contentsline {subsection}{\numberline {3.2.2}轨迹坐标数据预处理}{13}{subsection.3.2.2}%
+\contentsline {subsection}{\numberline {3.2.3}获取转化轨迹坐标数据}{14}{subsection.3.2.3}%
+\contentsline {subsection}{\numberline {3.2.4}轨迹坐标再识别}{15}{subsection.3.2.4}%
+\contentsline {section}{\numberline {3.3}轨迹预测分析}{15}{section.3.3}%
+\contentsline {subsection}{\numberline {3.3.1}现有检测跟踪模型的分析}{15}{subsection.3.3.1}%
+\contentsline {subsubsection}{\numberline {(1)}基于检测的跟踪模型}{15}{subsubsection.3.3.1.1}%
+\contentsline {subsubsection}{\numberline {(2)}端到端的跟踪模型}{15}{subsubsection.3.3.1.2}%
+\contentsline {subsection}{\numberline {3.3.2}模型优化策略与方法}{16}{subsection.3.3.2}%
+\contentsline {subsubsection}{\numberline {(1)}模型结构优化}{16}{subsubsection.3.3.2.1}%
+\contentsline {subsubsection}{\numberline {(2)}数据关联优化}{16}{subsubsection.3.3.2.2}%
+\contentsline {subsubsection}{\numberline {(3)}训练策略优化}{17}{subsubsection.3.3.2.3}%
+\contentsline {subsection}{\numberline {3.3.3}性能指标的选择与定义}{17}{subsection.3.3.3}%
+\contentsline {subsubsection}{\numberline {(1)}目标检测指标}{17}{subsubsection.3.3.3.1}%
+\contentsline {subsubsection}{\numberline {(2)}数据关联指标}{17}{subsubsection.3.3.3.2}%
+\contentsline {subsubsection}{\numberline {(3)}跟踪性能指标}{18}{subsubsection.3.3.3.3}%
+\contentsline {chapter}{\numberline {第4章\hspace {.3em}}实验环境搭建}{19}{chapter.4}%
+\contentsline {section}{\numberline {4.1}仿真环境配置}{19}{section.4.1}%
+\contentsline {subsection}{\numberline {4.1.1}Carla 仿真平台}{19}{subsection.4.1.1}%
+\contentsline {subsection}{\numberline {4.1.2}Pycharm环境配置}{19}{subsection.4.1.2}%
+\contentsline {subsection}{\numberline {4.1.3}Matlab环境配置}{19}{subsection.4.1.3}%
+\contentsline {section}{\numberline {4.2}实验设备与软件工具}{21}{section.4.2}%
+\contentsline {subsection}{\numberline {4.2.1}硬件设备}{21}{subsection.4.2.1}%
+\contentsline {subsection}{\numberline {4.2.2}软件工具}{22}{subsection.4.2.2}%
+\contentsline {chapter}{\numberline {第5章\hspace {.3em}}实验过程}{24}{chapter.5}%
+\contentsline {section}{\numberline {5.1}基础控制}{24}{section.5.1}%
+\contentsline {subsection}{\numberline {5.1.1}轨迹平滑控制}{24}{subsection.5.1.1}%
+\contentsline {subsection}{\numberline {5.1.2}实现步骤}{24}{subsection.5.1.2}%
+\contentsline {subsection}{\numberline {5.1.3}PID 控制}{25}{subsection.5.1.3}%
+\contentsline {section}{\numberline {5.2}基于雷达和相机获取小车坐标数据}{25}{section.5.2}%
+\contentsline {subsection}{\numberline {5.2.1}激光雷达检测}{25}{subsection.5.2.1}%
+\contentsline {subsubsection}{\numberline {(1)}点云数据预处理}{26}{subsubsection.5.2.1.1}%
+\contentsline {subsubsection}{\numberline {(2)}训练}{26}{subsubsection.5.2.1.2}%
+\contentsline {subsection}{\numberline {5.2.2}激光雷达和摄像头数据的对象级融合}{26}{subsection.5.2.2}%
+\contentsline {subsubsection}{\numberline {(1)}收集轨迹跟踪的数据}{26}{subsubsection.5.2.2.1}%
+\contentsline {subsubsection}{\numberline {(2)}数据预处理}{28}{subsubsection.5.2.2.2}%
+\contentsline {subsubsection}{\numberline {(3)}数据融合，获取轨迹}{28}{subsubsection.5.2.2.3}%
+\contentsline {subsubsection}{\numberline {(4)}坐标转换}{28}{subsubsection.5.2.2.4}%
+\contentsline {subsection}{\numberline {5.2.3}Re-ID网络再识别}{28}{subsection.5.2.3}%
+\contentsline {subsubsection}{\numberline {(1)}收集车辆再识别数据集}{28}{subsubsection.5.2.3.1}%
+\contentsline {subsubsection}{\numberline {(2)}数据裁剪}{28}{subsubsection.5.2.3.2}%
+\contentsline {subsubsection}{\numberline {(3)}训练}{30}{subsubsection.5.2.3.3}%
+\contentsline {subsubsection}{\numberline {(4)}测试}{30}{subsubsection.5.2.3.4}%
+\contentsline {subsection}{\numberline {5.2.4}路口间车辆轨迹匹配}{30}{subsection.5.2.4}%
+\contentsline {subsubsection}{\numberline {(1)}生成可作匹配的轨迹}{30}{subsubsection.5.2.4.1}%
+\contentsline {subsubsection}{\numberline {(2)}车辆轨迹匹配}{31}{subsubsection.5.2.4.2}%
+\contentsline {subsubsection}{\numberline {(3)}运行}{31}{subsubsection.5.2.4.3}%
+\contentsline {subsection}{\numberline {5.2.5}重复上述步骤}{31}{subsection.5.2.5}%
+\contentsline {section}{\numberline {5.3}小车轨迹复现}{31}{section.5.3}%
+\contentsline {subsection}{\numberline {5.3.1}对轨迹数据的优化}{31}{subsection.5.3.1}%
+\contentsline {subsubsection}{\numberline {(1)}计算两条轨迹的重合度}{31}{subsubsection.5.3.1.1}%
+\contentsline {subsubsection}{\numberline {(2)}计算轨迹的多个指标}{32}{subsubsection.5.3.1.2}%
+\contentsline {subsubsection}{\numberline {(3)}计算所有车辆的误差}{32}{subsubsection.5.3.1.3}%
+\contentsline {subsection}{\numberline {5.3.2}坐标数据再处理}{32}{subsection.5.3.2}%
+\contentsline {subsubsection}{\numberline {(1)}多路口车辆轨迹数据}{32}{subsubsection.5.3.2.1}%
+\contentsline {subsubsection}{\numberline {(2)}转化轨迹数据格式}{33}{subsubsection.5.3.2.2}%
+\contentsline {subsection}{\numberline {5.3.3}开始复现}{33}{subsection.5.3.3}%
+\contentsline {section}{\numberline {5.4}结果分析}{33}{section.5.4}%
+\contentsline {subsection}{\numberline {5.4.1}结果性能分析}{34}{subsection.5.4.1}%
+\contentsline {subsubsection}{\numberline {(1)}性能指标}{34}{subsubsection.5.4.1.1}%
+\contentsline {subsubsection}{\numberline {(2)}优化目标}{35}{subsubsection.5.4.1.2}%
+\contentsline {subsection}{\numberline {5.4.2}模型优化}{35}{subsection.5.4.2}%
+\contentsline {subsubsection}{\numberline {(1)}模型优化一：跟踪}{36}{subsubsection.5.4.2.1}%
+\contentsline {subsubsection}{\numberline {(2)}模型优化二：复现}{37}{subsubsection.5.4.2.2}%
+\contentsline {chapter}{\numberline {第6章\hspace {.3em}}本项目的创新点}{39}{chapter.6}%
+\contentsline {section}{\numberline {6.1}多模态传感器融合策略的创新应用}{39}{section.6.1}%
+\contentsline {subsection}{\numberline {6.1.1}数据融合技术}{39}{subsection.6.1.1}%
+\contentsline {subsection}{\numberline {6.1.2}跨模态特征互补}{39}{subsection.6.1.2}%
+\contentsline {section}{\numberline {6.2}检测跟踪模型的优化与性能突破}{39}{section.6.2}%
+\contentsline {subsection}{\numberline {6.2.1}模型结构与参数优化}{39}{subsection.6.2.1}%
+\contentsline {subsection}{\numberline {6.2.2}强化学习与元学习结合}{40}{subsection.6.2.2}%
+\contentsline {section}{\numberline {6.3}跨摄像头目标再识别与轨迹拼接技术}{40}{section.6.3}%
+\contentsline {subsection}{\numberline {6.3.1}Re-ID 网络的定制化训练}{40}{subsection.6.3.1}%
+\contentsline {subsection}{\numberline {6.3.2}多路口轨迹匹配算法}{40}{subsection.6.3.2}%
+\contentsline {section}{\numberline {6.4}工程化与实际应用的探索}{40}{section.6.4}%
+\contentsline {subsection}{\numberline {6.4.1}模块化系统设计}{40}{subsection.6.4.1}%
+\contentsline {subsection}{\numberline {6.4.2}数字孪生与城市级应用}{41}{subsection.6.4.2}%
+\contentsline {chapter}{\numberline {第7章\hspace {.3em}}总结}{42}{chapter.7}%
+\contentsline {section}{\numberline {7.1}课题工作总结}{42}{section.7.1}%
+\contentsline {subsection}{\numberline {7.1.1}总体}{42}{subsection.7.1.1}%
+\contentsline {subsection}{\numberline {7.1.2}实际应用方面}{42}{subsection.7.1.2}%
+\contentsline {section}{\numberline {7.2}研究中的不足}{43}{section.7.2}%
+\contentsline {subsection}{\numberline {7.2.1}数据集的多样性不足}{43}{subsection.7.2.1}%
+\contentsline {subsection}{\numberline {7.2.2}模型的实时性有待提高}{44}{subsection.7.2.2}%
+\contentsline {subsection}{\numberline {7.2.3}缺乏对交通行为的深入分析}{44}{subsection.7.2.3}%
+\contentsline {section}{\numberline {7.3}对于不足的展望}{44}{section.7.3}%
+\contentsline {subsection}{\numberline {7.3.1}多维度真实场景数据采集}{44}{subsection.7.3.1}%
+\contentsline {subsection}{\numberline {7.3.2}轻量化模型设计与计算效率优化}{45}{subsection.7.3.2}%
+\contentsline {subsection}{\numberline {7.3.3}多模态数据融合技术的深化研究与创新路径}{45}{subsection.7.3.3}%
+\contentsline {chapter}{参考文献}{47}{subsection.7.3.3}%
+\contentsline {chapter}{\numberline {附录 A\hspace {.3em}}}{50}{appendix.A}%
+\contentsline {section}{\numberline {A.1}代码Drived.py关键部分}{50}{section.A.1}%
+\contentsline {section}{\numberline {A.2}代码collect lidar dataset.py关键部分}{51}{section.A.2}%
+\contentsline {section}{\numberline {A.3}代码collect intersection camera lidar.py关键部分}{53}{section.A.3}%
+\contentsline {section}{\numberline {A.4}代码collect reid dataset.py关键部分}{56}{section.A.4}%
+\contentsline {section}{\numberline {A.5}代码DEMO.m关键部分}{59}{section.A.5}%
+\contentsfinish 

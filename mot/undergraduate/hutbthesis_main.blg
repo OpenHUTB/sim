@@ -1,0 +1,15 @@
+[0] Config.pm:307> INFO - This is Biber 2.19
+[0] Config.pm:310> INFO - Logfile is 'hutbthesis_main.blg'
+[120] biber-MSWIN64:340> INFO - === 
+[165] Biber.pm:419> INFO - Reading 'hutbthesis_main.bcf'
+[289] Biber.pm:976> INFO - Using all citekeys in bib section 0
+[300] Biber.pm:4419> INFO - Processing section 0
+[311] Biber.pm:4610> INFO - Looking for bibtex file 'content/reference.bib' for section 0
+[368] bibtex.pm:1713> INFO - LaTeX decoding ...
+[405] bibtex.pm:1519> INFO - Found BibTeX data source 'content/reference.bib'
+[697] UCollate.pm:68> INFO - Overriding locale 'en-US' defaults 'variable = shifted' with 'variable = non-ignorable'
+[697] UCollate.pm:68> INFO - Overriding locale 'en-US' defaults 'normalization = NFD' with 'normalization = prenormalized'
+[697] Biber.pm:4239> INFO - Sorting list 'none/global//global/global' of type 'entry' with template 'none' and locale 'en-US'
+[697] Biber.pm:4245> INFO - No sort tailoring available for locale 'en-US'
+[720] bbl.pm:660> INFO - Writing 'hutbthesis_main.bbl' with encoding 'UTF-8'
+[743] bbl.pm:763> INFO - Output to hutbthesis_main.bbl
