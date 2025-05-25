@@ -1,82 +1,43 @@
-# 本科毕业设计模板
+# 基于预训练大模型的高保真驾驶场景生成系统
 
-湖南工商大学本科毕业设计模板。
+## 项目简介
 
-# 使用
-推荐使用 [texstudio](https://pan.baidu.com/s/1Is2-VR1z-tMYvmdinsVY_g?pwd=hutb) 或 [overleaf](https://cn.overleaf.com/) 进行论文撰写。
+本项目旨在利用预训练大模型生成高保真驾驶场景，以支持自动驾驶车辆的安全性测试和验证。通过结合预训练大模型的强大生成能力和专业的仿真工具，我们能够生成多样化的驾驶场景，从而提高自动驾驶系统的安全性和可靠性。
 
-注：在 latex 2023 中编译成功，latex 2016 编译失败（需要更高的版本，其他版本的 latex 没试过）。
+## 项目地址
 
-# 贡献
-有任何对模板格式进行调整的可以提交 [Issues](https://github.com/OpenHUTB/undergraduate/issues) 或 [Pull Request](https://github.com/OpenHUTB/undergraduate/pulls) 。
+[GitHub - zrx0829222/scene: 郑睿翔](https://github.com/zrx0829222/scene.git)
 
-# 选题
-[选题列表](https://github.com/OpenHUTB/undergraduate/wiki/%E6%AF%95%E8%AE%BE%E9%80%89%E9%A2%98) 
+## 环境配置
 
+支持和测试的平台包括：Windows 11 
 
-## 要求
-1. 格式化、注释、文档翻译
-2. 运行
-3. 测试（例子通过）
+### 安装步骤
 
+1. **安装依赖软件**
+   - 下载并安装 Python 3.8、Carla 0.9.13、latex 2023、Texstudio 4.6.4、Git 2.42.0（Windows可使用 `TortoiseGit 2.15.0.0` 作为图形界面进行代码提交）。
+   - 安装 Carla 的 Python API：
+     ```bash
+     export CARLA_ROOT={path/to/your/carla}
+     export PYTHONPATH=$PYTHONPATH:${CARLA_ROOT}/PythonAPI/carla/dist/carla-0.9.15-py3.7-linux-x86_64.egg
+     export PYTHONPATH=$PYTHONPATH:${CARLA_ROOT}/PythonAPI/carla/agents
+     export PYTHONPATH=$PYTHONPATH:${CARLA_ROOT}/PythonAPI/carla
+     export PYTHONPATH=$PYTHONPATH:${CARLA_ROOT}/PythonAPI
+     ```
 
-## 初始化
+2. **克隆项目**
+   ```bash
+   git clone https://github.com/zrx0829222/scene.git
+   cd scene
 
-1. 新建github工程
+3. **安装依赖库**
+   ```bash
+   pip install -r requirements.txt
 
-2. 运行`init_proj('PROJECT_NAME');`
+4. **运行场景生成脚本**
+   ```bash
+   python retrieve.py，run_train_dynamic.py和run_eval_dynamic.py
+   ```
 
-3. 分配开发者
-
-
-## 使用
-克隆仓库
-```shell
-git clone --recursive https://github.com/OpenHUTB/undergraduate.git
-```
-
-## 修改方法
-
-### 添加新的一页
-
-以添加“授权使用说明书”为例：
-
-1.添加内容文件`content/authorizationzh.tex`
-
-2.在模板文件中`hutbthesis.cls`添加：
-```latex
-% 预定义名称
-\newcommand*{\hutb@name@authorization@zh}{声明}
-```
-```latex
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-% 诚信声明
-%
-%
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-
-\newenvironment{authorizationzh} {
-	%\begin{titlepage}%
-	\hutb@pdfbookmark{0}{\hutb@name@authorization@zh}
-	%\renewcommand*{\headsep}{20pt}
-	\vspace*{0pt}
-	%	\begin{center} \zihao{-2} \heiti \@titlecn \end{center}
-	\vspace{0pt}
-	\begin{center} \zihao{2} \heiti 湖南工商大学本科毕业设计版权使用授权书 \end{center}  % 摘要为三号黑体
-	\vspace{12pt}
-	\linespread{1.5}
-	\zihao{4}\songti  % 内容为四号宋体
-
-	%\end{titlepage}%
-
-}
-
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-```
-
-3.在主文件`hutbthesis_main.tex`中引入
-```latex
-\include{content/authorizationzh}
-```
-
-# 贡献者
+5. **查看生成的场景**
+   - 生成的场景将保存在 `output` 目录下，场景信息在 `log` 目录下，每个场景包含一个 `.json` 文件和一个 `.txt` 文件，分别描述了场景的配置和生成的日志。
