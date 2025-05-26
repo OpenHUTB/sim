@@ -599,6 +599,7 @@
 \newcommand*{\schoolcode}[1]{\gdef\@schoolcode{#1}}                     % 学校代码
 \newcommand*{\udc}[1]{\gdef\@udc{#1}}                                   % UDC
 \newcommand*{\academiccategory}[1]{\gdef\@academiccategory{#1}}         % 学术类别
+\newcommand*{\headertitle}[1]{\gdef\@headertitle{#1}}                   % 页眉字符串
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % 页面布局
@@ -619,13 +620,15 @@
 \patchcmd{\chapter}{\thispagestyle}{\@gobble}{}{}
 % 内芯页眉设置
 \ifhutb@type@print
-\fancyhead[L]{\includegraphics[scale=0.10]{hutb_logo_maoti.png}}
+%\fancyhead[L]{\includegraphics[scale=0.10]{hutb_logo_maoti.png}}
 \else
-\fancyhead[L]{\includegraphics[scale=0.10]{hutb_logo_maoti.png}}
+%\fancyhead[L]{\includegraphics[scale=0.10]{hutb_logo_maoti.png}}
 \fi
 % \fancyhf[RH]{\heiti \zihao{-5} {图像与激光融合的轨道扣件脱落检测}} % 设置所有（奇数和偶数）右侧页眉
 % UPDATE 更新配置为论文标题
-\fancyhf[RH]{\heiti \zihao{-5} {\@titlecn}}
+% 清空页眉，具体设置规则参考：https://www.overleaf.com/learn/latex/Headers_and_footers
+\fancyhf{}%
+\fancyhf[HC]{\heiti \zihao{-5} {\@headertitle}}
 % frontmatter设置
 \renewcommand{\frontmatter}{
 	\cleardoublepage
@@ -696,6 +699,7 @@
 % 预定义名称
 \newcommand*{\hutb@name@cover}{扉页}
 \newcommand*{\hutb@name@declaration@zh}{声明}
+\newcommand*{\hutb@name@authorization@zh}{声明}
 \newcommand*{\hutb@name@abstract@zh}{中文摘要}
 \newcommand*{\hutb@name@abstract@en}{英文摘要}
 \newcommand*{\hutb@name@keywords}{关键字}
@@ -714,6 +718,13 @@
 	% \textsuperscript{\cite[#1]{#2}}}
 
 
+% 定义命令：参数1=颜色，参数2=实线长度，参数3=空白长度
+\newcommand{\adjustabledashunderline}[4][black]{%
+	\tikz[baseline=(text.base)]{%
+		\node[inner sep=0pt, outer sep=0pt] (text) {#4};
+		\draw[color=#1, dash pattern=on #2 off #3] (text.south west) -- (text.south east);
+	}%
+}
 
 
 
@@ -746,16 +757,18 @@
 	\begin{center}
 		\vspace*{0pt}
 		\begin{figure}[hbt]
-			\centering
+			% \noindent 表示logo靠左对齐j
+			\centering  % logo居中对齐
 			\ifhutb@type@print
-			\includegraphics[width=0.6\textwidth]{hutb_logo_maoti.png}
+			\includegraphics[width=0.7\textwidth]{hutb_and_log.png}
 			\else
-			\includegraphics[width=0.6\textwidth]{hutb_logo_maoti.png}
+			\includegraphics[width=0.7\textwidth]{hutb_and_log.png}
 			\fi
 		\end{figure}
-		\vspace{0pt}
+		\vspace{40pt}
 		\begingroup
-		\fontsize{45}{50}\selectfont 本科毕业设计(论文) \par
+		% 做系统的用“毕业设计”，做算法的用毕业论文
+		\fontsize{50.0}{50}\selectfont 毕业论文 \par
 		% 45磅，黑体
 		\endgroup
 		\vspace*{6pt}
@@ -766,10 +779,11 @@
 		\endgroup
 		\begin{figure}[hbt]
 			\centering
+			\vspace{55pt} % 空行
 			\ifhutb@type@print
-			\includegraphics[width=0.2\textwidth]{hutb_logo.png}
+			%\includegraphics[width=0.2\textwidth]{hutb_logo.png}
 			\else
-			\includegraphics[width=0.2\textwidth]{hutb_logo.png}
+			%\includegraphics[width=0.2\textwidth]{hutb_logo.png}
 			\fi
 		\end{figure}
 		\vspace{10pt} % 空行
@@ -777,14 +791,15 @@
 		\linespread{1.3}
 		\zihao{-2} 
 		\songti
-		\begin{tabular}{ll}
-			\hspace{12pt} \makebox[4em][s]{\textbf{题\qquad 目：}} & \underline{\parbox[b][][c]{250pt}{\center \kaishu \@titlecn}} \\
-			\hspace{12pt} \makebox[4em][s]{\textbf{学生姓名：}} & \underline{\makebox[250pt][c]{\kaishu \@author}} \\
-			\hspace{12pt} \makebox[4em][s]{\textbf{学\qquad 号：}} & \underline{\makebox[250pt][c]{\kaishu \@studentid}}  \\
-			\hspace{12pt} \makebox[4em][s]{\textbf{专\qquad 业：}} & \underline{\makebox[250pt][c]{\kaishu \@priormajor}}  \\
-			\hspace{12pt} \makebox[4em][s]{\textbf{班\qquad 级：}} & \underline{\makebox[250pt][c]{\kaishu \@myclass}}  \\
-			\hspace{12pt} \makebox[4em][s]{\textbf{指导老师：}} &  \underline{\makebox[250pt][c]{\kaishu \@supervisor}}  \\
-			%\hspace{12pt} \makebox[4em][s]{学\qquad 院：} & \underline{\makebox[220pt][c]{\kaishu \@department}}  \\
+		\begin{tabular}{ll} % 实线是 \underline；虚线的 \hdashrule
+			\hspace{12pt} \makebox[4em][s]{\textbf{题\qquad 目}} & \underline{\parbox[b][][c]{250pt}{\center \kaishu \@titlecn}} \\
+			\hspace{12pt} \makebox[4em][s]{\textbf{学生姓名}} & \underline{\makebox[250pt][c]{\kaishu \@author}} \\
+			\hspace{12pt} \makebox[4em][s]{\textbf{学\qquad 号}} & \underline{\makebox[250pt][c]{\kaishu \@studentid}}  \\
+			\hspace{12pt} \makebox[4em][s]{\textbf{学\qquad 院}} & \underline{\makebox[250pt][c]{\kaishu \@department}}  \\
+			\hspace{12pt} \makebox[4em][s]{\textbf{专业班级}} & \underline{\makebox[250pt][c]{\kaishu \@priormajor}}  \\
+			% \hspace{12pt} \makebox[4em][s]{\textbf{班\qquad 级}} & \underline{\makebox[250pt][c]{\kaishu \@myclass}}  \\
+			\hspace{12pt} \makebox[4em][s]{\textbf{指导教师}} &  \underline{\makebox[250pt][c]{\kaishu \@supervisor}}  \\
+			\hspace{12pt} \makebox[4em][s]{\textbf{职\qquad 称}} &  \underline{\makebox[250pt][c]{\kaishu \@title}}  \\
 			
 		\end{tabular}
 		\endgroup
@@ -792,7 +807,7 @@
 		\vspace{40pt}
 		% \vfill
 		\begingroup
-		{\zihao{2} \heiti 人工智能与先进计算学院 \par}
+		% {\zihao{2} \heiti 人工智能与先进计算学院 \par}
 		\vspace{10pt}
 		{\zihao{-2} \heiti \@thesisdate \par}
 		\endgroup
@@ -820,6 +835,29 @@
 	%\end{titlepage}%
 	
 }
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% 诚信声明
+%
+%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\newenvironment{authorizationzh} {
+	%\begin{titlepage}%
+	\hutb@pdfbookmark{0}{\hutb@name@authorization@zh}
+	%\renewcommand*{\headsep}{20pt}
+	\vspace*{0pt}
+	%	\begin{center} \zihao{-2} \heiti \@titlecn \end{center}
+	\vspace{0pt}
+	\begin{center} \zihao{2} \heiti 湖南工商大学本科毕业设计\\版权使用授权书 \end{center}  % 摘要为三号黑体
+	\vspace{12pt}
+	\linespread{1.5}
+	\zihao{4}\songti  % 内容为四号宋体
+
+	%\end{titlepage}%
+
+}
+
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % 摘要
@@ -1091,8 +1129,10 @@ labelwidth=2em % 包含标签的盒子的正常宽度；若实际宽度更宽，
 % 各级标题格式设置。
 \ctexset{%
 chapter = {%
-	format       = \zihao{3} \heiti\centering,
-	name         = {第, 章},
+	% 居中 \centering
+	format       = \zihao{3} \heiti,
+	% {第, 章}
+	name         = {,.},
 	nameformat   = {},
 	number       = \arabic{chapter},
 	numberformat = {},
@@ -1107,8 +1147,9 @@ chapter = {%
 	afterskip    = {40pt},
 	% afterskip    = {\ifhutb@type@graduate 30pt\else 20pt\fi},
 },
+% 二级标题
 section = {%
-	format       = \zihao{-4} \heiti,
+	format       = \zihao{4} \bfseries \songti,
 	afterindent  = true,
 	% beforeskip 默认为 3.5ex plus 1ex minus .2ex 适当缩减
 	% beforeskip   = {20pt},
@@ -1116,15 +1157,17 @@ section = {%
 	% afterskip 默认为 2.3ex plus .2ex 适当缩减
 	afterskip    = {1ex \@plus .2ex},
 },
+% 三级标题
 subsection = {%
-	format       = \zihao{-4} \bfseries \songti,
+	format       = \zihao{-4} \songti,
 	afterindent  = true,
 	% afterskip 默认为 2.3ex plus .2ex 适当缩减
 	afterskip    = {1ex \@plus .2ex},
 	%fixskip      = true,
 },
+% 四级标题
 subsubsection = {%
-	format       = \zihao{-4} \normalfont,
+	format       = \zihao{-4} \songti,
 	afterindent  = true,
 	afterskip    = {1ex \@plus .2ex},
 	%fixskip      = true,
