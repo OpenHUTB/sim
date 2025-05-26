@@ -1,95 +1,54 @@
-%!TEX root = ../../csuthesis_main.tex
-\section{参考文献}
+%!TEX root = ../../csuthesis\_main.tex
 
-Cheng Bo, Lin Qingfeng, Song Tianjia, Cui Yongwei, Wang Limian, KuzumakiSeigo. Analysis of Driver Brake Operation in Near-Crash Situation UsingNaturalistic Driving Data[J]. International Journal of Automotive Engineering,2011,2(4).
+\chapter{总结与展望}
 
-
-Mckinsey \& Company. Autonomous driving’s future: Convenient and connected [EB/OL]. (2023-01-01)[2023-03-05].https://www.mckinsey.com/industries/automotive-and-assembly/our-insights/autonomous-drivings-future-convenientand-connected
+\section{总结}
 
 
-ChatScene: Knowledge-Enabled Safety-Critical Scenario Generation for Autonomous Vehicles
-Jiawei Zhang, Chejian Xu, Bo Li; Proceedings of the IEEE/CVF Conference on Computer Vision and Pattern Recognition (CVPR), 2024, pp. 15459-15469
+自动驾驶汽车技术的发展需要科学测试体系来提供支持，虚拟仿真测试是解决封闭和开放道路测试成本与效率问题的有效办法，虽说其理论和技术体系还有待完善，数字虚拟仿真在生成危险场景方面具备明显优势，是提升测试安全性和可靠性的关键所在，正逐渐成为研究的焦点，现有的自动驾驶危险场景生成方法包含专家经验法、自然驾驶数据提取法、危险场景衍生法以及基于强化学习的自生成法，专家经验法比较主观且难以覆盖所有场景情况，自然驾驶数据提取法缺乏动态交互能力，危险场景衍生法可能会产生不真实的轨迹，这些方法大多局限于学术研究难以应用到工程实践当中，基于强化学习的自生成法能够实时修正场景状态生成定制化场景库，适合高级别自动驾驶测试从而成为研究热点，不过现有方法可能产生不自然或者重复的场景且缺乏泛化能力，本项目旨在设计一种综合自然性、对抗性和多样性的统一生成策略以解决现有方法在实际应用中的不足 。
+
+为了探索自动驾驶汽车性能方面的极限情况，评估自动驾驶系统安全性、可靠性和可信度，需要精确且完整地描述自动驾驶性能边界，现有的研究没有使用真实自动驾驶模型和算法挖掘性能边界，可能导致缺乏现实性、出现误导性结果与可迁移性问题，现有的研究仅考虑周围车辆产生危险行为会限制整体风险评估，因为行人和环境因素可能引入新风险与挑战，需在危险场景生成中予以考虑，忽略这些因素可能导致对风险低估，无法全面评估自动驾驶系统在复杂多变环境中行为和决策能力，当前研究仅利用背景车辆初始运行条件如位置、速度、航向角等构造驾驶场景参数空间，所以应定义更高维参数空间以精细化和全面表征自动驾驶性能边界，当处理高维参数空间和昂贵自动驾驶仿真评价时，通用启发式智能优化算法往往不再适用，能有效求解的优化算法非常有限，在这种情况下，很有必要借助代理建模、最优计算资源分配、样本填充策略等技术设计相应随机或鲁棒仿真优化算法，这也是本项目研究的关键点。
+
+当前世界最先进的自动驾驶方案里端到端自动驾驶有较强感知性能和泛化能力构建的系统更简单智能，然而现有的端到端自动驾驶决策方法存在如下问题，一是端到端自动驾驶模型依赖训练数据面对复杂和危险场景可能做出不合理决策，二是端到端自动驾驶依赖深度神经网络其黑盒特性让决策过程难以解释限制系统行为理解和调试，三是端到端自动驾驶模型从图像或点云直接输出控制信号训练中难全面理解复杂交通环境无法考虑多重因素导致决策缺乏适应性和灵活性，本研究的终极目标是为端到端自动驾驶设计富含驾驶语义信息的输入并利用先进神经网络架构突破以往自动驾驶性能边界 。
+
+本研究紧紧围绕自动驾驶场景生成和安全评估核心问题展开，深入探索并提出ChatScene与ASIL - Gen协同解决方案，成功构建起从场景高效生成到精准风险评估完整技术体系，为自动驾驶测试领域带来创新性突破，在场景生成层面，ChatScene框架展现出独特的技术优势。
+其创新性地融合 Scenic 语言、深度强化学习与 GPT-4o 模型，场景生成模式实现了多元化与智能化发展。在固定场景模式里，基于Scenic语言预定义的8类基准场景，这些场景涵盖城市主干道、高速公路以及乡村道路等多种典型交通环境，利用深度强化学习中的SAC算法，以碰撞避免、车道保持和速度优化等作为核心奖励函数，对场景里对抗行为参数展开精细化调整与优化，以此模拟出高度真实且复杂多变的交通参与者交互行为，为自动驾驶系统提供标准化与规范化的测试场景模板。在动态模式方面，借助GPT - 4强大的自然语言理解与代码生成能力，用户只要输入自然语言描述，像“暴雨天气下，自我车辆在无信号灯十字路口左转，对向车辆突然加速直行”这样的内容，系统就能快速解析语义信息并将其转化为符合CARLA 0.9.13规范的场景代码。通过设定详细的约束条件，包含道路类型、车辆动力学参数以及交通规则等内容，生成多样化且贴近真实驾驶场景的测试用例，相比传统基于LiDARGen的场景生成方法，，动态模式的生成效率提升了 107 倍，极大地丰富了自动驾驶测试场景的多样性与灵活性，显著提高了测试效率。​
+
+在安全评估领域当中ASIL - Gen起到了关键作用，该模块借助NSGA - II多目标优化算法以及基于ISO 26262标准的量化评估模型，达成了场景的优化筛选与科学分类工作。在场景生成这个阶段，基于基础场景模板依靠脚本自动化生成13类场景变体，其中涵盖动态障碍物交叉、无信号路口冲突、恶劣天气下跟车等复杂情况，并且通过调整障碍物位置、速度、交通流量等参数，形成海量多样化的测试场景。在此基础之上，利用NSGA - II算法把碰撞概率与场景复杂度当作双目标函数来进行优化。碰撞概率通过精确预测车辆、行人等交通参与者的运动轨迹来计算，场景复杂度则综合考虑交通参与者数量、道路拓扑结构、环境干扰因素等多个指标，进而搜索出帕累托前沿筛选出既具高风险价值又有代表性的场景。实验数据表明，通过ASIL - Gen优化之后，高风险ASIL - D等级场景占比从随机搜索的5\%提升到12\%，经过进一步优化后更是提升至15\%，显著增强了场景，显著增强了场景筛选的精准性与安全评估的科学性。​
+
+在实验验证这个重要环节当中本研究取得一系列有说服力成果，基于ChatScene训练的RL模型在行人横穿场景测试里和基线模型开展多次重复对比实验，通过精确统计碰撞次数得出结果表明其碰撞率降低了32\%，这充分验证了ChatScene与ASIL - Gen协同方案对提升自动驾驶系统鲁棒性有效，同时场景生成效率以及安全评估准确性等方面实验数据有力证明该方案在自动驾驶技术安全测试中具巨大应用价值，为自动驾驶技术的安全测试开辟新的技术路径与研究方向。
+
+安全模型，英伟达的安全力场（SFF）和Mobileye的责任敏感安全（RSS）等对决策来说是有可解释性的数学模型。这项工作从头开始实现SFF，替代未公开的英伟达源代码，并将其与CARLA开源模拟器集成。使用SFF和CARLA，提出了一个车辆声明集合的预测器，并以此提出一种综合驾驶策略，无论在通过动态交通时遇到什么安全条件，其都能持续运行。该策略没有针对每种情况制定单独的规划，但利用安全潜能，目的是将类人的驾驶融入交通流中。
 
 
-张开元. FOT 数据库危险驾驶工况数据的自动处理方法研究[D]:[硕士学位论文].上海:同济大学, 2016.
+
+责任敏感安全（RSS）将自车的危险时间t与纵向/横向的危险阈值时间tlong/tlat进行比较。如果达到阈值，RSS判断为危险情况，并根据纵向或横向加速度对速度的限制做出适当的响应。换句话说，阈值可以用轨迹集的多边形表示。如果自车和其他道路使用者之间的轨迹集相交，RSS会选择以下三个决策中的一个来恢复安全状态：刹车，继续前进或开车离开。
+
+安全力场（SFF）表示，如果参与者遵循安全程序（这是一系列控制策略），量化风险的安全潜能ρAB不会再增加，因此可以保证参与者最终不会造成不安全的情况。这可以通过安全潜能的链式法则从数学上证明。简而言之，RSS的方法是最小化参与者声称集合之间的交集，这是每个参与者安全程序产生轨迹的联合。
+
+英特尔发布了一个名为ad-rss-lib的开源库，该库部分实现了RSS。此外，NVIDIA还提供了一个名为DriveWorks SDK的软件开发工具包，其中包括针对经批准用户的SFF实现。Intel ad-rss-lib没有涵盖其论文的全部范围，但它提供了Python绑定和CARLA集成。然而，NVIDIA DriveWorks SDK是一个非公开IP，它的实现是为了与配备NVIDIA DRIVE OS的NVIDIA DRIVE平台集成，因此研究人员很少使用它。在Intel和NVIDIA建议的将RSS和SFF与现有自动驾驶系统集成的基本示例架构中，RSS和SFF扮演着最后的角色，通过重写规划子系统的决策来防止自动驾驶车辆发生碰撞。
+
+在SFF实施中使用声明集合和安全潜能的概念，声明集合就是安全程序（驾驶策略）获取的轨迹之联合，安全潜能是两个参与者的声明集合之间相交测度及其负梯度。该文提出了一种将SFF集成到规划子系统中的方法，制定一种类似人类的驾驶策略，无论在安全或不安全的条件下都能始终如一地运行，最终尽量不阻碍顺畅的交通流。
+
+Intel RSS或NVIDIA SFF作为与现有子系统协调的附加模块。它接收来自感知子系统的世界环境数据和来自规划子系统的机动决策。为了自车的安全，作为上层限制器，它可以推翻接收的决策，并将限制的决策传递给驾驶子系统。如图是具有RSS或SFF安全模型的基本示例架构：灰色是现有子系统部分，蓝色/绿色是附加模块的RSS/SFF实现部分。
+
+\section{展望}
 
 
-Fitch G M, Hanowski R J. Using Naturalistic Driving Research to Design, Test andEvaluate Driver Assistance Systems[M]. Springer London, 2012.
+虽然本研究在自动驾驶场景生成和安全评估领域有了一定成果，但面对自动驾驶技术快速发展带来的需求和挑战，该领域还有很多需要深入探索的方向，未来研究可以从以下多个维度来开展，深化多模态数据融合方面，目前自动驾驶场景生成主要依靠有限的数据源，未来研究要进一步深化多模态数据融合，除了持续探索激光雷达和摄像头数据的深度融合，还会引入毫米波雷达数据，借助其在恶劣天气下稳定的探测性能，提高场景中目标检测与跟踪的准确性，同时融合高精地图数据，把地图里的道路属性、交通标志、车道线等信息和传感器数据相结合，构建更贴近真实驾驶环境的场景生成模型，通过多模态数据的协同处理与特征融合，不但能提升场景的物理真实性，还能增强场景的语义准确性，让生成的场景更符合实际驾驶过程中的复杂状况，为自动驾驶系统提供更具挑战性与真实性的测试环境。​
 
-朱西产, 张佳瑞, 马志雄. 安全切入场景下的驾驶人初始制动时刻分析[J]. 中国公路学报, 2019, 32(6).
+拓展 ASIL 分类标准：现有的 ASIL 分类标准主要基于静态的交通场景因素，未来将结合车路协同、交通流理论等前沿技术，对其进行拓展与完善。将 V2X 通信状态纳入评估体系，考虑车辆与车辆、车辆与基础设施之间的信息交互对驾驶安全的影响；同时引入交通拥堵态势分析，结合交通流模型，评估不同拥堵程度下自动驾驶系统面临的风险。此外，还将探索驾驶员行为模型与 ASIL 分类的结合，分析人类驾驶行为的不确定性对自动驾驶系统安全的潜在影响，从而完善高风险场景的识别维度，使 ASIL 分类标准更全面、准确地反映自动驾驶系统在复杂交通环境下的安全风险状况。​
 
-杨敏明, 王雪松, 朱美新. 基于自然驾驶实验的驾驶行为研究[J]. 交通与运输,2017,33(03):7-9.
+探索模型轻量化与实时化：随着自动驾驶技术向边缘设备的不断渗透，算力受限成为制约实时在线评估的关键因素。未来研究将致力于探索 ChatScene 与 ASIL-Gen 算法架构的轻量化与实时化优化。一方面，通过模型压缩技术，如剪枝、量化等方法，减少模型参数与计算量；另一方面，采用高效的算法优化策略，如改进的神经网络结构、并行计算技术等，提高算法执行效率。针对边缘设备的硬件特性，开发专用的轻量化模型，使其能够在资源有限的条件下快速生成场景并进行安全评估，推动自动驾驶仿真测试从离线分析向实时在线评估方向发展，为自动驾驶车辆的实时决策与安全监控提供有力支持，加速自动驾驶技术的落地应用进程。​
 
-VL Neale, SG Klauer, TA Dingus, et al. The 100-Car Naturalistic Driving Study,Phase I-Experimental Design.Bahavior,2002.
+强化人机协同测试模式：考虑到自动驾驶系统最终服务于人类出行，未来可探索将人类驾驶员的行为与决策纳入测试体系，构建人机协同的测试模式。通过收集和分析人类驾驶数据，模拟不同驾驶风格、驾驶习惯的人类驾驶员与自动驾驶系统的交互场景，评估自动驾驶系统在人机共驾环境下的安全性与适应性。同时，研究如何利用人类驾驶员的经验与直觉，辅助自动驾驶系统进行决策，实现人机优势互补，进一步提升自动驾驶系统的可靠性与用户接受度。​
 
-TA Dingus, SG Klauer, VL Neale, et al. The 100-Car Naturalistic Driving Study,Phase II-Results of the 100-Car Field Experiment.Bahavior,2006.
+开展跨地域与跨文化场景研究：目前的研究主要基于特定地域的交通规则与驾驶习惯，未来将开展跨地域与跨文化场景研究。收集不同国家、不同地区的交通数据，分析其交通规则、驾驶文化的差异，构建多样化的跨地域场景库。通过在这些场景下对自动驾驶系统进行测试与评估，确保自动驾驶技术在全球范围内的适用性与安全性，推动自动驾驶技术的全球化发展。
 
-Characterizing Underground Utilities[J]. Shrp Report, 2009.
 
-Integrated Vehicle-Based Safety Systems (IVBSS) Phase I Interim Report[J]. 2008.
 
-Sayer J, Leblanc D, Bogard S, et al. Integrated Vehicle-Based Safety Systems(IVBSS) light vehicle platform field operational test data analysis plan[J]. HeavyDuty Trucks, 2009.
 
-Sayer J R, Leblanc D J, Bogard S E. Integrated Vehicle-Based Safety Systems(IVBSS) Third annual report[J]. Scottish Journal of Theology, 2013, 22:382-383.
 
-Administration NHTS. Integrated Vehicle-Based Safety Systems: Light VehicleField Operational Test, Key Findings Report[J]. Annals of Emergency Medicine,2011, 58(2):205-206.
 
-Benmimoun M, Fahrenkrog F, Zlocki A , et al. Incident detection based on vehicleCAN-data within the large scale field operational test[J].2011.
-
-Benmimoun M, Eckstein L. Detection of Critical Driving Situations for NaturalisticDriving Studies by Means of an Automated Process[J]. bowen publishing, 2014:11-21.
-
-Victor T, Jonas BÃ€rgman, Gellerman H, et al. Sweden-Michigan NaturalisticField Operational Test (SeMiFOT) Phase 1: Final Report[J]. 2010.
-
-刘颖. 行人自动紧急制动系统测试方法研究[D]. 同济大学, 2014.
-
-NAO Engineering, Safety \& Restraints Center, Crash Avoidance Department, “44-Crashes”, General Motors Corporation, Version 3.0, January 1997.
-
-Crash Avoidance Metrics Partnership, “Enhanced Digital Mapping Project – FinalReport”. U.S. Department of Transportation, National Highway Traffic SafetyAdministration, November 2004.
-
-W.G. Najm, B. Sen, J.D. Smith, and B.N. Campbell, “Analysis of Light VehicleCrashes and Pre-Crash Scenarios Based on the 2000 General Estimates System”.DOT-VNTSC-NHTSA-02-04, DOT HS 809 573, February 2003.
-
-Najm W G, Smith J D, Yanagisawa M. Pre-Crash Scenario Typology for CrashAvoidance Research[J]. Dot Hs, 2007:767.
-
-曾宇凡, 朱西产, 马志雄, 等. 基于真实事故和自然驾驶场景大的车辆-骑车人危险工况的统计分析[J]. Infats Proceedings of the 14th International Forum ofAutomotive Traffic Safety, 2017(01):1-9.
-
-苏江平, 陈君毅, 王宏雁, 等. 基于中国危险工况的行人交通冲突典型场景提取与分析[J]. 交通与运输(学术版), 2017(01):216-221.
-
-孟琳, 朱西产, 孙晓宇, 等. 真实交通危险工况下驾驶员转向避撞相关因素分析[J]. 汽车技术, 000(6):59-62.
-
-李霖, 朱西产, 马志雄. 驾驶员在真实交通危险工况中的制动反应时间[J]. 汽车工程, 2014(10):1225-1229.
-
-吴斌, 朱西产, 沈剑平, 等. 基于自然驾驶研究的直行追尾危险场景诱导因素分析[J]. 同济大学学报:自然科学版, 2018, 46(09):96-103.
-
-孙 招 凤 . CAN 总 线 网 络 报 文 标 识 符 编 码 研 究 [J]. 导 弹 与 航 天 运 载 技 术 ,2009(02):34-39.
-
-范云锋, 刘博, 郑益凯. 一种基于三次样条曲线的目标航迹拟合与插值方法研究[J]. 数字技术与应用,2019,37(03):128-129.
-
-陈华. 面向智能辅助驾驶系统的驾驶员行为分析与建模[D].
-
-Thiemann C, Treiber M, Kesting A. Estimating Acceleration and Lane-ChangingDynamics from Next Generation Simulation Trajectory Data[J]. TransportationResearch Record Journal of the Transportation Research Board, 2008,2088(2088):90-101.
-
-薛薇. SPSS 统计分析方法及应用[M]. 北京：电子工业出版社, 2004.
-
-杨学兵, 张俊. 决策树算法及其核心技术[J]. 计算机技术与发展, 2007,17(1):43-45.
-
-曾星, 孙备, 罗武胜, 等. 基于深度传感器的坐姿检测系统[J]. 计算机科学,2018, v.45(07):243-248.
-
-程娟, 陈先华. 基于梯度提升决策树的高速公路行程时间预测模型（英文）[J].Journal of Southeast University (English Edition),2019,35(03):393-398.79
-
-段文强. 基于用户行为序列的网络购买行为预测[D]. 江西财经大学,2019.
-
-Chen T, Guestrin C. XGBoost: A Scalable Tree Boosting System[J]. 2016.
-
-师圣蔓. 基于机器学习的网络流量预测与应用研究[D]. 2019.
-
-靳小波. 基于机器学习算法的文本分类系统[D]. 西北工业大学.
-
-KE G, MENG Q, FINLEY T, et al. Lightgbm: A highly efficient gradient boostingdecision tree[C] // 31st Conference on Neural Information Processing Systems(NIPS 2017). California, USA,2017:3146-3154.
-
-刘彧祺, 张智斌, 陈昊昱, et al. 基于 XGBoost 集成的可解释信用评分模型[J].数据通信, 2019(3).
-
-Zhang Y, Xue J R, Zhang G, el al. A multi-feature fusion based traffic lightreognition algorithm for intelligent vehicles[C]. Proceeding of the 33rd ChineseControl Conference. IEEE,2014:4924-4929.
-
-Ma C, Xue J, Liu Y, et al. Data-Driven State-Increment Statistical Model and ItsApplication in Autonomous Driving[J]. Intelligent Transportation Systems IEEETransactions on, 2018, 19(12):3872-3882.
 
 \newpage
