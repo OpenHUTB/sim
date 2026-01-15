@@ -1,38 +1,34 @@
-# 本科毕业设计模板
+# 本科毕业设计
 
-湖南工商大学本科毕业设计模板。
+基于高保真模拟器的车辆和无人机的协同控制
 
-# 使用
-推荐使用 [texstudio](https://pan.baidu.com/s/1Is2-VR1z-tMYvmdinsVY_g?pwd=hutb) 或 [overleaf](https://cn.overleaf.com/) 进行论文撰写。
+## 功能特点
 
-注：在 latex 2023 中编译成功，latex 2016 编译失败（需要更高的版本，其他版本的 latex 没试过）。
-
-# 贡献
-有任何对模板格式进行调整的可以提交 [Issues](https://github.com/OpenHUTB/undergraduate/issues) 或 [Pull Request](https://github.com/OpenHUTB/undergraduate/pulls) 。
-
-# 选题
-[选题列表](https://github.com/OpenHUTB/undergraduate/wiki/%E6%AF%95%E8%AE%BE%E9%80%89%E9%A2%98) 
-
-
-## 要求
-1. 格式化、注释、文档翻译
-2. 运行
-3. 测试（例子通过）
-
-
-## 初始化
-
-1. 新建github工程
-
-2. 运行`init_proj('PROJECT_NAME');`
-
-3. 分配开发者
+- 🎮 **实时键盘控制** - 支持W/A/S/D方向键 + 空格刹车
+- 📊 **专业仪表盘** - 带转速表、档位指示器和速度显示  
+- 🚗 **自动挡支持** - D/R/N档位自动切换
+- 📈 **实时车辆状态监控** - 位置、速度、朝向实时更新
+- 🎨 **可定制化控制参数** - 油门、转向灵敏度可调
 
 
 ## 使用
-克隆仓库
-```shell
-git clone --recursive https://github.com/OpenHUTB/undergraduate.git
-```
 
-# 贡献者
+### 要求
+- Python 3.8+
+- AirSim 1.8.1+
+- pygame 2.6.1+
+- numpy 1.21.0+
+
+### 初始化
+```bash
+# 克隆项目
+git clone https://github.com/OpenHUTB/sim.git
+cd sim/keyboard_control
+
+# 安装依赖
+pip install -r requirements.txt
+
+# 确保AirSim正在运行
+# 启动Blocks环境
+cd ~/Blocks/LinuxNoEditor/Blocks/Binaries/Linux
+./Blocks -opengl -nosound -windowed -ResX=800 -ResY=600
