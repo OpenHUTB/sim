@@ -1,0 +1,26 @@
+name: latex Windows CI/CD
+
+on:
+  push:
+  pull_request:
+
+
+jobs:
+  windows-dev:
+    name: Windows CI/CD
+    timeout-minutes: 1440
+    runs-on: self-hosted:windows
+    env:
+      UE4_ROOT: C:\workspace\UnrealEngine
+      VCVARS: C:\Program Files (x86)\Microsoft Visual Studio\2019\Community\VC\Auxiliary\Build\vcvars64.bat
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v5
+        with:
+          fetch-depth: 0
+
+      - name: build
+        run: |
+          call build_latex.bat
+        shell: cmd
