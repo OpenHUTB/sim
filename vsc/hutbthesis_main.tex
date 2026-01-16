@@ -1,0 +1,30 @@
+% hutbthesis_main.tex - 主文档
+\documentclass{hutbthesis}  % 使用学校提供的样式文件
+
+% 文档基本信息（替换成你的信息）
+\school{智能机器人学院}
+\major{机器人工程}
+\name{罗亮}
+\studentid{2209040022}
+\advisor{王海东}
+\title{面向人车模拟器的快速开发验证VSCode插件系统}  % 你的选题名称
+\titleen{VSCode Plugin System for Rapid Development and Verification of Human-Vehicle Simulator}  % 选题英文名称
+
+\begin{document}
+% 封面（样式文件会自动生成，若没有则需手动加，这里用学校模板默认封面）
+\maketitle
+
+% 调用中英文摘要（content/abstract.tex）
+\input{content/abstract}
+
+% 调用第一章绪论（content/chapter01.tex）
+\input{content/chapter01}
+
+% 调用致谢（content/acknowledgements.tex）
+\input{content/acknowledgements}
+
+% 插入参考文献（reference.bib）
+\bibliography{reference}
+\bibliographystyle{unsrt}  % 参考文献格式，若学校有指定样式则替换
+
+\end{document}
