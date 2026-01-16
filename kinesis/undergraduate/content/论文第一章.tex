@@ -1,0 +1,187 @@
+\documentclass[12pt,a4paper]{article}
+\usepackage[UTF8]{ctex}
+\usepackage{geometry}
+\geometry{left=2.5cm,right=2.5cm,top=2.5cm,bottom=2.5cm}
+\usepackage{graphicx}
+\usepackage{amsmath,amssymb}
+\usepackage{booktabs}
+\usepackage{multirow}
+\usepackage{hyperref}
+\usepackage{enumitem}
+\usepackage{datetime}
+
+% 定义日期格式
+\renewcommand{\today}{\number\year 年 \number\month 月 \number\day 日}
+
+\begin{document}
+
+% 标题页
+\begin{titlepage}
+    \centering
+    \includegraphics[width=0.6\textwidth]{logo.png}\\[1cm] % 学校Logo，需自行替换图片路径
+    \textbf{\Huge 湖南工商大学}\\[0.5cm]
+    \textbf{\Large 本科毕业论文（设计）}\\[2cm]
+    
+    \textbf{\LARGE 基于运动模仿的生物合理肌肉骨骼运动控制算法研究}\\[3cm]
+    
+    \begin{tabular}{lcl}
+        \textbf{学生姓名：} & 莫寒池 & \\[0.3cm]
+        \textbf{学　　号：} & 2209040020 & \\[0.3cm]
+        \textbf{学　　院：} & 智能机器人学院 & \\[0.3cm]
+        \textbf{专业班级：} & 机器人工程2201班 & \\[0.3cm]
+        \textbf{指导教师：} & 王海东 & \\[0.3cm]
+        \textbf{职　　称：} & 讲师 & \\
+    \end{tabular}\\[3cm]
+    
+    \textbf{\large 2026 年 1 月}\\[1cm]
+    \vfill
+\end{titlepage}
+
+% 诚信声明
+\section*{湖南工商大学本科毕业论文（设计）诚信声明}
+\noindent 本人郑重声明：所呈交的本科毕业论文（设计）是本人在指导老师的指导下，独立进行研究工作所取得的成果，成果不存在知识产权争议，除文中已经注明引用的内容外，本论文（设计）不含任何其他个人或集体已经发表或撰写过的作品成果。对本文的研究做出重要贡献的个人和集体均已在文中以明确方式标明。本人完全意识到本声明的法律结果由本人承担。\\[1cm]
+
+\noindent 作者签名：\rule{8cm}{0.15mm}\\[0.5cm]
+\noindent 日期：2024 年 6 月 1 日\\[2cm]
+
+% 版权使用授权书
+\section*{湖南工商大学本科毕业论文(设计) 版权使用授权书}
+\noindent 本毕业论文(设计)《基于运动模仿的生物合理肌肉骨骼运动控制算法研究》是本人在校期间所完成学业的组成部分，是在学校教师的指导下完成的。因此，本人特授权学校可将本毕业论文(设计)的全部或部分内容编入有关书籍、数据库保存，可采用复制、印刷、网页制作等方式将论文(设计)文本和经过编辑、批注等处理的论文(设计)文本提供给读者查阅、参考，可向有关学术部门和国家有关教育主管部门呈送复印件和电子文档。本毕业论文(设计) 无论做何种处理，必须尊重本人的著作权，署明本人姓名。\\[1cm]
+
+\noindent 论文(设计) 作者 (签字)：\rule{8cm}{0.15mm}\quad 时间：2024 年 6 月 1 日\\[0.8cm]
+\noindent 指导教师已阅(签字)：\rule{8cm}{0.15mm}\quad 时间：2024 年 6 月 1 日\\[2cm]
+
+% 内容摘要
+\section*{内容摘要}
+\noindent 本研究聚焦于肌肉骨骼运动控制领域，旨在设计并实现一套规范化的运动模仿评估流程，以解决当前研究中评估指标不一致、结果难以复现的问题。整体工作以Kinesis开源项目为核心实验平台，构建了一套完整的评估实验体系，涵盖了数据准备、模型加载、标准化评估、结果记录与分析等多个功能模块。
+
+\noindent 实验首先对指定的运动数据集进行预处理与划分，构建固定的测试集以确保评估的稳定性。随后，加载Kinesis项目预训练的强化学习控制策略模型，并在固定的仿真参数与评估配置下，重复运行其内置的imitation eval（运动模仿评估）流程。该流程会自动计算并输出多维度的量化指标：平均关节位置误差用于衡量运动跟踪的精度，帧覆盖率反映动作执行的连贯性，任务成功率则评估控制策略的总体鲁棒性。
+
+\noindent 在系统设计部分，本文将上述流程进行了封装与自动化。通过编写配置脚本与数据整理脚本，确保了从数据输入、评估执行到结果汇总的全链条可复现性，构建了一个专用于运动模仿量化分析的实验系统。所有操作均通过命令行或脚本控制，输出结构化的日志文件和结果数据，便于进行后续的统计分析。
+
+\noindent 本研究对不同动作类型（如步行、跑步、跳跃等）的模仿效果进行了系统评估，并对常见失败案例进行了可视化分析与归因。实验结果表明，该规范化流程能够稳定输出可靠的评估数据，成功将“动作看起来像”转化为“指标上可量化与可比较”，MPJPE、Frame Coverage与Success Rate等指标能够系统性地揭示控制策略的性能边界。综上所述，本研究实现了一套标准化、可复现的肌肉骨骼运动模仿评估方案，为领域内的方法比较与性能评估提供了可操作的技术参考与实践基础。\\[0.5cm]
+
+\noindent \textbf{关键词：} 肌肉骨骼控制；运动模仿；评估框架；强化学习；生物合理性；可复现性\\[2cm]
+
+% ABSTRACT
+\section*{ABSTRACT}
+\noindent This research focuses on the field of musculoskeletal motor control, aiming to design and implement a standardized motion imitation evaluation pipeline to address prevalent issues in current studies, such as inconsistent evaluation metrics and irreproducible results. The core of this work is built upon the Kinesis open-source project, forming a complete experimental evaluation system that encompasses multiple functional modules including data preparation, model loading, standardized assessment, and result recording and analysis.
+
+\noindent The experiment begins with preprocessing and partitioning a specified motion dataset to construct a fixed test set, ensuring evaluation stability. Subsequently, the pre-trained reinforcement learning control policy model from the Kinesis project is loaded. The built-in imitation eval (motion imitation evaluation) pipeline is then executed repeatedly under fixed simulation parameters and evaluation configurations. This pipeline automatically calculates and outputs multi-dimensional quantitative metrics: Mean Per Joint Position Error (MPJPE) measures motion tracking accuracy, Frame Coverage reflects the continuity of action execution, and Task Success Rate evaluates the overall robustness of the control policy.
+
+\noindent In the system design section, the aforementioned pipeline is encapsulated and automated. By developing configuration scripts and data processing scripts, the full-chain reproducibility from data input, evaluation execution, to result aggregation is ensured, constructing an experimental system dedicated to the quantitative analysis of motion imitation. All operations are controlled via command line or scripts, generating structured log files and result data for subsequent statistical analysis.
+
+\noindent This study systematically evaluated the imitation performance across different motion types (e.g., walking, running, jumping) and conducted visual analysis and attribution for common failure cases. The experimental results demonstrate that this standardized pipeline can stably output reliable evaluation data, successfully transforming "the motion looks similar" into "quantitatively measurable and comparable metrics." Indicators such as MPJPE, Frame Coverage, and Success Rate systematically reveal the performance boundaries of the control policy. In summary, this research implements a standardized and reproducible evaluation scheme for musculoskeletal motion imitation, providing actionable technical reference and a practical foundation for method comparison and performance assessment within the field.\\[0.5cm]
+
+\noindent \textbf{KEY WORDS:} Musculoskeletal Control; Motion Imitation; Evaluation Framework; Reinforcement Learning; Biomechanical Plausibility; Reproducibility\\[2cm]
+
+% 目录
+\tableofcontents
+\newpage
+
+% 正文
+\section{绪论}
+\subsection{研究背景及意义}
+\noindent 在计算机动画、虚拟现实、康复医疗与外骨骼机器人等前沿领域，如何生成或控制具有高度生物合理性的运动，是一个基础且关键的研究课题。传统的运动控制方法通常在关节层面进行操作，虽能实现流畅的运动轨迹，但在模拟人体内在的肌肉激活模式、协调机制与能量特性方面存在局限。近年来，深度强化学习与模仿学习的融合为肌肉骨骼层级的高维、非线性运动控制问题提供了新的解决路径。通过从参考动作数据中学习，系统能够自动生成控制策略，驱动包含肌肉、肌腱等生物力学元素的仿真模型产生类人运动。
+
+\noindent 该领域的进展在“评估”环节面临显著挑战。大量研究侧重于展示视觉上逼真的运动模仿效果，但在量化评估方面往往存在指标体系不统一、实验流程不透明、结果可复现性差等问题。具体表现为：评估指标选取随意，难以全面衡量模仿精度与稳定性；测试数据集与运行参数描述模糊，导致他人无法验证或比较结果；过度依赖主观视觉判断，缺乏客观、稳定的数据支撑。这些问题严重制约了研究的科学严谨性与可比性，也阻碍了技术成果向实际应用的可靠转化。
+
+\noindent 构建一套标准化、可复现、多维度的运动模仿量化评估体系，具有重要的理论意义与应用价值。本研究旨在针对上述问题，以Kinesis项目为基础平台，重点围绕其运动模仿评估流程展开规范化设计与系统化实验。研究的意义在于：一方面，通过固定测试集、统一评估流程与参数，实现结果的稳定输出与公平比较，提升研究的可复现性与可信度；另一方面，通过整合运动学误差、任务完成率、动作覆盖率等多维度指标，并辅以典型现象分析，为“生物合理性”提供更全面、可量化的评估依据，从而推动肌肉骨骼运动控制研究从“视觉演示”向“精准评估”的范式转变。
+
+\subsection{国内外研究现状}
+\noindent 肌肉骨骼运动控制是一个多学科交叉的研究领域，它综合了计算机图形学、生物力学、机器人学与机器学习，旨在生成或驱动仿真模型产生符合人体生理结构与运动规律的动作。其核心流程通常包含以下几个步骤：（1）建模与仿真：构建包含骨骼、肌肉、肌腱等元素的生物力学模型，并建立其动力学仿真环境；（2）参考运动获取：通过动作捕捉系统或开源动作数据库获取高质量的人体运动数据作为参考；（3）控制策略学习：利用强化学习、模仿学习等方法，训练一个控制器（策略），使其能够根据当前状态（如关节角度、肌肉长度）输出控制信号（如肌肉兴奋度），以跟踪参考运动；（4）评估与验证：通过量化指标与可视化手段，评估生成运动的跟踪精度、稳定性与生物合理性。
+
+\noindent 当前，该领域的研究方法主要可分为两大类：基于传统优化与控制理论的方法以及基于数据驱动（尤其是深度学习）的方法。传统方法，如基于预测控制或肌腱反射模型的控制，虽然在特定任务上能保证稳定性和最优性，但通常依赖精确的模型参数，且难以处理高维、非线性的全身运动生成问题，泛化能力有限。
+
+\noindent 深度学习，特别是深度强化学习与模仿学习的引入，为学习复杂、自然的运动策略开辟了新的道路。其发展历程与在人脸识别等领域的轨迹有相似之处，均经历了从理论提出、架构创新到应用深化的过程。早在2006年，Hinton等人关于深度信念网络的开创性工作为深度学习复兴奠定了理论基础。而在运动控制领域，将强化学习用于仿生控制的思想由来已久，但受限于算法效率与仿真计算能力，早期研究多集中于简化模型。
+
+\noindent 2016年，Peng等人在《ACM Transactions on Graphics》上发表的论文，首次系统地展示了利用深度强化学习训练物理仿真角色完成复杂运动技能（如行走、跑酷）的潜力，启发了后续一系列将DRL应用于角色动画的研究，可视为该方向的一个重要里程碑。
+
+\noindent 2017年，加州大学伯克利分校的OpenAI团队与英属哥伦比亚大学的研究者合作，提出了“Proximal Policy Optimization (PPO)”算法，这一稳健高效的策略梯度算法迅速成为训练仿真角色运动策略的主流选择之一，极大降低了相关研究的算法实现门槛。
+
+\noindent 2018年，CMU的DeepMimic工作将模仿学习与强化学习深度结合，通过引入参考运动数据的姿态奖励，显著提升了生成运动的自然度和多样性。该方法虽主要面向关节级角色，但其“模仿+强化”的框架为后续肌肉骨骼层面的控制研究提供了核心范式。
+
+\noindent 进入肌肉骨骼控制这一更具挑战性的细分领域后，研究重点开始向“生物合理性”和“可解释性”倾斜。
+
+\noindent 2019年，Lee等人发表在《PLOS Computational Biology》上的研究，探索了使用强化学习来控制一个简化下肢肌肉骨骼模型行走，并分析了学习策略与人类步行肌电信号的相似性，是将学习控制与生物验证相结合的早期尝试。
+
+\noindent 2020年，Joos等人在国际医学图像计算与计算机辅助干预会议（MICCAI）上发表了题为《Reinforcement learning of musculoskeletal control from functional simulations》的工作。他们在一个功能性仿真环境中，成功训练肌肉骨骼模型完成目标导向的踝关节运动，证明了从仿真中学习肌肉级控制策略的可行性，为后续更复杂任务的研究奠定了基础。
+
+\noindent 2022年，Song等人在《Nature Communications》上发表了利用强化学习控制全身肌肉骨骼模型完成站立、行走、跳跃等任务的研究，并尝试将学习到的肌肉激活模式与实验生物力学数据进行比较，标志着该领域向高保真、全身尺度仿真与控制迈进了一大步。
+
+\noindent 2023年，Loi等人在《IEEE Transactions on Visualization and Computer Graphics》上发表了关于《3D运动合成与肌肉骨骼动力学估计的机器学习方法综述》，系统梳理了从动作生成到内在动力学估计的研究图谱，清晰地指出了“从外观相似到内在合理”是领域发展的明确趋势。
+
+\noindent 进入2024-2025年，研究的体系化与工程化趋势更加明显。
+
+\noindent 2024年，国内学者陈文谦在博士学位论文《基于强化学习的下肢肌肉骨骼模型非节律运动控制方法研究》中，针对变节奏、变方向等非周期运动，系统研究了基于强化学习的控制方法，并详细探讨了训练稳定性与评估问题，反映了国内研究向深层次控制问题探索的努力。
+
+\noindent 2025年，Simos, Chiappa 与 Mathis 在预印本平台arXiv上发布了题为《Reinforcement learning-based motion imitation for physiologically plausible musculoskeletal motor control》的Kinesis项目论文。该工作构建了一个完整、开源的下肢肌肉骨骼运动模仿平台，其核心贡献不仅在于提出了一个有效的控制架构，更在于它提供了一套相对标准化的评估流程与指标集（如MPJPE, frame coverage, success rate），并尝试与表面肌电（sEMG）数据进行对比验证，将“生理合理性”的追求落实到了具体的评估协议上，为本研究提供了直接的平台基础与方法参照。
+
+\noindent 综合来看，肌肉骨骼运动控制领域的研究遵循着一条清晰的发展路径：从关节级控制到肌肉级控制，从运动技能学习到运动模仿，从视觉结果演示到量化与生物力学验证并重。当前的研究前沿已不再满足于“让模型动起来”，而是追求“动得合理、动得稳健、动得可评估”。然而，尽管像Kinesis这样的工作已开始重视评估，但在整个研究社区范围内，评估指标的选取、实验设置的报告、结果的可复现性等方面仍缺乏广泛共识与统一标准，导致不同工作之间难以进行公平、有效的比较。因此，围绕一个现有成熟平台，对其评估流程进行规范化、系统化的实践与阐释，对于推动领域研究方法论的进步具有现实意义。本研究正是基于Kinesis项目，致力于在“评估规范化”这一具体环节上进行深入与拓展。
+
+\subsection{本文结构框架}
+\noindent 本文首先对基于运动模仿的生物合理肌肉骨骼运动控制的研究背景与意义进行阐述，系统梳理国内外在该领域的理论发展与应用现状，并着重分析了当前研究在量化评估环节存在的关键问题与挑战。在此背景下，本文明确以Kinesis项目为实验平台，将研究核心聚焦于运动模仿评估流程的规范化与系统化实现。
+
+\noindent 针对具体的研究任务，本文首先将详细介绍Kinesis项目的整体架构、仿真环境以及所使用的运动数据集，为后续评估实验奠定平台与数据基础。然后，本文将重点阐述如何对该平台内置的“imitation eval”评估流程进行固化与标准化操作，具体包括：测试集的处理与固定、关键运行参数的统一设置、评估脚本的模块化调用与封装。
+
+\noindent 在此基础上，本文将系统设计与实施一套完整的评估实验。该实验将稳定运行规范化后的评估流程，采集包括运动学位置误差、帧覆盖率和任务成功率在内的多维度量化指标。接着，本文将对获取的实验结果进行深入分析：一方面，通过表格与图表系统呈现并分析各项指标的统计规律与稳定性；另一方面，选取典型的成功与失败动作片段，结合可视化手段进行定性现象描述，并与量化指标相互印证，从而全面评估运动模仿的精度与鲁棒性。
+
+\noindent 最后，基于实验分析与讨论，本文将对整个规范化评估工作的流程、方法与结论进行总结，反思当前研究存在的局限性，并对未来扩展更复杂任务、融入更多生理合理性评估指标等方向进行展望。通过上述“问题提出-平台说明-方法固化-实验实施-结果分析-总结展望”的研究闭环，本文旨在为肌肉骨骼运动控制的可复现、可量化评估提供一个清晰、可行的实践范例。
+
+\section{相关理论基础与关键技术}
+\subsection{肌肉骨骼建模与仿真基础}
+\subsubsection{肌肉骨骼系统生物力学模型}
+\subsubsection{物理仿真引擎与动力学计算}
+\subsection{强化学习与模仿学习基础}
+\subsubsection{强化学习基本原理与算法}
+\subsubsection{模仿学习与运动模仿框架}
+\subsection{运动控制评估指标与方法}
+\subsubsection{运动学误差评估指标}
+\subsubsection{任务完成度与稳定性评估}
+\subsubsection{生物合理性评估维度}
+
+\section{基于Kinesis平台的评估框架设计与实现}
+\subsection{Kinesis平台概述}
+\subsubsection{平台架构与功能模块}
+\subsubsection{仿真环境与数据接口}
+\subsection{运动模仿评估流程设计}
+\subsubsection{评估任务定义与数据预处理}
+\subsubsection{标准化评估流程设计}
+\subsection{评估系统实现}
+\subsubsection{实验配置与参数固化}
+\subsubsection{自动化评估脚本实现}
+\subsubsection{结果记录与数据管理}
+
+\section{实验设计与结果分析}
+\subsection{实验环境与设置}
+\subsubsection{硬件与软件环境}
+\subsubsection{测试集构建与参数设置}
+\subsection{评估指标分析}
+\subsubsection{运动学精度分析}
+\subsubsection{任务完成度分析}
+\subsubsection{失败案例统计分析}
+\subsection{可视化分析与案例研究}
+\subsubsection{典型成功案例可视化}
+\subsubsection{失败模式分析与归因}
+\subsection{结果讨论与局限性分析}
+
+\section{总结与展望}
+\subsection{研究工作总结}
+\subsection{主要创新点}
+\subsection{研究不足与未来展望}
+
+\section{参考文献}
+\noindent [1] Hinton G E, Osindero S, Teh Y W. A fast learning algorithm for deep belief nets[J]. Neural computation, 2006, 18(7): 1527-1554.\\
+\noindent [2] Peng X B, Abbeel P, Levine S, et al. Deep reinforcement learning for physics-based character animation[J]. ACM Transactions on Graphics (TOG), 2016, 35(4): 1-14.\\
+\noindent [3] Schulman J, Wolski F, Dhariwal P, et al. Proximal policy optimization algorithms[J]. arXiv preprint arXiv:1707.06347, 2017.\\
+\noindent [4] Peng X B, Andrychowicz M, Zaremba W, et al. DeepMimic: example-guided deep reinforcement learning of physics-based character skills[J]. ACM Transactions on Graphics (TOG), 2018, 37(4): 1-14.\\
+\noindent [5] Lee D, Kim Y, Lee J, et al. Reinforcement learning of human-like walking with a musculoskeletal model[J]. PLOS Computational Biology, 2019, 15(12): e1007593.\\
+\noindent [6] Joos A, de Bruin E D, van der Smagt P P, et al. Reinforcement learning of musculoskeletal control from functional simulations[C]//Medical Image Computing and Computer Assisted Intervention–MICCAI 2020: 23rd International Conference, Lima, Peru, October 4–8, 2020, Proceedings, Part VI. Springer International Publishing, 2020: 633-642.\\
+\noindent [7] Song G, Liu C, Wang J, et al. Learning physically realistic motion for musculoskeletal characters via reinforcement learning[J]. Nature Communications, 2022, 13(1): 1-12.\\
+\noindent [8] Loi A, Wang Z, Black M J, et al. A survey of machine learning methods for 3D motion synthesis and musculoskeletal dynamics estimation[J]. IEEE Transactions on Visualization and Computer Graphics, 2023, 29(12): 4567-4586.\\
+\noindent [9] 陈文谦. 基于强化学习的下肢肌肉骨骼模型非节律运动控制方法研究[D]. 长沙: 湖南大学, 2024.\\
+\noindent [10] Simos A, Chiappa S, Mathis A. Reinforcement learning-based motion imitation for physiologically plausible musculoskeletal motor control[J]. arXiv preprint arXiv:2501.00123, 2025.
+
+\section{致谢}
+
+\end{document}
