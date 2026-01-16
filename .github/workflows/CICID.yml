@@ -2,10 +2,15 @@
 name: Auto test
 
 on: 
-  push:
-  pull_request:
-    branches:
-      - master
+  # 手动触发事件
+  workflow_dispatch:
+    inputs:
+      logLevel:
+        description: 'Log level'
+        required: true
+        default: 'warning'
+      tags:
+        description: 'Test Latex documents'
     
 jobs:
   work:
