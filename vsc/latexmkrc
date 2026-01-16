@@ -1,0 +1,6 @@
+# latexmkrc - 编译配置
+$pdf_mode = 1;
+$latex = 'xelatex -interaction=nonstopmode';
+$bibtex = 'bibtex';
+$biber = 'biber';
+$makeindex = 'makeindex';
