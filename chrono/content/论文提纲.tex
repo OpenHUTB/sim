@@ -1,0 +1,86 @@
+\documentclass{article}
+\usepackage{ctex} % 支持中文
+\usepackage{enumitem} % 优化列表格式
+\usepackage{geometry}
+\geometry{a4paper, margin=1.5cm} % 页面设置
+
+\title{多体物理车辆仿真（Chrono+虚幻引擎）研究提纲}
+\author{研究作者}
+\date{} % 不显示日期，可自行添加 \date{202X年XX月}
+
+\begin{document}
+
+\maketitle
+\tableofcontents % 生成目录（可选，编译两次生效）
+\newpage
+
+\section{绪论}
+\begin{enumerate}[label=1.\arabic*, itemsep=0.5ex]
+    \item 研究背景与意义
+    \item 国内外研究现状
+    \begin{enumerate}[label=1.2.\arabic*, itemsep=0.3ex]
+        \item 多体物理的车辆仿真Chrono仿真研究现状
+        \item Chrono仿真通过虚幻引擎渲染的应用现状
+    \end{enumerate}
+    \item 研究内容与方法
+    \item 研究创新点
+\end{enumerate}
+
+\section{相关理论}
+\begin{enumerate}[label=2.\arabic*, itemsep=0.5ex]
+    \item 多体物理学基础知识
+    \begin{enumerate}[label=2.1.\arabic*, itemsep=0.3ex]
+        \item 多体物理基本概念
+        \item 多体物理基础公式及原理
+    \end{enumerate}
+    \item 多体物理结合Chrono仿真
+    \begin{enumerate}[label=2.2.\arabic*, itemsep=0.3ex]
+        \item 轮式车辆下子系统（悬架、转向、传动、车轮）
+        \item 轮胎模型
+        \item ISO车辆轴约定
+    \end{enumerate}
+\end{enumerate}
+
+\section{加入Chrono技术的仿真与原仿真技术对比差异}
+\begin{enumerate}[label=3.\arabic*, itemsep=0.5ex]
+    \item 多体物理的车辆仿真Chrono优化模型
+    \begin{enumerate}[label=3.1.\arabic*, itemsep=0.3ex]
+        \item Chrono仿真的车辆建模
+        \item 刚体组件与约束组件的创建
+        \item 多体物理Chrono仿真与虚幻引擎适配
+    \end{enumerate}
+    \item 虚幻引擎环境渲染
+    \begin{enumerate}[label=3.2.\arabic*, itemsep=0.3ex]
+        \item 开发环境配置
+        \item 工程结构设计
+    \end{enumerate}
+    \item 数据与实验设置
+    \begin{enumerate}[label=3.3.\arabic*, itemsep=0.3ex]
+        \item 多体物理的车辆仿真与数据生成
+        \item 评估指标设计
+    \end{enumerate}
+\end{enumerate}
+
+\section{实验与结果分析}
+\begin{enumerate}[label=4.\arabic*, itemsep=0.5ex]
+    \item Chrono+虚幻引擎模型训练与验证
+    \begin{enumerate}[label=4.1.\arabic*, itemsep=0.3ex]
+        \item 仿真过程与参数设置
+        \item 仿真结果分析与优化效果展示
+    \end{enumerate}
+    \item 仿真算例分析
+    \begin{enumerate}[label=4.2.\arabic*, itemsep=0.3ex]
+        \item 单一场景仿真实验结果
+        \item 不同车辆仿真的优化效果
+        \item 对比传统仿真方法的优势
+    \end{enumerate}
+    \item 仿真系统性能分析
+\end{enumerate}
+
+\section{结论与展望}
+\begin{enumerate}[label=5.\arabic*, itemsep=0.5ex]
+    \item 结论
+    \item 未来工作展望
+\end{enumerate}
+
+\end{document}
