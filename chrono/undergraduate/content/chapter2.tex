@@ -1,139 +1,118 @@
-%!TEX root = ../../csuthesis_main.tex
-\chapter{相关理论基础（图表示例）}
+%!TEX root = ../hutbthesis_main.tex
+\chapter{相关基础理论框架}
 
-\section{图片与布局}
+\section{CarlaUE4仿真平台基础}
+本研究采用的hutb人车模拟器，是面向具身智能、无人车、无人机研究领域的高保真开源仿真平台，基于原生Carla-DReyeVR与OpenSim框架二次开发，完全兼容CarlaUE4的核心技术体系与API规范，同时针对原生平台的功能短板进行了本土化优化与能力扩展，是国内自动驾驶与具身智能研究领域广泛应用的本土化仿真环境。该平台填补了原生Carla在多智能体协同仿真、中文本地化、多物理场耦合等方面的空白，可在安全可控的虚拟环境中，复现实车测试中难以覆盖的极端工况、长尾场景与危险交通事件，为自动驾驶感知、决策、规划、控制全栈模块的测试提供标准化、高适配性的仿真环境。
 
-\subsection{插图}
+\subsection{CarlaUE4平台特性与场景搭建}
+hutb搭建的CarlaUE4仿真环境，在完全继承原生Carla平台核心能力的基础上，进行了针对性的功能扩展与性能优化，其核心特性可归纳为以下6个维度：
 
-图片可以通过\cs{includegraphics}指令插入，我们建议模板使用者将文章所需插入的图片源问卷放置在 images 目录中，
-另外，矢量图片应使用PDF格式，位图照片则应使用JPG格式（LaTeX不支持TIFF格式）。具有透明背景的栅格图可以使用PNG格式。
+\subsubsection{多智能体一体化仿真能力}
+平台突破了原生Carla以车辆为核心的仿真边界，原生支持具身人、无人车、无人机三类智能体的同场景联合仿真，内置了带骨骼动画的行人生物力学模型、无人机飞控动力学模型，可实现人车协同、车路协同、空地一体等复杂场景的仿真测试，完美适配多目标跟踪算法在复杂交通参与者场景下的验证需求。同时平台优化了多智能体的行为调度逻辑，解决了原生平台中大量NPC并行运行时的性能衰减问题，支持单场景内超百个交通参与者的稳定仿真。
 
-下面是一个简单的插图示例。
 
-\begin{figure}[hbt]
-    \centering
-    \includegraphics[width=0.3\linewidth]{hutb_building.png}
-    \caption{插图示例}
-    \label{f.example}
+
+\subsubsection{本土化高保真开源数字资产库}
+平台基于UE4引擎实现了影视级的3D场景渲染与物理模拟，除兼容原生Carla的全部数字资产外，还提供了自主研发的本土化开放数字资产库，涵盖符合中国道路规范的城镇布局、建筑模型、交通标志标线、中式道路基础设施\cite{zhao2025carlascene}，以及16类带完整动力学参数的国产车辆模型、50种带骨骼动画的行人模型与各类道路道具资产。所有资产均遵循统一的物理尺度规范\cite{li2025virtual}，通过git-lfs实现大文件资产的高效管理，兼顾渲染效率与视觉真实感，可直接用于符合国内交通场景的算法测试。
+
+
+\subsubsection{全栈式传感器仿真与扩展能力}
+平台完全兼容原生Carla的全品类传感器模型，支持RGB相机、深度相机、语义分割相机、多线激光雷达、毫米波雷达、GNSS、IMU等传感器的参数化配置，可自定义传感器的安装位置、朝向、视场角、噪声模型、采样频率等关键参数，同时支持地面真值数据的同步输出。在此基础上，平台新增了`NormalsSensor`法线信息传感器等专用传感模型，扩展了无人机专用机载传感器套件，支持Open3D激光雷达可视化等功能，为多模态感知算法的开发与验证提供了更丰富的数据源。
+
+
+\subsubsection{低门槛开发与中文本地化适配}
+
+平台提供了Windows 10+、Ubuntu 18.04+、MacOS 12+全平台适配方案，针对国内开发者优化了编译与部署流程：提供预编译的编辑器版本，无需完整源码编译，双击启动脚本即可进入带插件的虚幻编辑器；提供`hutb`专属Python工具包，支持`pip install hutb`一键安装，兼容Python 3.7-3.14全版本，解决了原生Carla Python版本适配受限、安装流程复杂的问题。同时平台提供了完整的中文构建文档、开发教程与示例代码，大幅降低了仿真环境的部署与二次开发门槛。
+
+
+
+\subsubsection{交通流与场景引擎深度优化}
+
+平台针对原生Carla的核心功能模块进行了大量bug修复与性能优化：重写了基于Waypoint API的OpenDriveActor模块，修复了原生平台环岛路径规划、路口转向的逻辑缺陷；优化了TrafficManager交通管理模块对大型车辆的路口控制逻辑，大幅降低了路口碰撞事故的发生概率；修复了多传感器创建与销毁时的TCP连接错误、文件句柄泄漏问题，提升了长时间仿真运行的稳定性。同时平台原生兼容ScenarioRunner场景运行引擎，支持OpenSCENARIO标准场景定义，可与SUMO、PTV Vissim等交通仿真软件实现联合仿真，满足复杂交通流场景的构建需求。
+\subsection{基于hutb的仿真场景搭建流程}
+本研究采用的hutb-CarlaUE4完整环境，分为预编译版本快速部署与源码编译自定义场景开发两种搭建模式，可适配不同的算法测试需求，核心流程如下：
+
+\subsubsection{预编译版本快速部署流程}
+
+针对常规的算法测试需求，可直接使用平台预编译的完整环境，无需源码编译，核心流程为：首先从官方发布页面下载对应平台的预编译安装包，解压后运行启动脚本`CarlaUE4.exe`（Windows）或`CarlaUE4.sh`（Linux），启动hutb-CarlaUE4仿真服务器；通过`pip install hutb`命令一键安装Python API工具包，完成客户端环境配置；通过客户端API连接本地仿真服务器（默认IP：127.0.0.1，端口：2000），设置天气、光照、时间等环境参数，加载适配国内交通规范的城镇地图；调用平台优化后的TrafficManager模块生成背景交通流，配置NPC车辆、行人、无人机的行为参数；在指定生成点创建主车与多传感器套件，完成传感器参数配置与数据回调函数绑定；最终通过ScenarioRunner定义测试场景的触发条件与执行逻辑，完成仿真场景的快速搭建。
+
+
+
+
+\subsubsection{源码编译与自定义场景全流程开发}
+
+
+针对特定测试场景的定制化需求，平台提供了完整的源码编译与自定义场景开发流程：第一步，通过`git clone`拉取hutb分支的最新源码，按照官方中文文档完成UE4引擎适配、依赖环境配置与源码全编译，生成可自定义开发的仿真服务器；第二步，基于OpenDRIVE标准完成符合中国道路规范的道路网络拓扑设计，通过RoadRunner工具绘制道路中心线、车道线、交通标志、信号灯等道路元素，导出符合平台规范的OpenDRIVE地图文件；第三步，在UE4引擎中导入地图文件，完成本土化3D场景资产的布置与渲染配置，通过git-lfs拉取平台开发版资产库，完成建筑、植被、地形等静态元素的摆放，以及材质、光照、碰撞体的设置；第四步，通过平台的地图编译工具完成场景的打包与编译，生成可被仿真环境加载的自定义地图；第五步，通过hutb Python/C++ API编写场景的控制逻辑，定义交通参与者的行为、场景触发条件与多传感器数据采集规则，完成自定义场景的全流程开发。
+
+
+\section{Chrono::Vehicle车辆动力学模块化建模体系}
+Chrono::Vehicle模块采用模块化+模板化的设计理念，实现了车辆动力学模型的快速构建与灵活调整，也是hutb-CarlaUE4平台联合仿真的核心适配能力，本研究的车辆动力学模型均基于该体系构建\cite{openhutb2026chrono}。
+\subsection{模板化建模核心设计}
+
+Chrono::Vehicle将车辆定义为各类子系统实例的集合，采用基于模板的设计实现建模的灵活性。其中，模板是车辆子系统的参数化模型，用于定义车辆子系统的特定实现，核心作用包括：定义车身、关节、力元素等基础建模元素，强制定义子系统的拓扑结构，规定设计参数的输入规范，实现特定类型子系统的通用功能。
+以悬架系统为例，双叉臂悬架模板预定义了上控制臂、下控制臂、转向节、减震器、弹簧等核心部件的拓扑结构与约束关系，用户只需通过硬点坐标、关节方向、惯性属性、接触材料属性等模板参数，即可完成该模板的实例化，得到适配特定车型的前/后悬架模型，无需重新开发底层动力学逻辑。
+完整的车辆移动仿真，除车辆本体子系统外，还包含三大辅助系统模板：一是驾驶员系统，用于提供转向、油门、制动等控制输入，可直接对接hutb-CarlaUE4平台的车辆控制指令\cite{fu2026carlaoverview}；二是动力总成系统，封装发动机和变速箱模型，与车辆传动系统连接，实现车辆驱动力的精准计算\cite{shi20254ws}；三是地形系统，支持刚性、柔性、颗粒状地形的建模，为轮胎-地面交互提供环境基础。\ref{2.png}所示：
+\begin{figure}[H] % 可以是h（here），t（top），b（bottom），p（page of floats）
+	\centering
+	\includegraphics[width=1\textwidth]{2} % 假设图片文件名为car.pdf或car.png等，位于当前工作目录
+	\caption{数据流闭环解析} % 图片标题
+	\label{2.png} % 用于引用的标签
+\end{figure}
+
+\subsection{标准化子系统模板库}
+
+\subsubsection{悬架系统模板}
+覆盖双叉臂、基于距离约束简化的双叉臂、多连杆、实心轴、麦弗逊式支柱、半拖曳臂等主流悬架拓扑结构，适配乘用车辆、商用车辆等不同车型的建模需求。\ref{3.png}所示：
+\begin{figure}[H] % 可以是h（here），t（top），b（bottom），p（page of floats）
+	\centering
+	\includegraphics[width=1\textwidth]{3} % 假设图片文件名为car.pdf或car.png等，位于当前工作目录
+	\caption{悬架系统模板} % 图片标题
+	\label{3.png} % 用于引用的标签
 \end{figure}
 
 
-如果一个图由多个分图（子图）组成，应通过(a),(b),(c)进行标识并附注在分图（子图下方）。
-目前子图标识不居中问题没有解决，预计下个版本修复。
-
-\subsection{横向布局}
-
-模板提供常见的图片布局，比如单图布局\ref{f.example}，另外还有横排布局如下：
-
-\begin{figure}[!htb]
-    \centering
-    \begin{subfigure}[t]{0.24\linewidth}
-        \begin{minipage}[b]{1\linewidth}
-        \includegraphics[width=1\linewidth]{hutb_building.png}
-        \caption{test}
-        \end{minipage}
-    \end{subfigure}
-    \begin{subfigure}[t]{0.24\linewidth}
-        \begin{minipage}[b]{1\linewidth}
-        \includegraphics[width=1\linewidth]{hutb_eim.png}
-        \caption{test}
-        \end{minipage}
-    \end{subfigure}
-    \begin{subfigure}[t]{0.24\linewidth}
-        \begin{minipage}[b]{1\linewidth}
-        \includegraphics[width=1\linewidth]{hutb_building.png}
-        \caption{test}
-        \end{minipage}
-    \end{subfigure}
-    \begin{subfigure}[t]{0.24\linewidth}
-        \begin{minipage}[b]{1\linewidth}
-        \includegraphics[width=1\linewidth]{hutb_eim.png}
-        \caption{test}
-        \end{minipage}
-    \end{subfigure}
-    \caption{图片横排布局示例}
-    \label{f.row}
+\subsubsection{转向系统模板}
+提供转向臂、齿条齿轮两类主流转向机构模板，可实现与前悬架系统的精准匹配，复现车辆转向的动力学特性。\ref{4.png}所示：
+\begin{figure}[H] % 可以是h（here），t（top），b（bottom），p（page of floats）
+	\centering
+	\includegraphics[width=1\textwidth]{4} % 假设图片文件名为car.pdf或car.png等，位于当前工作目录
+	\caption{转向系统模板} % 图片标题
+	\label{4.png} % 用于引用的标签
 \end{figure}
 
-\section{纵向布局}
+\subsubsection{传动系统模板}
 
-纵向布局如图\ref{f.col}
-
-\begin{figure}[!htb]
-    \centering
-    \begin{subfigure}[t]{0.15\linewidth}
-        \captionsetup{justification=centering} %ugly hacks
-        \begin{minipage}[b]{1\linewidth}
-        \includegraphics[width=1\linewidth]{hutb_building.png}
-        \caption{test}
-        \end{minipage}
-    \end{subfigure}\\
-    \begin{subfigure}[t]{0.15\linewidth}
-        \captionsetup{justification=centering} %ugly hacks
-        \begin{minipage}[b]{1\linewidth}
-        \includegraphics[width=1\linewidth]{hutb_eim.png}
-        \caption{test}
-        \end{minipage}
-    \end{subfigure}
-    \caption{图片纵向布局示例}
-    \label{f.col}
+支持2WD两驱与4WD四驱传动系统建模，采用Chrono专用建模元素实现传动系统的精细化仿真，同时提供简化的运动学传动系统模板，适配不同仿真精度的需求。\ref{5.png}所示：
+\begin{figure}[H] % 可以是h（here），t（top），b（bottom），p（page of floats）
+	\centering
+	\includegraphics[width=1\textwidth]{5} % 假设图片文件名为car.pdf或car.png等，位于当前工作目录
+	\caption{基于轴的 4WD 传动系统与基于轴的动力传动系统模型的连接。} % 图片标题
+	\label{5.png} % 用于引用的标签
 \end{figure}
 
-\section{竖排多图横排布局}
+\subsubsection{车轮与制动系统模板}
+车轮模板作为悬架主轴上附加质量与转动惯量的载体，实现车轮惯性参数的精准配置；制动器模板采用基于驾驶员制动输入调节的恒定扭矩模型，可复现车辆制动的动力学响应。
 
-\begin{figure}[!htb]
-    \centering
-    \begin{subfigure}[t]{0.13\linewidth}
-        \captionsetup{justification=centering} 
-        \begin{minipage}[b]{1\linewidth}
-        \includegraphics[width=1\linewidth]{hutb_building.png} 
-        \vspace{-1ex} \vfill
-        \includegraphics[width=1\linewidth]{hutb_eim.png}
-        \caption{aaa}
-        \end{minipage}
-    \end{subfigure}
-    \begin{subfigure}[t]{0.13\linewidth}
-        \captionsetup{justification=centering} 
-        \begin{minipage}[b]{1\linewidth}
-        \includegraphics[width=1\linewidth]{hutb_eim.png} 
-        \vspace{-1ex} \vfill
-        \includegraphics[width=1\linewidth]{hutb_building.png}
-        \caption{bbb}
-        \end{minipage}
-    \end{subfigure}
-    \caption{图片竖排多图横排布局}
-    \label{f.csu_col_row}
+\subsubsection{轮胎模型模板}
+提供多精度等级的轮胎模型，包括刚性轮胎、Pacejka与Fiala半经验轮胎模型，以及基于绝对节点坐标公式或共旋转公式的有限元全可变形轮胎模型，可根据仿真需求选择适配的轮胎模型，平衡仿真精度与计算效率。
+针对履带式车辆，模块也提供了单销式/双销式履带板、配套链轮、扭转弹簧/液压悬架、惰轮张紧机构、滚筒等全系列模板，可实现履带式工程车辆的动力学建模。
+
+\section{基于JSON文件的车辆模型实例化方法}
+为降低建模门槛，Chrono::Vehicle提供了基于JSON格式输入文件的车辆模型定义机制，无需编写C++代码，即可完成车辆系统与子系统模板的实例化，也是本研究车辆模型参数调整的核心方式，hutb-CarlaUE4平台原生支持该JSON配置文件的导入与加载。
+基于JSON文件的车辆建模，遵循子系统模板的层级结构，通过顶级JSON文件与子系统引用JSON文件，即可完整定义一辆轮式/履带式车辆。以双轴双叉臂悬架轮式车辆为例，其顶级JSON规范文件核心结构如下，该结构完整定义了车辆的底盘、车轴、悬架、转向、传动系统等核心子系统，通过修改对应JSON文件中的参数，即可完成车辆动力学特性的调整：
+\subsection{坐标系约定与适配规范}
+Chrono::Vehicle模块遵循严格的坐标系约定，保证车辆子系统建模的规范性与跨平台适配性，也是与hutb-CarlaUE4平台联合仿真的核心适配基础。
+
+\subsubsection{车辆子系统与整车参考系}
+每个车辆子系统均基于自身的参考系定义，模板中所有硬点、受力点位置均需在子系统参考系中提供。整车系统通过指定各子系统相对于车辆参考系的位置和方向，完成子系统的装配与连接，车辆参考系默认与底盘子系统的参考系对齐。
+模块严格遵循ISO 8855:2011车辆轴约定，采用右手坐标系，规定X轴向前、Z轴向上、Y轴指向车辆左侧，该约定与hutb-CarlaUE4平台的车辆坐标系完全兼容，无需额外的坐标转换，即可实现两个平台之间的车辆状态数据无缝交互\cite{zhang2025multiscene}。\ref{6.png}所	示：
+
+\begin{figure}[H] % 可以是h（here），t（top），b（bottom），p（page of floats）
+	\centering
+	\includegraphics[width=1\textwidth]{6} % 假设图片文件名为car.pdf或car.png等，位于当前工作目录
+	\caption{车辆参考系O1以及子系统参考系（O′2和 O′′2表示前后悬架，O3表示转向机构）。} % 图片标题
+	\label{6.png} % 用于引用的标签
 \end{figure}
 
-竖排多图横排布局如图\ref{f.csu_col_row}所示。注意看(a)、(b)编号与图关系
-
-
-\section{横排多图竖排布局}
-
-潮涌湘江阔，鹏翔天地宽。湖南工商大学正以习近平新时代中国特色社会主义思想为指引，秉持“新工科+新商科+新文科”与理科融合发展的思路，努力形成一流的理念、一流的目标、一流的标准、一流的质量、一流的机制，打造创新工商、人文工商、艺术工商、体育工商、数智工商、绿色工商、幸福工商，建设读书求知的好园地，乘高等教育改革奋进的东风，朝着创新型一流工商大学的愿景扬帆远航。
-
-\begin{figure}[!htb]
-    \centering
-    \begin{subfigure}[t]{0.3\linewidth}
-        \captionsetup{justification=centering} 
-        \begin{minipage}[b]{1\linewidth}
-        \includegraphics[width=0.45\linewidth]{hutb_building.png}
-        \includegraphics[width=0.45\linewidth]{hutb_eim.png}
-        \caption{}
-        \end{minipage}
-    \end{subfigure}\\
-    \begin{subfigure}[t]{0.3\linewidth}
-        \captionsetup{justification=centering} 
-        \begin{minipage}[b]{1\linewidth}
-        \includegraphics[width=0.45\linewidth]{hutb_eim.png}
-        \includegraphics[width=0.45\linewidth]{hutb_building.png}
-        \caption{}
-        \end{minipage}
-    \end{subfigure}
-    \caption{图片横排多图竖排布局}
-    \label{f.csu_row_col}
-\end{figure}
-
-横排多图竖排布局如图\ref{f.csu_row_col}所示。注意看(a)、(b)编号与图关系。
-
-\newpage
+\subsubsection{模拟世界坐标系}
+Chrono::Vehicle默认的世界坐标系与车辆参考系一致，采用ISO标准的Z轴向上坐标系，同时支持自定义世界坐标系，可适配不同参考系约定的仿真场景\cite{xu2025mining}。针对部分采用Y轴向上的仿真环境，模块提供了快捷设置接口`ChWorldFrame::SetYUP()`，可一键切换为X轴向前、Y轴向上、Z轴向右的世界坐标系；同时`ChWorldFrame`类提供了坐标系转换、高度查询、平面投影等工具函数，可实现ISO标准坐标系与自定义世界坐标系之间的无缝转换，保证了与不同仿真平台的适配能力\cite{ge2025rl}。
