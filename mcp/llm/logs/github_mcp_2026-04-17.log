@@ -1,0 +1,739 @@
+2026-04-17 15:16:31 | INFO     | __main__:chat:859 - 💬 用户消息: 连接CARLA仿真服务器
+2026-04-17 15:16:31 | DEBUG    | __main__:call_deepseek_with_tools:610 - 📤 调用Deepseek API，消息数: 2
+2026-04-17 15:16:31 | DEBUG    | __main__:call_deepseek_with_tools:611 - 📤 最后一条消息: {"role": "user", "content": "连接CARLA仿真服务器"}
+2026-04-17 15:16:35 | DEBUG    | __main__:call_deepseek_with_tools:617 - 📥 API响应状态: 200
+2026-04-17 15:16:35 | DEBUG    | __main__:call_deepseek_with_tools:620 - 📥 响应内容长度: 17
+2026-04-17 15:16:35 | DEBUG    | __main__:call_deepseek_with_tools:621 - 📥 响应内容预览: 我将为您连接CARLA仿真服务器。
+2026-04-17 15:16:35 | INFO     | __main__:chat:874 - 🔧 第1轮：检测到 1 个FastMCP工具调用
+2026-04-17 15:16:35 | INFO     | __main__:chat:878 - 🔨 执行FastMCP工具: connect_carla
+2026-04-17 15:16:35 | INFO     | __main__:execute_fastmcp_tool_call:632 - 🔧 执行FastMCP工具: connect_carla
+2026-04-17 15:16:35 | INFO     | __main__:execute_fastmcp_tool_call:633 - 📝 参数: {'host': 'localhost', 'port': 2000}
+2026-04-17 15:16:35 | INFO     | __main__:chat:880 - ✅ FastMCP工具执行完成，结果长度: 125
+2026-04-17 15:16:35 | INFO     | __main__:chat:890 - 🤖 第1轮：正在生成回答...
+2026-04-17 15:16:35 | DEBUG    | __main__:chat:891 - � 发送给API的消息数量: 4
+2026-04-17 15:16:35 | DEBUG    | __main__:chat:892 - 📤 最后一条消息类型: tool
+2026-04-17 15:16:35 | DEBUG    | __main__:call_deepseek_with_tools:610 - 📤 调用Deepseek API，消息数: 4
+2026-04-17 15:16:35 | DEBUG    | __main__:call_deepseek_with_tools:611 - 📤 最后一条消息: {"role": "tool", "tool_call_id": "call_00_3K7pSGyLYNPiTMNVtYltemIl", "content": "{\"success\": true, \"data\": \"❌ CARLA模块未安装。请运行: pip install D:/hutb/PythonAPI/carla/dist/hutb-2.9.16-cp310-cp310-win_
+2026-04-17 15:16:42 | DEBUG    | __main__:call_deepseek_with_tools:617 - 📥 API响应状态: 200
+2026-04-17 15:16:42 | DEBUG    | __main__:call_deepseek_with_tools:620 - 📥 响应内容长度: 332
+2026-04-17 15:16:42 | DEBUG    | __main__:call_deepseek_with_tools:621 - 📥 响应内容预览: 看起来CARLA PythonAPI模块没有正确安装。根据错误信息，您需要先安装CARLA的Python包。请运行以下命令：
+
+```
+pip install D:/hutb/PythonAPI/ca
+2026-04-17 15:16:42 | DEBUG    | __main__:chat:896 - 📥 API响应: {
+  "id": "1d030dc4-b934-465c-a705-5961abcb325f",
+  "object": "chat.completion",
+  "created": 1776410197,
+  "model": "deepseek-chat",
+  "choices": [
+    {
+      "index": 0,
+      "message": {
+        "role": "assistant",
+        "content": "看起来CARLA PythonAPI模块没有正确安装。根据错误信息，您需要先安装CARLA的Python包。请运行以下命令：\n\n```\npip install D:/hutb/PythonAPI/carla/dist/hutb-2.9.16-cp310-cp310-win_amd64.whl\n```\n\n安装完成后，请确保CARLA服务器正在运行（通常通过运行CarlaUE4.exe启动），然后您可以再次尝试连接服务器。\n\n如果您已经安装了CARLA包，请确认：\n1. CARLA服务器是否正在运行\n2. 服务器地址和端口是否正确（默认localhost:2000）\n3. Python环境是否正确配置\n\n安装完成后，请告诉我，我将为您重新连接CARLA服务器。"
+      },
+      "logprobs": null,
+      "finish_reason": "stop"
+    }
+  ],
+  "usage": {
+    "prompt_tokens": 2011,
+    "completion_tokens": 150,
+    "total_tokens": 2161,
+    "prompt_tokens_details": {
+      "cached_tokens": 1920
+    },
+    "prompt_cache_hit_tokens": 1920,
+    "prompt_cache_miss_tokens": 91
+  },
+  "system_fingerprint": "fp_eaab8d114b_prod0820_fp8_kvcache_new_kvcache_20260410"
+}
+2026-04-17 15:16:42 | INFO     | __main__:chat:907 - ✅ 最终回答生成成功，长度: 332
+2026-04-17 15:16:42 | DEBUG    | __main__:chat:908 - 📝 最终回答内容: 看起来CARLA PythonAPI模块没有正确安装。根据错误信息，您需要先安装CARLA的Python包。请运行以下命令：
+
+```
+pip install D:/hutb/PythonAPI/carla/dist/hutb-2.9.16-cp310-cp310-win_amd64.whl
+```
+
+安装完成后，请确保CARLA服务器正在运行（通常通过运行CarlaUE4.exe启动），然后您可以再次尝试连接服务器。
+
+如果您已经安装了CARLA包，请确认：
+1. CARLA服务器是否正在运行
+2. 服务器地址和端口是否正确（默认localhost:2000）
+3. Python环境是否正确配置
+
+安装完成后，请告诉我，我将为您重新连接CARLA服务器。
+2026-04-17 15:17:54 | INFO     | __main__:chat:859 - 💬 用户消息: 连接CARLA仿真服务器
+2026-04-17 15:17:54 | DEBUG    | __main__:call_deepseek_with_tools:610 - 📤 调用Deepseek API，消息数: 2
+2026-04-17 15:17:54 | DEBUG    | __main__:call_deepseek_with_tools:611 - 📤 最后一条消息: {"role": "user", "content": "连接CARLA仿真服务器"}
+2026-04-17 15:17:58 | DEBUG    | __main__:call_deepseek_with_tools:617 - 📥 API响应状态: 200
+2026-04-17 15:17:58 | DEBUG    | __main__:call_deepseek_with_tools:620 - 📥 响应内容长度: 17
+2026-04-17 15:17:58 | DEBUG    | __main__:call_deepseek_with_tools:621 - 📥 响应内容预览: 我将为您连接CARLA仿真服务器。
+2026-04-17 15:17:58 | INFO     | __main__:chat:874 - 🔧 第1轮：检测到 1 个FastMCP工具调用
+2026-04-17 15:17:58 | INFO     | __main__:chat:878 - 🔨 执行FastMCP工具: connect_carla
+2026-04-17 15:17:58 | INFO     | __main__:execute_fastmcp_tool_call:632 - 🔧 执行FastMCP工具: connect_carla
+2026-04-17 15:17:58 | INFO     | __main__:execute_fastmcp_tool_call:633 - 📝 参数: {'host': 'localhost', 'port': 2000}
+2026-04-17 15:17:58 | INFO     | __main__:chat:880 - ✅ FastMCP工具执行完成，结果长度: 125
+2026-04-17 15:17:58 | INFO     | __main__:chat:890 - 🤖 第1轮：正在生成回答...
+2026-04-17 15:17:58 | DEBUG    | __main__:chat:891 - � 发送给API的消息数量: 4
+2026-04-17 15:17:58 | DEBUG    | __main__:chat:892 - 📤 最后一条消息类型: tool
+2026-04-17 15:17:58 | DEBUG    | __main__:call_deepseek_with_tools:610 - 📤 调用Deepseek API，消息数: 4
+2026-04-17 15:17:58 | DEBUG    | __main__:call_deepseek_with_tools:611 - 📤 最后一条消息: {"role": "tool", "tool_call_id": "call_00_VRH8qCVWpGKkVASptzVDpv5E", "content": "{\"success\": true, \"data\": \"❌ CARLA模块未安装。请运行: pip install D:/hutb/PythonAPI/carla/dist/hutb-2.9.16-cp310-cp310-win_
+2026-04-17 15:18:03 | DEBUG    | __main__:call_deepseek_with_tools:617 - 📥 API响应状态: 200
+2026-04-17 15:18:03 | DEBUG    | __main__:call_deepseek_with_tools:620 - 📥 响应内容长度: 233
+2026-04-17 15:18:03 | DEBUG    | __main__:call_deepseek_with_tools:621 - 📥 响应内容预览: 看起来CARLA模块没有正确安装。根据错误信息，您需要先安装CARLA Python API。请运行以下命令来安装：
+
+```
+pip install D:/hutb/PythonAPI/carla/
+2026-04-17 15:18:03 | DEBUG    | __main__:chat:896 - 📥 API响应: {
+  "id": "242266c2-a768-4012-bb6d-29e6bd4da126",
+  "object": "chat.completion",
+  "created": 1776410280,
+  "model": "deepseek-chat",
+  "choices": [
+    {
+      "index": 0,
+      "message": {
+        "role": "assistant",
+        "content": "看起来CARLA模块没有正确安装。根据错误信息，您需要先安装CARLA Python API。请运行以下命令来安装：\n\n```\npip install D:/hutb/PythonAPI/carla/dist/hutb-2.9.16-cp310-cp310-win_amd64.whl\n```\n\n安装完成后，您可以再次尝试连接CARLA服务器。如果您已经安装了CARLA模块但仍然遇到问题，请确保CARLA服务器正在运行（通常通过运行CarlaUE4.exe启动）。"
+      },
+      "logprobs": null,
+      "finish_reason": "stop"
+    }
+  ],
+  "usage": {
+    "prompt_tokens": 2011,
+    "completion_tokens": 105,
+    "total_tokens": 2116,
+    "prompt_tokens_details": {
+      "cached_tokens": 1984
+    },
+    "prompt_cache_hit_tokens": 1984,
+    "prompt_cache_miss_tokens": 27
+  },
+  "system_fingerprint": "fp_eaab8d114b_prod0820_fp8_kvcache_new_kvcache_20260410"
+}
+2026-04-17 15:18:03 | INFO     | __main__:chat:907 - ✅ 最终回答生成成功，长度: 233
+2026-04-17 15:18:03 | DEBUG    | __main__:chat:908 - 📝 最终回答内容: 看起来CARLA模块没有正确安装。根据错误信息，您需要先安装CARLA Python API。请运行以下命令来安装：
+
+```
+pip install D:/hutb/PythonAPI/carla/dist/hutb-2.9.16-cp310-cp310-win_amd64.whl
+```
+
+安装完成后，您可以再次尝试连接CARLA服务器。如果您已经安装了CARLA模块但仍然遇到问题，请确保CARLA服务器正在运行（通常通过运行CarlaUE4.exe启动）。
+2026-04-17 15:18:58 | INFO     | __main__:chat:859 - 💬 用户消息: 连接CARLA仿真服务器
+2026-04-17 15:18:58 | DEBUG    | __main__:call_deepseek_with_tools:610 - 📤 调用Deepseek API，消息数: 2
+2026-04-17 15:18:58 | DEBUG    | __main__:call_deepseek_with_tools:611 - 📤 最后一条消息: {"role": "user", "content": "连接CARLA仿真服务器"}
+2026-04-17 15:19:03 | DEBUG    | __main__:call_deepseek_with_tools:617 - 📥 API响应状态: 200
+2026-04-17 15:19:03 | DEBUG    | __main__:call_deepseek_with_tools:620 - 📥 响应内容长度: 17
+2026-04-17 15:19:03 | DEBUG    | __main__:call_deepseek_with_tools:621 - 📥 响应内容预览: 我来帮您连接CARLA仿真服务器。
+2026-04-17 15:19:03 | INFO     | __main__:chat:874 - 🔧 第1轮：检测到 1 个FastMCP工具调用
+2026-04-17 15:19:03 | INFO     | __main__:chat:878 - 🔨 执行FastMCP工具: connect_carla
+2026-04-17 15:19:03 | INFO     | __main__:execute_fastmcp_tool_call:632 - 🔧 执行FastMCP工具: connect_carla
+2026-04-17 15:19:03 | INFO     | __main__:execute_fastmcp_tool_call:633 - 📝 参数: {'host': 'localhost', 'port': 2000}
+2026-04-17 15:19:05 | INFO     | __main__:connect:58 - ✅ CARLA服务器连接成功
+2026-04-17 15:19:05 | INFO     | __main__:chat:880 - ✅ FastMCP工具执行完成，结果长度: 43
+2026-04-17 15:19:05 | INFO     | __main__:chat:890 - 🤖 第1轮：正在生成回答...
+2026-04-17 15:19:05 | DEBUG    | __main__:chat:891 - � 发送给API的消息数量: 4
+2026-04-17 15:19:05 | DEBUG    | __main__:chat:892 - 📤 最后一条消息类型: tool
+2026-04-17 15:19:05 | DEBUG    | __main__:call_deepseek_with_tools:610 - 📤 调用Deepseek API，消息数: 4
+2026-04-17 15:19:05 | DEBUG    | __main__:call_deepseek_with_tools:611 - 📤 最后一条消息: {"role": "tool", "tool_call_id": "call_00_LvD8iNLXUxOENyIANxYiNlIm", "content": "{\"success\": true, \"data\": \"✅ CARLA服务器连接成功\"}"}
+2026-04-17 15:19:10 | DEBUG    | __main__:call_deepseek_with_tools:617 - 📥 API响应状态: 200
+2026-04-17 15:19:10 | DEBUG    | __main__:call_deepseek_with_tools:620 - 📥 响应内容长度: 129
+2026-04-17 15:19:10 | DEBUG    | __main__:call_deepseek_with_tools:621 - 📥 响应内容预览: CARLA仿真服务器连接成功！现在您可以：
+1. 生成车辆（model3/a2/mustang）
+2. 设置天气（clear/rain/fog）
+3. 查看交通灯状态
+4. 生成行人
+5. 清理场景
+
+2026-04-17 15:19:10 | DEBUG    | __main__:chat:896 - 📥 API响应: {
+  "id": "1441b03b-ec90-48ab-bff3-281cc325a130",
+  "object": "chat.completion",
+  "created": 1776410347,
+  "model": "deepseek-chat",
+  "choices": [
+    {
+      "index": 0,
+      "message": {
+        "role": "assistant",
+        "content": "CARLA仿真服务器连接成功！现在您可以：\n1. 生成车辆（model3/a2/mustang）\n2. 设置天气（clear/rain/fog）\n3. 查看交通灯状态\n4. 生成行人\n5. 清理场景\n6. 获取可用车辆蓝图列表\n\n请告诉我您想要进行什么操作？"
+      },
+      "logprobs": null,
+      "finish_reason": "stop"
+    }
+  ],
+  "usage": {
+    "prompt_tokens": 1972,
+    "completion_tokens": 73,
+    "total_tokens": 2045,
+    "prompt_tokens_details": {
+      "cached_tokens": 1920
+    },
+    "prompt_cache_hit_tokens": 1920,
+    "prompt_cache_miss_tokens": 52
+  },
+  "system_fingerprint": "fp_eaab8d114b_prod0820_fp8_kvcache_new_kvcache_20260410"
+}
+2026-04-17 15:19:10 | INFO     | __main__:chat:907 - ✅ 最终回答生成成功，长度: 129
+2026-04-17 15:19:10 | DEBUG    | __main__:chat:908 - 📝 最终回答内容: CARLA仿真服务器连接成功！现在您可以：
+1. 生成车辆（model3/a2/mustang）
+2. 设置天气（clear/rain/fog）
+3. 查看交通灯状态
+4. 生成行人
+5. 清理场景
+6. 获取可用车辆蓝图列表
+
+请告诉我您想要进行什么操作？
+2026-04-17 15:19:50 | INFO     | __main__:chat:859 - 💬 用户消息: 连接CARLA仿真服务器，生成车辆model3，自动驾驶
+2026-04-17 15:19:50 | DEBUG    | __main__:call_deepseek_with_tools:610 - 📤 调用Deepseek API，消息数: 2
+2026-04-17 15:19:50 | DEBUG    | __main__:call_deepseek_with_tools:611 - 📤 最后一条消息: {"role": "user", "content": "连接CARLA仿真服务器，生成车辆model3，自动驾驶"}
+2026-04-17 15:19:55 | DEBUG    | __main__:call_deepseek_with_tools:617 - 📥 API响应状态: 200
+2026-04-17 15:19:55 | DEBUG    | __main__:call_deepseek_with_tools:620 - 📥 响应内容长度: 50
+2026-04-17 15:19:55 | DEBUG    | __main__:call_deepseek_with_tools:621 - 📥 响应内容预览: 我来帮您连接CARLA服务器并生成车辆model3，然后开启自动驾驶。
+
+首先连接CARLA服务器：
+2026-04-17 15:19:55 | INFO     | __main__:chat:874 - 🔧 第1轮：检测到 1 个FastMCP工具调用
+2026-04-17 15:19:55 | INFO     | __main__:chat:878 - 🔨 执行FastMCP工具: connect_carla
+2026-04-17 15:19:55 | INFO     | __main__:execute_fastmcp_tool_call:632 - 🔧 执行FastMCP工具: connect_carla
+2026-04-17 15:19:55 | INFO     | __main__:execute_fastmcp_tool_call:633 - 📝 参数: {'host': 'localhost', 'port': 2000}
+2026-04-17 15:19:57 | INFO     | __main__:connect:58 - ✅ CARLA服务器连接成功
+2026-04-17 15:19:57 | INFO     | __main__:chat:880 - ✅ FastMCP工具执行完成，结果长度: 43
+2026-04-17 15:19:57 | INFO     | __main__:chat:890 - 🤖 第1轮：正在生成回答...
+2026-04-17 15:19:57 | DEBUG    | __main__:chat:891 - � 发送给API的消息数量: 4
+2026-04-17 15:19:57 | DEBUG    | __main__:chat:892 - 📤 最后一条消息类型: tool
+2026-04-17 15:19:57 | DEBUG    | __main__:call_deepseek_with_tools:610 - 📤 调用Deepseek API，消息数: 4
+2026-04-17 15:19:57 | DEBUG    | __main__:call_deepseek_with_tools:611 - 📤 最后一条消息: {"role": "tool", "tool_call_id": "call_00_bGB5IXfpwo3kXCVa8pNc7How", "content": "{\"success\": true, \"data\": \"✅ CARLA服务器连接成功\"}"}
+2026-04-17 15:20:01 | DEBUG    | __main__:call_deepseek_with_tools:617 - 📥 API响应状态: 200
+2026-04-17 15:20:01 | DEBUG    | __main__:call_deepseek_with_tools:620 - 📥 响应内容长度: 15
+2026-04-17 15:20:01 | DEBUG    | __main__:call_deepseek_with_tools:621 - 📥 响应内容预览: 现在生成一辆model3车辆：
+2026-04-17 15:20:01 | DEBUG    | __main__:chat:896 - 📥 API响应: {
+  "id": "0abd7325-3726-41ec-a1b0-317ce269b9fa",
+  "object": "chat.completion",
+  "created": 1776410399,
+  "model": "deepseek-chat",
+  "choices": [
+    {
+      "index": 0,
+      "message": {
+        "role": "assistant",
+        "content": "现在生成一辆model3车辆：",
+        "tool_calls": [
+          {
+            "index": 0,
+            "id": "call_00_lVVz0AjifCdL4hl2tqtW6qBV",
+            "type": "function",
+            "function": {
+              "name": "spawn_vehicle",
+              "arguments": "{\"query\": \"model3\"}"
+            }
+          }
+        ]
+      },
+      "logprobs": null,
+      "finish_reason": "tool_calls"
+    }
+  ],
+  "usage": {
+    "prompt_tokens": 1993,
+    "completion_tokens": 52,
+    "total_tokens": 2045,
+    "prompt_tokens_details": {
+      "cached_tokens": 1920
+    },
+    "prompt_cache_hit_tokens": 1920,
+    "prompt_cache_miss_tokens": 73
+  },
+  "system_fingerprint": "fp_eaab8d114b_prod0820_fp8_kvcache_new_kvcache_20260410"
+}
+2026-04-17 15:20:01 | INFO     | __main__:chat:920 - 🔄 检测到更多工具调用，继续执行...
+2026-04-17 15:20:01 | INFO     | __main__:chat:874 - 🔧 第2轮：检测到 1 个FastMCP工具调用
+2026-04-17 15:20:01 | INFO     | __main__:chat:878 - 🔨 执行FastMCP工具: spawn_vehicle
+2026-04-17 15:20:01 | INFO     | __main__:execute_fastmcp_tool_call:632 - 🔧 执行FastMCP工具: spawn_vehicle
+2026-04-17 15:20:01 | INFO     | __main__:execute_fastmcp_tool_call:633 - 📝 参数: {'query': 'model3'}
+2026-04-17 15:20:01 | INFO     | __main__:execute_fastmcp_tool_call:648 - 🚗 spawn_vehicle参数详情: {'query': 'model3'}
+2026-04-17 15:20:02 | INFO     | __main__:spawn_vehicle:71 - 🚗 生成车辆: model3
+2026-04-17 15:20:02 | INFO     | __main__:execute_fastmcp_tool_call:652 - 🚗 spawn_vehicle执行结果: ✅ 已生成车辆: model3 (ID: 24)
+2026-04-17 15:20:02 | INFO     | __main__:chat:880 - ✅ FastMCP工具执行完成，结果长度: 53
+2026-04-17 15:20:02 | INFO     | __main__:chat:890 - 🤖 第2轮：正在生成回答...
+2026-04-17 15:20:02 | DEBUG    | __main__:chat:891 - � 发送给API的消息数量: 6
+2026-04-17 15:20:02 | DEBUG    | __main__:chat:892 - 📤 最后一条消息类型: tool
+2026-04-17 15:20:02 | DEBUG    | __main__:call_deepseek_with_tools:610 - 📤 调用Deepseek API，消息数: 6
+2026-04-17 15:20:02 | DEBUG    | __main__:call_deepseek_with_tools:611 - 📤 最后一条消息: {"role": "tool", "tool_call_id": "call_00_lVVz0AjifCdL4hl2tqtW6qBV", "content": "{\"success\": true, \"data\": \"✅ 已生成车辆: model3 (ID: 24)\"}"}
+2026-04-17 15:20:07 | DEBUG    | __main__:call_deepseek_with_tools:617 - 📥 API响应状态: 200
+2026-04-17 15:20:07 | DEBUG    | __main__:call_deepseek_with_tools:620 - 📥 响应内容长度: 29
+2026-04-17 15:20:07 | DEBUG    | __main__:call_deepseek_with_tools:621 - 📥 响应内容预览: 车辆已成功生成，车辆ID为24。现在为这辆车开启自动驾驶：
+2026-04-17 15:20:07 | DEBUG    | __main__:chat:896 - 📥 API响应: {
+  "id": "abb7023c-a36b-4ed5-9fd3-ac71c0a09428",
+  "object": "chat.completion",
+  "created": 1776410404,
+  "model": "deepseek-chat",
+  "choices": [
+    {
+      "index": 0,
+      "message": {
+        "role": "assistant",
+        "content": "车辆已成功生成，车辆ID为24。现在为这辆车开启自动驾驶：",
+        "tool_calls": [
+          {
+            "index": 0,
+            "id": "call_00_upOLE3eN6yFpZRjpm9t0njoH",
+            "type": "function",
+            "function": {
+              "name": "set_vehicle_autopilot",
+              "arguments": "{\"vehicle_id\": 24, \"enabled\": true}"
+            }
+          }
+        ]
+      },
+      "logprobs": null,
+      "finish_reason": "tool_calls"
+    }
+  ],
+  "usage": {
+    "prompt_tokens": 2085,
+    "completion_tokens": 82,
+    "total_tokens": 2167,
+    "prompt_tokens_details": {
+      "cached_tokens": 1984
+    },
+    "prompt_cache_hit_tokens": 1984,
+    "prompt_cache_miss_tokens": 101
+  },
+  "system_fingerprint": "fp_eaab8d114b_prod0820_fp8_kvcache_new_kvcache_20260410"
+}
+2026-04-17 15:20:07 | INFO     | __main__:chat:920 - 🔄 检测到更多工具调用，继续执行...
+2026-04-17 15:20:07 | INFO     | __main__:chat:874 - 🔧 第3轮：检测到 1 个FastMCP工具调用
+2026-04-17 15:20:07 | INFO     | __main__:chat:878 - 🔨 执行FastMCP工具: set_vehicle_autopilot
+2026-04-17 15:20:07 | INFO     | __main__:execute_fastmcp_tool_call:632 - 🔧 执行FastMCP工具: set_vehicle_autopilot
+2026-04-17 15:20:07 | INFO     | __main__:execute_fastmcp_tool_call:633 - 📝 参数: {'vehicle_id': 24, 'enabled': True}
+2026-04-17 15:20:07 | INFO     | __main__:chat:880 - ✅ FastMCP工具执行完成，结果长度: 44
+2026-04-17 15:20:07 | INFO     | __main__:chat:890 - 🤖 第3轮：正在生成回答...
+2026-04-17 15:20:07 | DEBUG    | __main__:chat:891 - � 发送给API的消息数量: 8
+2026-04-17 15:20:07 | DEBUG    | __main__:chat:892 - 📤 最后一条消息类型: tool
+2026-04-17 15:20:07 | DEBUG    | __main__:call_deepseek_with_tools:610 - 📤 调用Deepseek API，消息数: 8
+2026-04-17 15:20:07 | DEBUG    | __main__:call_deepseek_with_tools:611 - 📤 最后一条消息: {"role": "tool", "tool_call_id": "call_00_upOLE3eN6yFpZRjpm9t0njoH", "content": "{\"success\": true, \"data\": \"✅ 车辆 24 自动驾驶已开启\"}"}
+2026-04-17 15:20:16 | DEBUG    | __main__:call_deepseek_with_tools:617 - 📥 API响应状态: 200
+2026-04-17 15:20:16 | DEBUG    | __main__:call_deepseek_with_tools:620 - 📥 响应内容长度: 372
+2026-04-17 15:20:16 | DEBUG    | __main__:call_deepseek_with_tools:621 - 📥 响应内容预览: 完成！我已经成功：
+1. ✅ 连接了CARLA服务器（localhost:2000）
+2. ✅ 生成了一辆model3车辆（ID: 24）
+3. ✅ 开启了车辆24的自动驾驶模式
+
+现在车辆24正在自
+2026-04-17 15:20:16 | DEBUG    | __main__:chat:896 - 📥 API响应: {
+  "id": "16a9cf78-60a5-45c1-a049-aee20c9eb3c3",
+  "object": "chat.completion",
+  "created": 1776410409,
+  "model": "deepseek-chat",
+  "choices": [
+    {
+      "index": 0,
+      "message": {
+        "role": "assistant",
+        "content": "完成！我已经成功：\n1. ✅ 连接了CARLA服务器（localhost:2000）\n2. ✅ 生成了一辆model3车辆（ID: 24）\n3. ✅ 开启了车辆24的自动驾驶模式\n\n现在车辆24正在自动驾驶中。您可以：\n- 查看车辆状态：`get_vehicle_state(vehicle_id=24)`\n- 关闭自动驾驶：`set_vehicle_autopilot(vehicle_id=24, enabled=false)`\n- 手动控制车辆：使用`apply_vehicle_control`控制油门、转向、刹车等\n- 销毁车辆：`destroy_vehicle(vehicle_id=24)`\n- 设置天气：如雨天`set_weather(owner=\"weather\", repo=\"rain\")`\n\n需要我为您做什么其他操作吗？"
+      },
+      "logprobs": null,
+      "finish_reason": "stop"
+    }
+  ],
+  "usage": {
+    "prompt_tokens": 2203,
+    "completion_tokens": 164,
+    "total_tokens": 2367,
+    "prompt_tokens_details": {
+      "cached_tokens": 2112
+    },
+    "prompt_cache_hit_tokens": 2112,
+    "prompt_cache_miss_tokens": 91
+  },
+  "system_fingerprint": "fp_eaab8d114b_prod0820_fp8_kvcache_new_kvcache_20260410"
+}
+2026-04-17 15:20:16 | INFO     | __main__:chat:907 - ✅ 最终回答生成成功，长度: 372
+2026-04-17 15:20:16 | DEBUG    | __main__:chat:908 - 📝 最终回答内容: 完成！我已经成功：
+1. ✅ 连接了CARLA服务器（localhost:2000）
+2. ✅ 生成了一辆model3车辆（ID: 24）
+3. ✅ 开启了车辆24的自动驾驶模式
+
+现在车辆24正在自动驾驶中。您可以：
+- 查看车辆状态：`get_vehicle_state(vehicle_id=24)`
+- 关闭自动驾驶：`set_vehicle_autopilot(vehicle_id=24, enabled=false)`
+- 手动控制车辆：使用`apply_vehicle_control`控制油门、转向、刹车等
+- 销毁车辆：`destroy_vehicle(vehicle_id=24)`
+- 设置天气：如雨天`set_weather(owner="weather", repo="rain")`
+
+需要我为您做什么其他操作吗？
+2026-04-17 15:21:58 | INFO     | __main__:chat:859 - 💬 用户消息: 连接CARLA仿真服务器，开启车辆24的自动驾驶模式
+2026-04-17 15:21:58 | DEBUG    | __main__:call_deepseek_with_tools:610 - 📤 调用Deepseek API，消息数: 2
+2026-04-17 15:21:58 | DEBUG    | __main__:call_deepseek_with_tools:611 - 📤 最后一条消息: {"role": "user", "content": "连接CARLA仿真服务器，开启车辆24的自动驾驶模式"}
+2026-04-17 15:22:04 | DEBUG    | __main__:call_deepseek_with_tools:617 - 📥 API响应状态: 200
+2026-04-17 15:22:04 | DEBUG    | __main__:call_deepseek_with_tools:620 - 📥 响应内容长度: 108
+2026-04-17 15:22:04 | DEBUG    | __main__:call_deepseek_with_tools:621 - 📥 响应内容预览: 我注意到您想要开启车辆24的自动驾驶模式，但是目前我还没有连接到CARLA服务器。根据我的策略，我需要先连接到CARLA服务器才能进行后续操作。
+
+让我先连接到CARLA服务器，然后再为您开启车辆24
+2026-04-17 15:22:04 | INFO     | __main__:chat:874 - 🔧 第1轮：检测到 1 个FastMCP工具调用
+2026-04-17 15:22:04 | INFO     | __main__:chat:878 - 🔨 执行FastMCP工具: connect_carla
+2026-04-17 15:22:04 | INFO     | __main__:execute_fastmcp_tool_call:632 - 🔧 执行FastMCP工具: connect_carla
+2026-04-17 15:22:04 | INFO     | __main__:execute_fastmcp_tool_call:633 - 📝 参数: {'host': 'localhost', 'port': 2000}
+2026-04-17 15:22:06 | INFO     | __main__:connect:58 - ✅ CARLA服务器连接成功
+2026-04-17 15:22:06 | INFO     | __main__:chat:880 - ✅ FastMCP工具执行完成，结果长度: 43
+2026-04-17 15:22:06 | INFO     | __main__:chat:890 - 🤖 第1轮：正在生成回答...
+2026-04-17 15:22:06 | DEBUG    | __main__:chat:891 - � 发送给API的消息数量: 4
+2026-04-17 15:22:06 | DEBUG    | __main__:chat:892 - 📤 最后一条消息类型: tool
+2026-04-17 15:22:06 | DEBUG    | __main__:call_deepseek_with_tools:610 - 📤 调用Deepseek API，消息数: 4
+2026-04-17 15:22:06 | DEBUG    | __main__:call_deepseek_with_tools:611 - 📤 最后一条消息: {"role": "tool", "tool_call_id": "call_00_BA4PRNcW5Y49QqfDHCrht8bF", "content": "{\"success\": true, \"data\": \"✅ CARLA服务器连接成功\"}"}
+2026-04-17 15:22:11 | DEBUG    | __main__:call_deepseek_with_tools:617 - 📥 API响应状态: 200
+2026-04-17 15:22:11 | DEBUG    | __main__:call_deepseek_with_tools:620 - 📥 响应内容长度: 36
+2026-04-17 15:22:11 | DEBUG    | __main__:call_deepseek_with_tools:621 - 📥 响应内容预览: 很好！CARLA服务器连接成功。现在我来为您开启车辆24的自动驾驶模式。
+2026-04-17 15:22:11 | DEBUG    | __main__:chat:896 - 📥 API响应: {
+  "id": "2bf589ee-4014-47c8-b774-3d5df70c2a71",
+  "object": "chat.completion",
+  "created": 1776410528,
+  "model": "deepseek-chat",
+  "choices": [
+    {
+      "index": 0,
+      "message": {
+        "role": "assistant",
+        "content": "很好！CARLA服务器连接成功。现在我来为您开启车辆24的自动驾驶模式。",
+        "tool_calls": [
+          {
+            "index": 0,
+            "id": "call_00_UZD7Q7hOQKsN8nUYWWV4w9w7",
+            "type": "function",
+            "function": {
+              "name": "set_vehicle_autopilot",
+              "arguments": "{\"vehicle_id\": 24, \"enabled\": true}"
+            }
+          }
+        ]
+      },
+      "logprobs": null,
+      "finish_reason": "tool_calls"
+    }
+  ],
+  "usage": {
+    "prompt_tokens": 2021,
+    "completion_tokens": 83,
+    "total_tokens": 2104,
+    "prompt_tokens_details": {
+      "cached_tokens": 1984
+    },
+    "prompt_cache_hit_tokens": 1984,
+    "prompt_cache_miss_tokens": 37
+  },
+  "system_fingerprint": "fp_eaab8d114b_prod0820_fp8_kvcache_new_kvcache_20260410"
+}
+2026-04-17 15:22:11 | INFO     | __main__:chat:920 - 🔄 检测到更多工具调用，继续执行...
+2026-04-17 15:22:11 | INFO     | __main__:chat:874 - 🔧 第2轮：检测到 1 个FastMCP工具调用
+2026-04-17 15:22:11 | INFO     | __main__:chat:878 - 🔨 执行FastMCP工具: set_vehicle_autopilot
+2026-04-17 15:22:11 | INFO     | __main__:execute_fastmcp_tool_call:632 - 🔧 执行FastMCP工具: set_vehicle_autopilot
+2026-04-17 15:22:11 | INFO     | __main__:execute_fastmcp_tool_call:633 - 📝 参数: {'vehicle_id': 24, 'enabled': True}
+2026-04-17 15:22:11 | INFO     | __main__:chat:880 - ✅ FastMCP工具执行完成，结果长度: 44
+2026-04-17 15:22:11 | INFO     | __main__:chat:890 - 🤖 第2轮：正在生成回答...
+2026-04-17 15:22:11 | DEBUG    | __main__:chat:891 - � 发送给API的消息数量: 6
+2026-04-17 15:22:11 | DEBUG    | __main__:chat:892 - 📤 最后一条消息类型: tool
+2026-04-17 15:22:11 | DEBUG    | __main__:call_deepseek_with_tools:610 - 📤 调用Deepseek API，消息数: 6
+2026-04-17 15:22:11 | DEBUG    | __main__:call_deepseek_with_tools:611 - 📤 最后一条消息: {"role": "tool", "tool_call_id": "call_00_UZD7Q7hOQKsN8nUYWWV4w9w7", "content": "{\"success\": true, \"data\": \"✅ 车辆 24 自动驾驶已开启\"}"}
+2026-04-17 15:22:15 | DEBUG    | __main__:call_deepseek_with_tools:617 - 📥 API响应状态: 200
+2026-04-17 15:22:15 | DEBUG    | __main__:call_deepseek_with_tools:620 - 📥 响应内容长度: 88
+2026-04-17 15:22:15 | DEBUG    | __main__:call_deepseek_with_tools:621 - 📥 响应内容预览: 完成！我已经成功连接到CARLA服务器，并且开启了车辆24的自动驾驶模式。现在车辆24应该会自动在仿真环境中行驶了。
+
+如果您需要查看车辆24的状态或者进行其他操作，请告诉我。
+2026-04-17 15:22:15 | DEBUG    | __main__:chat:896 - 📥 API响应: {
+  "id": "e1e02752-b1fb-482a-b448-f9c9d9f9169d",
+  "object": "chat.completion",
+  "created": 1776410534,
+  "model": "deepseek-chat",
+  "choices": [
+    {
+      "index": 0,
+      "message": {
+        "role": "assistant",
+        "content": "完成！我已经成功连接到CARLA服务器，并且开启了车辆24的自动驾驶模式。现在车辆24应该会自动在仿真环境中行驶了。\n\n如果您需要查看车辆24的状态或者进行其他操作，请告诉我。"
+      },
+      "logprobs": null,
+      "finish_reason": "stop"
+    }
+  ],
+  "usage": {
+    "prompt_tokens": 2140,
+    "completion_tokens": 42,
+    "total_tokens": 2182,
+    "prompt_tokens_details": {
+      "cached_tokens": 2048
+    },
+    "prompt_cache_hit_tokens": 2048,
+    "prompt_cache_miss_tokens": 92
+  },
+  "system_fingerprint": "fp_eaab8d114b_prod0820_fp8_kvcache_new_kvcache_20260410"
+}
+2026-04-17 15:22:15 | INFO     | __main__:chat:907 - ✅ 最终回答生成成功，长度: 88
+2026-04-17 15:22:15 | DEBUG    | __main__:chat:908 - 📝 最终回答内容: 完成！我已经成功连接到CARLA服务器，并且开启了车辆24的自动驾驶模式。现在车辆24应该会自动在仿真环境中行驶了。
+
+如果您需要查看车辆24的状态或者进行其他操作，请告诉我。
+2026-04-17 15:23:03 | INFO     | __main__:chat:859 - 💬 用户消息: 连接CARLA仿真服务器，开启车辆24的自动驾驶模式
+2026-04-17 15:23:03 | DEBUG    | __main__:call_deepseek_with_tools:610 - 📤 调用Deepseek API，消息数: 2
+2026-04-17 15:23:03 | DEBUG    | __main__:call_deepseek_with_tools:611 - 📤 最后一条消息: {"role": "user", "content": "连接CARLA仿真服务器，开启车辆24的自动驾驶模式"}
+2026-04-17 15:23:09 | DEBUG    | __main__:call_deepseek_with_tools:617 - 📥 API响应状态: 200
+2026-04-17 15:23:09 | DEBUG    | __main__:call_deepseek_with_tools:620 - 📥 响应内容长度: 75
+2026-04-17 15:23:09 | DEBUG    | __main__:call_deepseek_with_tools:621 - 📥 响应内容预览: 我注意到您想要连接CARLA服务器并开启车辆24的自动驾驶模式。不过，我需要先连接到CARLA服务器才能执行这些操作。
+
+让我先连接CARLA服务器：
+2026-04-17 15:23:09 | INFO     | __main__:chat:874 - 🔧 第1轮：检测到 1 个FastMCP工具调用
+2026-04-17 15:23:09 | INFO     | __main__:chat:878 - 🔨 执行FastMCP工具: connect_carla
+2026-04-17 15:23:09 | INFO     | __main__:execute_fastmcp_tool_call:632 - 🔧 执行FastMCP工具: connect_carla
+2026-04-17 15:23:09 | INFO     | __main__:execute_fastmcp_tool_call:633 - 📝 参数: {'host': 'localhost', 'port': 2000}
+2026-04-17 15:23:11 | INFO     | __main__:connect:58 - ✅ CARLA服务器连接成功
+2026-04-17 15:23:11 | INFO     | __main__:chat:880 - ✅ FastMCP工具执行完成，结果长度: 43
+2026-04-17 15:23:11 | INFO     | __main__:chat:890 - 🤖 第1轮：正在生成回答...
+2026-04-17 15:23:11 | DEBUG    | __main__:chat:891 - � 发送给API的消息数量: 4
+2026-04-17 15:23:11 | DEBUG    | __main__:chat:892 - 📤 最后一条消息类型: tool
+2026-04-17 15:23:11 | DEBUG    | __main__:call_deepseek_with_tools:610 - 📤 调用Deepseek API，消息数: 4
+2026-04-17 15:23:11 | DEBUG    | __main__:call_deepseek_with_tools:611 - 📤 最后一条消息: {"role": "tool", "tool_call_id": "call_00_PPCoDeaZ4Lh3vCyN2A5nGmpB", "content": "{\"success\": true, \"data\": \"✅ CARLA服务器连接成功\"}"}
+2026-04-17 15:23:16 | DEBUG    | __main__:call_deepseek_with_tools:617 - 📥 API响应状态: 200
+2026-04-17 15:23:16 | DEBUG    | __main__:call_deepseek_with_tools:620 - 📥 响应内容长度: 37
+2026-04-17 15:23:16 | DEBUG    | __main__:call_deepseek_with_tools:621 - 📥 响应内容预览: 很好！CARLA服务器连接成功。现在我可以为您开启车辆24的自动驾驶模式：
+2026-04-17 15:23:16 | DEBUG    | __main__:chat:896 - 📥 API响应: {
+  "id": "8961d2bf-b09a-4f76-9dea-568444555a7a",
+  "object": "chat.completion",
+  "created": 1776410593,
+  "model": "deepseek-chat",
+  "choices": [
+    {
+      "index": 0,
+      "message": {
+        "role": "assistant",
+        "content": "很好！CARLA服务器连接成功。现在我可以为您开启车辆24的自动驾驶模式：",
+        "tool_calls": [
+          {
+            "index": 0,
+            "id": "call_00_0ow6gD14Pmo1XCJVrhUV9AXD",
+            "type": "function",
+            "function": {
+              "name": "set_vehicle_autopilot",
+              "arguments": "{\"vehicle_id\": 24, \"enabled\": true}"
+            }
+          }
+        ]
+      },
+      "logprobs": null,
+      "finish_reason": "tool_calls"
+    }
+  ],
+  "usage": {
+    "prompt_tokens": 2006,
+    "completion_tokens": 83,
+    "total_tokens": 2089,
+    "prompt_tokens_details": {
+      "cached_tokens": 1920
+    },
+    "prompt_cache_hit_tokens": 1920,
+    "prompt_cache_miss_tokens": 86
+  },
+  "system_fingerprint": "fp_eaab8d114b_prod0820_fp8_kvcache_new_kvcache_20260410"
+}
+2026-04-17 15:23:16 | INFO     | __main__:chat:920 - 🔄 检测到更多工具调用，继续执行...
+2026-04-17 15:23:16 | INFO     | __main__:chat:874 - 🔧 第2轮：检测到 1 个FastMCP工具调用
+2026-04-17 15:23:16 | INFO     | __main__:chat:878 - 🔨 执行FastMCP工具: set_vehicle_autopilot
+2026-04-17 15:23:16 | INFO     | __main__:execute_fastmcp_tool_call:632 - 🔧 执行FastMCP工具: set_vehicle_autopilot
+2026-04-17 15:23:16 | INFO     | __main__:execute_fastmcp_tool_call:633 - 📝 参数: {'vehicle_id': 24, 'enabled': True}
+2026-04-17 15:23:16 | INFO     | __main__:chat:880 - ✅ FastMCP工具执行完成，结果长度: 44
+2026-04-17 15:23:16 | INFO     | __main__:chat:890 - 🤖 第2轮：正在生成回答...
+2026-04-17 15:23:16 | DEBUG    | __main__:chat:891 - � 发送给API的消息数量: 6
+2026-04-17 15:23:16 | DEBUG    | __main__:chat:892 - 📤 最后一条消息类型: tool
+2026-04-17 15:23:16 | DEBUG    | __main__:call_deepseek_with_tools:610 - 📤 调用Deepseek API，消息数: 6
+2026-04-17 15:23:16 | DEBUG    | __main__:call_deepseek_with_tools:611 - 📤 最后一条消息: {"role": "tool", "tool_call_id": "call_00_0ow6gD14Pmo1XCJVrhUV9AXD", "content": "{\"success\": true, \"data\": \"✅ 车辆 24 自动驾驶已开启\"}"}
+2026-04-17 15:23:20 | DEBUG    | __main__:call_deepseek_with_tools:617 - 📥 API响应状态: 200
+2026-04-17 15:23:20 | DEBUG    | __main__:call_deepseek_with_tools:620 - 📥 响应内容长度: 114
+2026-04-17 15:23:20 | DEBUG    | __main__:call_deepseek_with_tools:621 - 📥 响应内容预览: 完成！我已经成功：
+1. 连接到CARLA服务器（localhost:2000）
+2. 开启了车辆24的自动驾驶模式
+
+车辆24现在应该会自动在仿真环境中行驶了。如果您需要查看车辆状态、手动控制车辆或
+2026-04-17 15:23:20 | DEBUG    | __main__:chat:896 - 📥 API响应: {
+  "id": "16db173d-22cc-4bbc-92f0-fa7254b407d8",
+  "object": "chat.completion",
+  "created": 1776410598,
+  "model": "deepseek-chat",
+  "choices": [
+    {
+      "index": 0,
+      "message": {
+        "role": "assistant",
+        "content": "完成！我已经成功：\n1. 连接到CARLA服务器（localhost:2000）\n2. 开启了车辆24的自动驾驶模式\n\n车辆24现在应该会自动在仿真环境中行驶了。如果您需要查看车辆状态、手动控制车辆或进行其他操作，请随时告诉我。"
+      },
+      "logprobs": null,
+      "finish_reason": "stop"
+    }
+  ],
+  "usage": {
+    "prompt_tokens": 2125,
+    "completion_tokens": 57,
+    "total_tokens": 2182,
+    "prompt_tokens_details": {
+      "cached_tokens": 2048
+    },
+    "prompt_cache_hit_tokens": 2048,
+    "prompt_cache_miss_tokens": 77
+  },
+  "system_fingerprint": "fp_eaab8d114b_prod0820_fp8_kvcache_new_kvcache_20260410"
+}
+2026-04-17 15:23:20 | INFO     | __main__:chat:907 - ✅ 最终回答生成成功，长度: 114
+2026-04-17 15:23:20 | DEBUG    | __main__:chat:908 - 📝 最终回答内容: 完成！我已经成功：
+1. 连接到CARLA服务器（localhost:2000）
+2. 开启了车辆24的自动驾驶模式
+
+车辆24现在应该会自动在仿真环境中行驶了。如果您需要查看车辆状态、手动控制车辆或进行其他操作，请随时告诉我。
+2026-04-17 15:24:21 | INFO     | __main__:chat:859 - 💬 用户消息: 设置雨天天气条件
+2026-04-17 15:24:21 | DEBUG    | __main__:call_deepseek_with_tools:610 - 📤 调用Deepseek API，消息数: 2
+2026-04-17 15:24:21 | DEBUG    | __main__:call_deepseek_with_tools:611 - 📤 最后一条消息: {"role": "user", "content": "设置雨天天气条件"}
+2026-04-17 15:24:26 | DEBUG    | __main__:call_deepseek_with_tools:617 - 📥 API响应状态: 200
+2026-04-17 15:24:26 | DEBUG    | __main__:call_deepseek_with_tools:620 - 📥 响应内容长度: 23
+2026-04-17 15:24:26 | DEBUG    | __main__:call_deepseek_with_tools:621 - 📥 响应内容预览: 我需要设置雨天天气条件。让我为您设置雨天天气。
+2026-04-17 15:24:26 | INFO     | __main__:chat:874 - 🔧 第1轮：检测到 1 个FastMCP工具调用
+2026-04-17 15:24:26 | INFO     | __main__:chat:878 - 🔨 执行FastMCP工具: set_weather
+2026-04-17 15:24:26 | INFO     | __main__:execute_fastmcp_tool_call:632 - 🔧 执行FastMCP工具: set_weather
+2026-04-17 15:24:26 | INFO     | __main__:execute_fastmcp_tool_call:633 - 📝 参数: {'owner': 'weather', 'repo': 'rain'}
+2026-04-17 15:24:26 | INFO     | __main__:chat:880 - ✅ FastMCP工具执行完成，结果长度: 40
+2026-04-17 15:24:26 | INFO     | __main__:chat:890 - 🤖 第1轮：正在生成回答...
+2026-04-17 15:24:26 | DEBUG    | __main__:chat:891 - � 发送给API的消息数量: 4
+2026-04-17 15:24:26 | DEBUG    | __main__:chat:892 - 📤 最后一条消息类型: tool
+2026-04-17 15:24:26 | DEBUG    | __main__:call_deepseek_with_tools:610 - 📤 调用Deepseek API，消息数: 4
+2026-04-17 15:24:26 | DEBUG    | __main__:call_deepseek_with_tools:611 - 📤 最后一条消息: {"role": "tool", "tool_call_id": "call_00_B4ZGnfQafA7wIBew49SHxMG5", "content": "{\"success\": true, \"data\": \"✅ 天气已设置为 雨天\"}"}
+2026-04-17 15:24:29 | DEBUG    | __main__:call_deepseek_with_tools:617 - 📥 API响应状态: 200
+2026-04-17 15:24:29 | DEBUG    | __main__:call_deepseek_with_tools:620 - 📥 响应内容长度: 53
+2026-04-17 15:24:29 | DEBUG    | __main__:call_deepseek_with_tools:621 - 📥 响应内容预览: 已成功将天气设置为雨天！现在CARLA仿真环境中的天气条件已经变为雨天，包括降雨效果和相应的路面湿滑条件。
+2026-04-17 15:24:29 | DEBUG    | __main__:chat:896 - 📥 API响应: {
+  "id": "1ca05eda-6015-4d48-aece-0169c2db6b2c",
+  "object": "chat.completion",
+  "created": 1776410668,
+  "model": "deepseek-chat",
+  "choices": [
+    {
+      "index": 0,
+      "message": {
+        "role": "assistant",
+        "content": "已成功将天气设置为雨天！现在CARLA仿真环境中的天气条件已经变为雨天，包括降雨效果和相应的路面湿滑条件。"
+      },
+      "logprobs": null,
+      "finish_reason": "stop"
+    }
+  ],
+  "usage": {
+    "prompt_tokens": 1974,
+    "completion_tokens": 29,
+    "total_tokens": 2003,
+    "prompt_tokens_details": {
+      "cached_tokens": 1920
+    },
+    "prompt_cache_hit_tokens": 1920,
+    "prompt_cache_miss_tokens": 54
+  },
+  "system_fingerprint": "fp_eaab8d114b_prod0820_fp8_kvcache_new_kvcache_20260410"
+}
+2026-04-17 15:24:29 | INFO     | __main__:chat:907 - ✅ 最终回答生成成功，长度: 53
+2026-04-17 15:24:29 | DEBUG    | __main__:chat:908 - 📝 最终回答内容: 已成功将天气设置为雨天！现在CARLA仿真环境中的天气条件已经变为雨天，包括降雨效果和相应的路面湿滑条件。
+2026-04-17 15:24:39 | INFO     | __main__:chat:859 - 💬 用户消息: 连接CARLA仿真服务器，开启车辆24的自动驾驶模式
+2026-04-17 15:24:39 | DEBUG    | __main__:call_deepseek_with_tools:610 - 📤 调用Deepseek API，消息数: 2
+2026-04-17 15:24:39 | DEBUG    | __main__:call_deepseek_with_tools:611 - 📤 最后一条消息: {"role": "user", "content": "连接CARLA仿真服务器，开启车辆24的自动驾驶模式"}
+2026-04-17 15:24:45 | DEBUG    | __main__:call_deepseek_with_tools:617 - 📥 API响应状态: 200
+2026-04-17 15:24:45 | DEBUG    | __main__:call_deepseek_with_tools:620 - 📥 响应内容长度: 65
+2026-04-17 15:24:45 | DEBUG    | __main__:call_deepseek_with_tools:621 - 📥 响应内容预览: 我注意到您想要开启车辆24的自动驾驶模式，但首先需要连接到CARLA服务器。让我先连接服务器，然后为您开启车辆24的自动驾驶模式。
+2026-04-17 15:24:45 | INFO     | __main__:chat:874 - 🔧 第1轮：检测到 1 个FastMCP工具调用
+2026-04-17 15:24:45 | INFO     | __main__:chat:878 - 🔨 执行FastMCP工具: connect_carla
+2026-04-17 15:24:45 | INFO     | __main__:execute_fastmcp_tool_call:632 - 🔧 执行FastMCP工具: connect_carla
+2026-04-17 15:24:45 | INFO     | __main__:execute_fastmcp_tool_call:633 - 📝 参数: {'host': 'localhost', 'port': 2000}
+2026-04-17 15:24:47 | INFO     | __main__:connect:58 - ✅ CARLA服务器连接成功
+2026-04-17 15:24:47 | INFO     | __main__:chat:880 - ✅ FastMCP工具执行完成，结果长度: 43
+2026-04-17 15:24:47 | INFO     | __main__:chat:890 - 🤖 第1轮：正在生成回答...
+2026-04-17 15:24:47 | DEBUG    | __main__:chat:891 - � 发送给API的消息数量: 4
+2026-04-17 15:24:47 | DEBUG    | __main__:chat:892 - 📤 最后一条消息类型: tool
+2026-04-17 15:24:47 | DEBUG    | __main__:call_deepseek_with_tools:610 - 📤 调用Deepseek API，消息数: 4
+2026-04-17 15:24:47 | DEBUG    | __main__:call_deepseek_with_tools:611 - 📤 最后一条消息: {"role": "tool", "tool_call_id": "call_00_cxAyh6FNBmX7Pfjm76waAkKe", "content": "{\"success\": true, \"data\": \"✅ CARLA服务器连接成功\"}"}
+2026-04-17 15:24:52 | DEBUG    | __main__:call_deepseek_with_tools:617 - 📥 API响应状态: 200
+2026-04-17 15:24:52 | DEBUG    | __main__:call_deepseek_with_tools:620 - 📥 响应内容长度: 36
+2026-04-17 15:24:52 | DEBUG    | __main__:call_deepseek_with_tools:621 - 📥 响应内容预览: 好的，CARLA服务器连接成功！现在我来为您开启车辆24的自动驾驶模式。
+2026-04-17 15:24:52 | DEBUG    | __main__:chat:896 - 📥 API响应: {
+  "id": "37de630d-1404-4272-9e56-d3feb7b6587b",
+  "object": "chat.completion",
+  "created": 1776410689,
+  "model": "deepseek-chat",
+  "choices": [
+    {
+      "index": 0,
+      "message": {
+        "role": "assistant",
+        "content": "好的，CARLA服务器连接成功！现在我来为您开启车辆24的自动驾驶模式。",
+        "tool_calls": [
+          {
+            "index": 0,
+            "id": "call_00_7fmp9gG4G8Fx0Gehs8IHw0rP",
+            "type": "function",
+            "function": {
+              "name": "set_vehicle_autopilot",
+              "arguments": "{\"vehicle_id\": 24, \"enabled\": true}"
+            }
+          }
+        ]
+      },
+      "logprobs": null,
+      "finish_reason": "tool_calls"
+    }
+  ],
+  "usage": {
+    "prompt_tokens": 2003,
+    "completion_tokens": 83,
+    "total_tokens": 2086,
+    "prompt_tokens_details": {
+      "cached_tokens": 1920
+    },
+    "prompt_cache_hit_tokens": 1920,
+    "prompt_cache_miss_tokens": 83
+  },
+  "system_fingerprint": "fp_eaab8d114b_prod0820_fp8_kvcache_new_kvcache_20260410"
+}
+2026-04-17 15:24:52 | INFO     | __main__:chat:920 - 🔄 检测到更多工具调用，继续执行...
+2026-04-17 15:24:52 | INFO     | __main__:chat:874 - 🔧 第2轮：检测到 1 个FastMCP工具调用
+2026-04-17 15:24:52 | INFO     | __main__:chat:878 - 🔨 执行FastMCP工具: set_vehicle_autopilot
+2026-04-17 15:24:52 | INFO     | __main__:execute_fastmcp_tool_call:632 - 🔧 执行FastMCP工具: set_vehicle_autopilot
+2026-04-17 15:24:52 | INFO     | __main__:execute_fastmcp_tool_call:633 - 📝 参数: {'vehicle_id': 24, 'enabled': True}
+2026-04-17 15:24:52 | INFO     | __main__:chat:880 - ✅ FastMCP工具执行完成，结果长度: 44
+2026-04-17 15:24:52 | INFO     | __main__:chat:890 - 🤖 第2轮：正在生成回答...
+2026-04-17 15:24:52 | DEBUG    | __main__:chat:891 - � 发送给API的消息数量: 6
+2026-04-17 15:24:52 | DEBUG    | __main__:chat:892 - 📤 最后一条消息类型: tool
+2026-04-17 15:24:52 | DEBUG    | __main__:call_deepseek_with_tools:610 - 📤 调用Deepseek API，消息数: 6
+2026-04-17 15:24:52 | DEBUG    | __main__:call_deepseek_with_tools:611 - 📤 最后一条消息: {"role": "tool", "tool_call_id": "call_00_7fmp9gG4G8Fx0Gehs8IHw0rP", "content": "{\"success\": true, \"data\": \"✅ 车辆 24 自动驾驶已开启\"}"}
+2026-04-17 15:24:56 | DEBUG    | __main__:call_deepseek_with_tools:617 - 📥 API响应状态: 200
+2026-04-17 15:24:56 | DEBUG    | __main__:call_deepseek_with_tools:620 - 📥 响应内容长度: 87
+2026-04-17 15:24:56 | DEBUG    | __main__:call_deepseek_with_tools:621 - 📥 响应内容预览: 完成！我已经成功连接到CARLA仿真服务器，并开启了车辆24的自动驾驶模式。现在车辆24将自动在仿真环境中行驶。如果您需要查看车辆状态、手动控制车辆或进行其他操作，请告诉我。
+2026-04-17 15:24:56 | DEBUG    | __main__:chat:896 - 📥 API响应: {
+  "id": "65a5c3cc-de77-4b1f-bc30-13675e0948af",
+  "object": "chat.completion",
+  "created": 1776410694,
+  "model": "deepseek-chat",
+  "choices": [
+    {
+      "index": 0,
+      "message": {
+        "role": "assistant",
+        "content": "完成！我已经成功连接到CARLA仿真服务器，并开启了车辆24的自动驾驶模式。现在车辆24将自动在仿真环境中行驶。如果您需要查看车辆状态、手动控制车辆或进行其他操作，请告诉我。"
+      },
+      "logprobs": null,
+      "finish_reason": "stop"
+    }
+  ],
+  "usage": {
+    "prompt_tokens": 2122,
+    "completion_tokens": 45,
+    "total_tokens": 2167,
+    "prompt_tokens_details": {
+      "cached_tokens": 2048
+    },
+    "prompt_cache_hit_tokens": 2048,
+    "prompt_cache_miss_tokens": 74
+  },
+  "system_fingerprint": "fp_eaab8d114b_prod0820_fp8_kvcache_new_kvcache_20260410"
+}
+2026-04-17 15:24:56 | INFO     | __main__:chat:907 - ✅ 最终回答生成成功，长度: 87
+2026-04-17 15:24:56 | DEBUG    | __main__:chat:908 - 📝 最终回答内容: 完成！我已经成功连接到CARLA仿真服务器，并开启了车辆24的自动驾驶模式。现在车辆24将自动在仿真环境中行驶。如果您需要查看车辆状态、手动控制车辆或进行其他操作，请告诉我。

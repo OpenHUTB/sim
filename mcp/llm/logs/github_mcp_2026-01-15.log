@@ -1,0 +1,1007 @@
+2026-01-15 14:57:38 | INFO     | __main__:chat:586 - 💬 用户消息: 连接CARLA仿真服务器
+2026-01-15 14:57:42 | INFO     | __main__:chat:596 - 🔧 检测到 1 个FastMCP工具调用
+2026-01-15 14:57:42 | INFO     | __main__:chat:599 - 🔨 执行FastMCP工具: connect_carla
+2026-01-15 14:57:42 | INFO     | __main__:execute_fastmcp_tool_call:416 - 🔧 执行FastMCP工具: connect_carla
+2026-01-15 14:57:42 | INFO     | __main__:execute_fastmcp_tool_call:417 - 📝 参数: {'host': 'localhost', 'port': 2000}
+2026-01-15 14:57:42 | INFO     | __main__:chat:601 - ✅ FastMCP工具执行完成，结果长度: 125
+2026-01-15 14:57:42 | INFO     | __main__:chat:611 - 🤖 正在生成最终回答...
+2026-01-15 14:57:48 | INFO     | __main__:chat:615 - ✅ 最终回答生成成功，长度: 302
+2026-01-15 15:13:34 | INFO     | __main__:chat:586 - 💬 用户消息: 连接CARLA仿真服务器
+2026-01-15 15:13:37 | INFO     | __main__:chat:596 - 🔧 检测到 1 个FastMCP工具调用
+2026-01-15 15:13:37 | INFO     | __main__:chat:599 - 🔨 执行FastMCP工具: connect_carla
+2026-01-15 15:13:37 | INFO     | __main__:execute_fastmcp_tool_call:416 - 🔧 执行FastMCP工具: connect_carla
+2026-01-15 15:13:37 | INFO     | __main__:execute_fastmcp_tool_call:417 - 📝 参数: {'host': 'localhost', 'port': 2000}
+2026-01-15 15:13:37 | INFO     | __main__:chat:601 - ✅ FastMCP工具执行完成，结果长度: 125
+2026-01-15 15:13:37 | INFO     | __main__:chat:611 - 🤖 正在生成最终回答...
+2026-01-15 15:13:43 | INFO     | __main__:chat:615 - ✅ 最终回答生成成功，长度: 273
+2026-01-15 15:20:39 | INFO     | __main__:chat:586 - 💬 用户消息: 连接CARLA仿真服务器
+2026-01-15 15:20:41 | INFO     | __main__:chat:586 - 💬 用户消息: 连接CARLA仿真服务器
+2026-01-15 15:20:43 | INFO     | __main__:chat:596 - 🔧 检测到 1 个FastMCP工具调用
+2026-01-15 15:20:43 | INFO     | __main__:chat:599 - 🔨 执行FastMCP工具: connect_carla
+2026-01-15 15:20:43 | INFO     | __main__:execute_fastmcp_tool_call:416 - 🔧 执行FastMCP工具: connect_carla
+2026-01-15 15:20:43 | INFO     | __main__:execute_fastmcp_tool_call:417 - 📝 参数: {'host': 'localhost', 'port': 2000}
+2026-01-15 15:20:53 | ERROR    | __main__:connect:61 - ❌ 连接CARLA失败: time-out of 10000ms while waiting for the simulator, make sure the simulator is ready and connected to localhost:2000
+2026-01-15 15:20:53 | INFO     | __main__:chat:601 - ✅ FastMCP工具执行完成，结果长度: 43
+2026-01-15 15:20:53 | INFO     | __main__:chat:611 - 🤖 正在生成最终回答...
+2026-01-15 15:20:53 | INFO     | __main__:chat:596 - 🔧 检测到 1 个FastMCP工具调用
+2026-01-15 15:20:53 | INFO     | __main__:chat:599 - 🔨 执行FastMCP工具: connect_carla
+2026-01-15 15:20:53 | INFO     | __main__:execute_fastmcp_tool_call:416 - 🔧 执行FastMCP工具: connect_carla
+2026-01-15 15:20:53 | INFO     | __main__:execute_fastmcp_tool_call:417 - 📝 参数: {'host': 'localhost', 'port': 2000}
+2026-01-15 15:21:03 | ERROR    | __main__:connect:61 - ❌ 连接CARLA失败: time-out of 10000ms while waiting for the simulator, make sure the simulator is ready and connected to localhost:2000
+2026-01-15 15:21:03 | INFO     | __main__:chat:601 - ✅ FastMCP工具执行完成，结果长度: 43
+2026-01-15 15:21:03 | INFO     | __main__:chat:611 - 🤖 正在生成最终回答...
+2026-01-15 15:21:08 | INFO     | __main__:chat:615 - ✅ 最终回答生成成功，长度: 201
+2026-01-15 15:21:09 | INFO     | __main__:chat:615 - ✅ 最终回答生成成功，长度: 291
+2026-01-15 16:07:37 | INFO     | __main__:chat:586 - 💬 用户消息: 连接CARLA仿真服务器
+2026-01-15 16:07:40 | INFO     | __main__:chat:596 - 🔧 检测到 1 个FastMCP工具调用
+2026-01-15 16:07:40 | INFO     | __main__:chat:599 - 🔨 执行FastMCP工具: connect_carla
+2026-01-15 16:07:40 | INFO     | __main__:execute_fastmcp_tool_call:416 - 🔧 执行FastMCP工具: connect_carla
+2026-01-15 16:07:40 | INFO     | __main__:execute_fastmcp_tool_call:417 - 📝 参数: {'host': 'localhost', 'port': 2000}
+2026-01-15 16:07:42 | INFO     | __main__:connect:58 - ✅ CARLA服务器连接成功
+2026-01-15 16:07:42 | INFO     | __main__:chat:601 - ✅ FastMCP工具执行完成，结果长度: 43
+2026-01-15 16:07:42 | INFO     | __main__:chat:611 - 🤖 正在生成最终回答...
+2026-01-15 16:07:46 | INFO     | __main__:chat:615 - ✅ 最终回答生成成功，长度: 117
+2026-01-15 16:07:59 | INFO     | __main__:chat:586 - 💬 用户消息: 设置雨天天气条件
+2026-01-15 16:08:03 | INFO     | __main__:chat:596 - 🔧 检测到 1 个FastMCP工具调用
+2026-01-15 16:08:03 | INFO     | __main__:chat:599 - 🔨 执行FastMCP工具: connect_carla
+2026-01-15 16:08:03 | INFO     | __main__:execute_fastmcp_tool_call:416 - 🔧 执行FastMCP工具: connect_carla
+2026-01-15 16:08:03 | INFO     | __main__:execute_fastmcp_tool_call:417 - 📝 参数: {'host': 'localhost', 'port': 2000}
+2026-01-15 16:08:05 | INFO     | __main__:connect:58 - ✅ CARLA服务器连接成功
+2026-01-15 16:08:05 | INFO     | __main__:chat:601 - ✅ FastMCP工具执行完成，结果长度: 43
+2026-01-15 16:08:05 | INFO     | __main__:chat:611 - 🤖 正在生成最终回答...
+2026-01-15 16:08:08 | INFO     | __main__:chat:615 - ✅ 最终回答生成成功，长度: 16
+2026-01-15 16:08:34 | INFO     | __main__:chat:586 - 💬 用户消息: 生成行人
+2026-01-15 16:08:37 | INFO     | __main__:chat:596 - 🔧 检测到 1 个FastMCP工具调用
+2026-01-15 16:08:37 | INFO     | __main__:chat:599 - 🔨 执行FastMCP工具: connect_carla
+2026-01-15 16:08:37 | INFO     | __main__:execute_fastmcp_tool_call:416 - 🔧 执行FastMCP工具: connect_carla
+2026-01-15 16:08:37 | INFO     | __main__:execute_fastmcp_tool_call:417 - 📝 参数: {'host': 'localhost', 'port': 2000}
+2026-01-15 16:08:39 | INFO     | __main__:connect:58 - ✅ CARLA服务器连接成功
+2026-01-15 16:08:39 | INFO     | __main__:chat:601 - ✅ FastMCP工具执行完成，结果长度: 43
+2026-01-15 16:08:39 | INFO     | __main__:chat:611 - 🤖 正在生成最终回答...
+2026-01-15 16:08:43 | INFO     | __main__:chat:615 - ✅ 最终回答生成成功，长度: 14
+2026-01-15 16:09:56 | INFO     | __main__:chat:586 - 💬 用户消息: 行人呢？
+2026-01-15 16:10:06 | INFO     | __main__:chat:586 - 💬 用户消息: 启动了
+2026-01-15 16:10:18 | INFO     | __main__:chat:586 - 💬 用户消息: 生成行人
+2026-01-15 16:10:24 | INFO     | __main__:chat:596 - 🔧 检测到 1 个FastMCP工具调用
+2026-01-15 16:10:24 | INFO     | __main__:chat:599 - 🔨 执行FastMCP工具: spawn_pedestrian
+2026-01-15 16:10:24 | INFO     | __main__:execute_fastmcp_tool_call:416 - 🔧 执行FastMCP工具: spawn_pedestrian
+2026-01-15 16:10:24 | INFO     | __main__:execute_fastmcp_tool_call:417 - 📝 参数: {'query': 'walker'}
+2026-01-15 16:10:24 | INFO     | __main__:spawn_pedestrian:129 - 🚶 生成行人: walker
+2026-01-15 16:10:24 | INFO     | __main__:set_spectator_view:162 - 👁️  视角已对准actor 24
+2026-01-15 16:10:24 | INFO     | __main__:chat:601 - ✅ FastMCP工具执行完成，结果长度: 53
+2026-01-15 16:10:24 | INFO     | __main__:chat:611 - 🤖 正在生成最终回答...
+2026-01-15 16:10:27 | INFO     | __main__:chat:615 - ✅ 最终回答生成成功，长度: 47
+2026-01-15 16:11:12 | INFO     | __main__:chat:586 - 💬 用户消息: 生成车辆
+2026-01-15 16:11:37 | INFO     | __main__:chat:586 - 💬 用户消息: 已经链接了，model3
+2026-01-15 16:11:40 | INFO     | __main__:chat:596 - 🔧 检测到 1 个FastMCP工具调用
+2026-01-15 16:11:40 | INFO     | __main__:chat:599 - 🔨 执行FastMCP工具: spawn_vehicle
+2026-01-15 16:11:40 | INFO     | __main__:execute_fastmcp_tool_call:416 - 🔧 执行FastMCP工具: spawn_vehicle
+2026-01-15 16:11:40 | INFO     | __main__:execute_fastmcp_tool_call:417 - 📝 参数: {'query': 'model3'}
+2026-01-15 16:11:40 | INFO     | __main__:execute_fastmcp_tool_call:432 - spawn_vehicle参数详情: {'query': 'model3'}
+2026-01-15 16:11:41 | INFO     | __main__:spawn_vehicle:71 - 🚗 生成车辆: model3
+2026-01-15 16:11:41 | INFO     | __main__:chat:601 - ✅ FastMCP工具执行完成，结果长度: 53
+2026-01-15 16:11:41 | INFO     | __main__:chat:611 - 🤖 正在生成最终回答...
+2026-01-15 16:11:47 | INFO     | __main__:chat:615 - ✅ 最终回答生成成功，长度: 106
+2026-01-15 16:12:53 | INFO     | __main__:chat:586 - 💬 用户消息: 连接CARLA仿真服务器
+2026-01-15 16:12:56 | INFO     | __main__:chat:596 - 🔧 检测到 1 个FastMCP工具调用
+2026-01-15 16:12:56 | INFO     | __main__:chat:599 - 🔨 执行FastMCP工具: connect_carla
+2026-01-15 16:12:56 | INFO     | __main__:execute_fastmcp_tool_call:416 - 🔧 执行FastMCP工具: connect_carla
+2026-01-15 16:12:56 | INFO     | __main__:execute_fastmcp_tool_call:417 - 📝 参数: {'host': 'localhost', 'port': 2000}
+2026-01-15 16:12:58 | INFO     | __main__:connect:58 - ✅ CARLA服务器连接成功
+2026-01-15 16:12:58 | INFO     | __main__:chat:601 - ✅ FastMCP工具执行完成，结果长度: 43
+2026-01-15 16:12:58 | INFO     | __main__:chat:611 - 🤖 正在生成最终回答...
+2026-01-15 16:13:01 | INFO     | __main__:chat:615 - ✅ 最终回答生成成功，长度: 112
+2026-01-15 16:13:28 | INFO     | __main__:chat:586 - 💬 用户消息: 生成车辆
+2026-01-15 16:13:48 | INFO     | __main__:chat:586 - 💬 用户消息: model3
+2026-01-15 16:14:04 | INFO     | __main__:chat:586 - 💬 用户消息: 已经链接了
+2026-01-15 16:14:21 | INFO     | __main__:chat:586 - 💬 用户消息: 生成车辆 - 可以生成model3
+2026-01-15 16:14:35 | INFO     | __main__:chat:586 - 💬 用户消息: 要
+2026-01-15 16:14:54 | INFO     | __main__:chat:586 - 💬 用户消息: 要生成车辆 - 生成model3
+2026-01-15 16:15:28 | INFO     | __main__:chat:586 - 💬 用户消息: 我已经链接过了，生成车辆 - 要生成model3
+2026-01-15 16:15:32 | INFO     | __main__:chat:596 - 🔧 检测到 1 个FastMCP工具调用
+2026-01-15 16:15:32 | INFO     | __main__:chat:599 - 🔨 执行FastMCP工具: spawn_vehicle
+2026-01-15 16:15:32 | INFO     | __main__:execute_fastmcp_tool_call:416 - 🔧 执行FastMCP工具: spawn_vehicle
+2026-01-15 16:15:32 | INFO     | __main__:execute_fastmcp_tool_call:417 - 📝 参数: {'query': 'model3'}
+2026-01-15 16:15:32 | INFO     | __main__:execute_fastmcp_tool_call:432 - spawn_vehicle参数详情: {'query': 'model3'}
+2026-01-15 16:15:32 | INFO     | __main__:spawn_vehicle:71 - 🚗 生成车辆: model3
+2026-01-15 16:15:32 | INFO     | __main__:chat:601 - ✅ FastMCP工具执行完成，结果长度: 53
+2026-01-15 16:15:32 | INFO     | __main__:chat:611 - 🤖 正在生成最终回答...
+2026-01-15 16:15:39 | INFO     | __main__:chat:615 - ✅ 最终回答生成成功，长度: 121
+2026-01-15 16:16:22 | INFO     | __main__:chat:586 - 💬 用户消息: 你在什么地方生成的？
+2026-01-15 16:16:53 | INFO     | __main__:chat:586 - 💬 用户消息: 连接CARLA服务器 ，生成行人
+2026-01-15 16:16:58 | INFO     | __main__:chat:596 - 🔧 检测到 1 个FastMCP工具调用
+2026-01-15 16:16:58 | INFO     | __main__:chat:599 - 🔨 执行FastMCP工具: connect_carla
+2026-01-15 16:16:58 | INFO     | __main__:execute_fastmcp_tool_call:416 - 🔧 执行FastMCP工具: connect_carla
+2026-01-15 16:16:58 | INFO     | __main__:execute_fastmcp_tool_call:417 - 📝 参数: {'host': 'localhost', 'port': 2000}
+2026-01-15 16:17:00 | INFO     | __main__:connect:58 - ✅ CARLA服务器连接成功
+2026-01-15 16:17:00 | INFO     | __main__:chat:601 - ✅ FastMCP工具执行完成，结果长度: 43
+2026-01-15 16:17:00 | INFO     | __main__:chat:611 - 🤖 正在生成最终回答...
+2026-01-15 16:17:03 | INFO     | __main__:chat:615 - ✅ 最终回答生成成功，长度: 16
+2026-01-15 16:17:59 | INFO     | __main__:chat:586 - 💬 用户消息: ?
+2026-01-15 16:29:02 | INFO     | __main__:chat:586 - 💬 用户消息: 连接CARLA仿真服务器
+2026-01-15 16:29:02 | ERROR    | __main__:chat:1255 - ❌ FastMCP聊天处理失败: Deepseek API调用失败: 400 - {"error":{"message":"Model Not Exist","type":"invalid_request_error","param":null,"code":"invalid_request_error"}}
+2026-01-15 16:29:06 | INFO     | __main__:chat:586 - 💬 用户消息: 连接CARLA仿真服务器
+2026-01-15 16:29:06 | ERROR    | __main__:chat:1255 - ❌ FastMCP聊天处理失败: Deepseek API调用失败: 400 - {"error":{"message":"Model Not Exist","type":"invalid_request_error","param":null,"code":"invalid_request_error"}}
+2026-01-15 16:33:00 | INFO     | __main__:chat:586 - 💬 用户消息: 连接CARLA仿真服务器
+2026-01-15 16:33:01 | ERROR    | __main__:chat:1255 - ❌ FastMCP聊天处理失败: Deepseek API调用失败: 400 - {"error":{"message":"Model Not Exist","type":"invalid_request_error","param":null,"code":"invalid_request_error"}}
+2026-01-15 16:33:09 | INFO     | __main__:chat:586 - 💬 用户消息: 连接CARLA仿真服务器
+2026-01-15 16:33:09 | ERROR    | __main__:chat:1255 - ❌ FastMCP聊天处理失败: Deepseek API调用失败: 400 - {"error":{"message":"Model Not Exist","type":"invalid_request_error","param":null,"code":"invalid_request_error"}}
+2026-01-15 16:38:01 | INFO     | __main__:chat:586 - 💬 用户消息: 连接CARLA仿真服务器
+2026-01-15 16:38:05 | INFO     | __main__:chat:596 - 🔧 检测到 1 个FastMCP工具调用
+2026-01-15 16:38:05 | INFO     | __main__:chat:599 - 🔨 执行FastMCP工具: connect_carla
+2026-01-15 16:38:05 | INFO     | __main__:execute_fastmcp_tool_call:416 - 🔧 执行FastMCP工具: connect_carla
+2026-01-15 16:38:05 | INFO     | __main__:execute_fastmcp_tool_call:417 - 📝 参数: {'host': 'localhost', 'port': 2000}
+2026-01-15 16:38:07 | INFO     | __main__:connect:58 - ✅ CARLA服务器连接成功
+2026-01-15 16:38:07 | INFO     | __main__:chat:601 - ✅ FastMCP工具执行完成，结果长度: 43
+2026-01-15 16:38:07 | INFO     | __main__:chat:611 - 🤖 正在生成最终回答...
+2026-01-15 16:38:11 | INFO     | __main__:chat:615 - ✅ 最终回答生成成功，长度: 117
+2026-01-15 16:38:19 | INFO     | __main__:chat:586 - 💬 用户消息: 生成车辆（model3
+2026-01-15 16:38:26 | INFO     | __main__:chat:596 - 🔧 检测到 1 个FastMCP工具调用
+2026-01-15 16:38:26 | INFO     | __main__:chat:599 - 🔨 执行FastMCP工具: connect_carla
+2026-01-15 16:38:26 | INFO     | __main__:execute_fastmcp_tool_call:416 - 🔧 执行FastMCP工具: connect_carla
+2026-01-15 16:38:26 | INFO     | __main__:execute_fastmcp_tool_call:417 - 📝 参数: {'host': 'localhost', 'port': 2000}
+2026-01-15 16:38:28 | INFO     | __main__:connect:58 - ✅ CARLA服务器连接成功
+2026-01-15 16:38:28 | INFO     | __main__:chat:601 - ✅ FastMCP工具执行完成，结果长度: 43
+2026-01-15 16:38:28 | INFO     | __main__:chat:611 - 🤖 正在生成最终回答...
+2026-01-15 16:38:31 | INFO     | __main__:chat:615 - ✅ 最终回答生成成功，长度: 35
+2026-01-15 16:38:56 | INFO     | __main__:chat:586 - 💬 用户消息: 在什么地方，我看不出来
+2026-01-15 16:39:22 | INFO     | __main__:chat:586 - 💬 用户消息: 查看当前场景中的刚才生成的车辆（model3
+2026-01-15 16:39:39 | INFO     | __main__:chat:586 - 💬 用户消息: 生成新的model3车辆
+2026-01-15 16:39:52 | INFO     | __main__:chat:586 - 💬 用户消息: 现在链接
+2026-01-15 16:40:15 | INFO     | __main__:chat:586 - 💬 用户消息: 启动过了
+2026-01-15 16:40:26 | INFO     | __main__:chat:586 - 💬 用户消息: 生成一辆model3
+2026-01-15 16:40:54 | INFO     | __main__:chat:586 - 💬 用户消息: 正在运行，localhost:2000
+2026-01-15 16:40:59 | INFO     | __main__:chat:596 - 🔧 检测到 1 个FastMCP工具调用
+2026-01-15 16:40:59 | INFO     | __main__:chat:599 - 🔨 执行FastMCP工具: connect_carla
+2026-01-15 16:40:59 | INFO     | __main__:execute_fastmcp_tool_call:416 - 🔧 执行FastMCP工具: connect_carla
+2026-01-15 16:40:59 | INFO     | __main__:execute_fastmcp_tool_call:417 - 📝 参数: {'host': 'localhost', 'port': 2000}
+2026-01-15 16:41:01 | INFO     | __main__:connect:58 - ✅ CARLA服务器连接成功
+2026-01-15 16:41:01 | INFO     | __main__:chat:601 - ✅ FastMCP工具执行完成，结果长度: 43
+2026-01-15 16:41:01 | INFO     | __main__:chat:611 - 🤖 正在生成最终回答...
+2026-01-15 16:41:11 | INFO     | __main__:chat:615 - ✅ 最终回答生成成功，长度: 220
+2026-01-15 16:41:18 | INFO     | __main__:chat:586 - 💬 用户消息: 生成一辆model3
+2026-01-15 16:41:23 | INFO     | __main__:chat:596 - 🔧 检测到 1 个FastMCP工具调用
+2026-01-15 16:41:23 | INFO     | __main__:chat:599 - 🔨 执行FastMCP工具: connect_carla
+2026-01-15 16:41:23 | INFO     | __main__:execute_fastmcp_tool_call:416 - 🔧 执行FastMCP工具: connect_carla
+2026-01-15 16:41:23 | INFO     | __main__:execute_fastmcp_tool_call:417 - 📝 参数: {'host': 'localhost', 'port': 2000}
+2026-01-15 16:41:25 | INFO     | __main__:connect:58 - ✅ CARLA服务器连接成功
+2026-01-15 16:41:25 | INFO     | __main__:chat:601 - ✅ FastMCP工具执行完成，结果长度: 43
+2026-01-15 16:41:25 | INFO     | __main__:chat:611 - 🤖 正在生成最终回答...
+2026-01-15 16:41:28 | INFO     | __main__:chat:615 - ✅ 最终回答生成成功，长度: 35
+2026-01-15 16:42:27 | INFO     | __main__:chat:586 - 💬 用户消息: 生成行人
+2026-01-15 16:42:31 | INFO     | __main__:chat:596 - 🔧 检测到 1 个FastMCP工具调用
+2026-01-15 16:42:31 | INFO     | __main__:chat:599 - 🔨 执行FastMCP工具: connect_carla
+2026-01-15 16:42:31 | INFO     | __main__:execute_fastmcp_tool_call:416 - 🔧 执行FastMCP工具: connect_carla
+2026-01-15 16:42:31 | INFO     | __main__:execute_fastmcp_tool_call:417 - 📝 参数: {'host': 'localhost', 'port': 2000}
+2026-01-15 16:42:33 | INFO     | __main__:connect:58 - ✅ CARLA服务器连接成功
+2026-01-15 16:42:33 | INFO     | __main__:chat:601 - ✅ FastMCP工具执行完成，结果长度: 43
+2026-01-15 16:42:33 | INFO     | __main__:chat:611 - 🤖 正在生成最终回答...
+2026-01-15 16:42:36 | INFO     | __main__:chat:615 - ✅ 最终回答生成成功，长度: 14
+2026-01-15 16:46:43 | INFO     | __main__:chat:619 - 💬 用户消息: 连接CARLA仿真服务器
+2026-01-15 16:46:47 | INFO     | __main__:chat:629 - 🔧 检测到 1 个FastMCP工具调用
+2026-01-15 16:46:47 | INFO     | __main__:chat:632 - 🔨 执行FastMCP工具: connect_carla
+2026-01-15 16:46:47 | INFO     | __main__:execute_fastmcp_tool_call:449 - 🔧 执行FastMCP工具: connect_carla
+2026-01-15 16:46:47 | INFO     | __main__:execute_fastmcp_tool_call:450 - 📝 参数: {'host': 'localhost', 'port': 2000}
+2026-01-15 16:46:49 | INFO     | __main__:connect:58 - ✅ CARLA服务器连接成功
+2026-01-15 16:46:49 | INFO     | __main__:chat:634 - ✅ FastMCP工具执行完成，结果长度: 43
+2026-01-15 16:46:49 | INFO     | __main__:chat:644 - 🤖 正在生成最终回答...
+2026-01-15 16:46:52 | INFO     | __main__:chat:648 - ✅ 最终回答生成成功，长度: 117
+2026-01-15 16:47:01 | INFO     | __main__:chat:619 - 💬 用户消息: 生成车辆（model3
+2026-01-15 16:47:04 | INFO     | __main__:chat:629 - 🔧 检测到 1 个FastMCP工具调用
+2026-01-15 16:47:04 | INFO     | __main__:chat:632 - 🔨 执行FastMCP工具: connect_carla
+2026-01-15 16:47:04 | INFO     | __main__:execute_fastmcp_tool_call:449 - 🔧 执行FastMCP工具: connect_carla
+2026-01-15 16:47:04 | INFO     | __main__:execute_fastmcp_tool_call:450 - 📝 参数: {'host': 'localhost', 'port': 2000}
+2026-01-15 16:47:07 | INFO     | __main__:connect:58 - ✅ CARLA服务器连接成功
+2026-01-15 16:47:07 | INFO     | __main__:chat:634 - ✅ FastMCP工具执行完成，结果长度: 43
+2026-01-15 16:47:07 | INFO     | __main__:chat:644 - 🤖 正在生成最终回答...
+2026-01-15 16:47:10 | INFO     | __main__:chat:648 - ✅ 最终回答生成成功，长度: 22
+2026-01-15 16:49:24 | INFO     | __main__:chat:619 - 💬 用户消息: 生成行人
+2026-01-15 16:49:29 | INFO     | __main__:chat:629 - 🔧 检测到 1 个FastMCP工具调用
+2026-01-15 16:49:29 | INFO     | __main__:chat:632 - 🔨 执行FastMCP工具: connect_carla
+2026-01-15 16:49:29 | INFO     | __main__:execute_fastmcp_tool_call:449 - 🔧 执行FastMCP工具: connect_carla
+2026-01-15 16:49:29 | INFO     | __main__:execute_fastmcp_tool_call:450 - 📝 参数: {'host': 'localhost', 'port': 2000}
+2026-01-15 16:49:31 | INFO     | __main__:connect:58 - ✅ CARLA服务器连接成功
+2026-01-15 16:49:31 | INFO     | __main__:chat:634 - ✅ FastMCP工具执行完成，结果长度: 43
+2026-01-15 16:49:31 | INFO     | __main__:chat:644 - 🤖 正在生成最终回答...
+2026-01-15 16:49:34 | INFO     | __main__:chat:648 - ✅ 最终回答生成成功，长度: 14
+2026-01-15 16:52:19 | INFO     | __main__:chat:586 - 💬 用户消息: 连接CARLA仿真服务器
+2026-01-15 16:52:23 | INFO     | __main__:chat:596 - 🔧 检测到 1 个FastMCP工具调用
+2026-01-15 16:52:23 | INFO     | __main__:chat:599 - 🔨 执行FastMCP工具: connect_carla
+2026-01-15 16:52:23 | INFO     | __main__:execute_fastmcp_tool_call:416 - 🔧 执行FastMCP工具: connect_carla
+2026-01-15 16:52:23 | INFO     | __main__:execute_fastmcp_tool_call:417 - 📝 参数: {'host': 'localhost', 'port': 2000}
+2026-01-15 16:52:25 | INFO     | __main__:connect:58 - ✅ CARLA服务器连接成功
+2026-01-15 16:52:25 | INFO     | __main__:chat:601 - ✅ FastMCP工具执行完成，结果长度: 43
+2026-01-15 16:52:25 | INFO     | __main__:chat:611 - 🤖 正在生成最终回答...
+2026-01-15 16:52:28 | INFO     | __main__:chat:615 - ✅ 最终回答生成成功，长度: 133
+2026-01-15 16:53:05 | INFO     | __main__:chat:586 - 💬 用户消息: 设置天气clear
+2026-01-15 16:53:09 | INFO     | __main__:chat:596 - 🔧 检测到 1 个FastMCP工具调用
+2026-01-15 16:53:09 | INFO     | __main__:chat:599 - 🔨 执行FastMCP工具: set_weather
+2026-01-15 16:53:09 | INFO     | __main__:execute_fastmcp_tool_call:416 - 🔧 执行FastMCP工具: set_weather
+2026-01-15 16:53:09 | INFO     | __main__:execute_fastmcp_tool_call:417 - 📝 参数: {'owner': 'weather', 'repo': 'clear'}
+2026-01-15 16:53:09 | INFO     | __main__:chat:601 - ✅ FastMCP工具执行完成，结果长度: 40
+2026-01-15 16:53:09 | INFO     | __main__:chat:611 - 🤖 正在生成最终回答...
+2026-01-15 16:53:11 | INFO     | __main__:chat:615 - ✅ 最终回答生成成功，长度: 31
+2026-01-15 16:53:36 | INFO     | __main__:chat:586 - 💬 用户消息: 生成车辆model3
+2026-01-15 16:53:40 | INFO     | __main__:chat:596 - 🔧 检测到 1 个FastMCP工具调用
+2026-01-15 16:53:40 | INFO     | __main__:chat:599 - 🔨 执行FastMCP工具: connect_carla
+2026-01-15 16:53:40 | INFO     | __main__:execute_fastmcp_tool_call:416 - 🔧 执行FastMCP工具: connect_carla
+2026-01-15 16:53:40 | INFO     | __main__:execute_fastmcp_tool_call:417 - 📝 参数: {'host': 'localhost', 'port': 2000}
+2026-01-15 16:53:42 | INFO     | __main__:connect:58 - ✅ CARLA服务器连接成功
+2026-01-15 16:53:42 | INFO     | __main__:chat:601 - ✅ FastMCP工具执行完成，结果长度: 43
+2026-01-15 16:53:42 | INFO     | __main__:chat:611 - 🤖 正在生成最终回答...
+2026-01-15 16:53:45 | INFO     | __main__:chat:615 - ✅ 最终回答生成成功，长度: 20
+2026-01-15 17:03:09 | INFO     | __main__:chat:593 - 💬 用户消息: 连接CARLA仿真服务器
+2026-01-15 17:03:09 | DEBUG    | __main__:call_deepseek_with_tools:403 - 📤 调用Deepseek API，消息数: 2
+2026-01-15 17:03:09 | DEBUG    | __main__:call_deepseek_with_tools:404 - 📤 最后一条消息: {"role": "user", "content": "连接CARLA仿真服务器"}
+2026-01-15 17:03:12 | DEBUG    | __main__:call_deepseek_with_tools:410 - 📥 API响应状态: 200
+2026-01-15 17:03:12 | DEBUG    | __main__:call_deepseek_with_tools:413 - 📥 响应内容长度: 17
+2026-01-15 17:03:12 | DEBUG    | __main__:call_deepseek_with_tools:414 - 📥 响应内容预览: 我将为您连接CARLA仿真服务器。
+2026-01-15 17:03:12 | INFO     | __main__:chat:603 - 🔧 检测到 1 个FastMCP工具调用
+2026-01-15 17:03:12 | INFO     | __main__:chat:606 - 🔨 执行FastMCP工具: connect_carla
+2026-01-15 17:03:12 | INFO     | __main__:execute_fastmcp_tool_call:425 - 🔧 执行FastMCP工具: connect_carla
+2026-01-15 17:03:12 | INFO     | __main__:execute_fastmcp_tool_call:426 - 📝 参数: {'host': 'localhost', 'port': 2000}
+2026-01-15 17:03:14 | INFO     | __main__:connect:58 - ✅ CARLA服务器连接成功
+2026-01-15 17:03:14 | INFO     | __main__:chat:608 - ✅ FastMCP工具执行完成，结果长度: 43
+2026-01-15 17:03:14 | INFO     | __main__:chat:618 - 🤖 正在生成最终回答...
+2026-01-15 17:03:14 | DEBUG    | __main__:chat:619 - 📤 发送给API的消息数量: 4
+2026-01-15 17:03:14 | DEBUG    | __main__:chat:620 - 📤 最后一条消息类型: tool
+2026-01-15 17:03:14 | DEBUG    | __main__:call_deepseek_with_tools:403 - 📤 调用Deepseek API，消息数: 4
+2026-01-15 17:03:14 | DEBUG    | __main__:call_deepseek_with_tools:404 - 📤 最后一条消息: {"role": "tool", "tool_call_id": "call_00_tBw93pUorMZCqhjkn0VvrpQR", "content": "{\"success\": true, \"data\": \"✅ CARLA服务器连接成功\"}"}
+2026-01-15 17:03:17 | DEBUG    | __main__:call_deepseek_with_tools:410 - 📥 API响应状态: 200
+2026-01-15 17:03:17 | DEBUG    | __main__:call_deepseek_with_tools:413 - 📥 响应内容长度: 117
+2026-01-15 17:03:17 | DEBUG    | __main__:call_deepseek_with_tools:414 - 📥 响应内容预览: ✅ CARLA服务器连接成功！现在您可以：
+1. 生成车辆（model3/a2/mustang）
+2. 生成行人
+3. 设置天气（clear/rain/fog）
+4. 查看交通灯状态
+5. 清理仿真场
+2026-01-15 17:03:17 | DEBUG    | __main__:chat:624 - 📥 API响应: {
+  "id": "4530e17d-d2b9-47fc-85c5-9d3ea51622df",
+  "object": "chat.completion",
+  "created": 1768467797,
+  "model": "deepseek-chat",
+  "choices": [
+    {
+      "index": 0,
+      "message": {
+        "role": "assistant",
+        "content": "✅ CARLA服务器连接成功！现在您可以：\n1. 生成车辆（model3/a2/mustang）\n2. 生成行人\n3. 设置天气（clear/rain/fog）\n4. 查看交通灯状态\n5. 清理仿真场景\n\n请告诉我您想要进行什么操作？"
+      },
+      "logprobs": null,
+      "finish_reason": "stop"
+    }
+  ],
+  "usage": {
+    "prompt_tokens": 1218,
+    "completion_tokens": 65,
+    "total_tokens": 1283,
+    "prompt_tokens_details": {
+      "cached_tokens": 1216
+    },
+    "prompt_cache_hit_tokens": 1216,
+    "prompt_cache_miss_tokens": 2
+  },
+  "system_fingerprint": "fp_eaab8d114b_prod0820_fp8_kvcache"
+}
+2026-01-15 17:03:17 | INFO     | __main__:chat:627 - ✅ 最终回答生成成功，长度: 117
+2026-01-15 17:03:17 | DEBUG    | __main__:chat:628 - 📝 最终回答内容: ✅ CARLA服务器连接成功！现在您可以：
+1. 生成车辆（model3/a2/mustang）
+2. 生成行人
+3. 设置天气（clear/rain/fog）
+4. 查看交通灯状态
+5. 清理仿真场景
+
+请告诉我您想要进行什么操作？
+2026-01-15 17:03:29 | INFO     | __main__:chat:593 - 💬 用户消息: 生成车辆
+2026-01-15 17:03:29 | DEBUG    | __main__:call_deepseek_with_tools:403 - 📤 调用Deepseek API，消息数: 2
+2026-01-15 17:03:29 | DEBUG    | __main__:call_deepseek_with_tools:404 - 📤 最后一条消息: {"role": "user", "content": "生成车辆"}
+2026-01-15 17:03:33 | DEBUG    | __main__:call_deepseek_with_tools:410 - 📥 API响应状态: 200
+2026-01-15 17:03:33 | DEBUG    | __main__:call_deepseek_with_tools:413 - 📥 响应内容长度: 166
+2026-01-15 17:03:33 | DEBUG    | __main__:call_deepseek_with_tools:414 - 📥 响应内容预览: 我可以帮您生成车辆。不过，为了生成车辆，我需要知道您想要生成哪种类型的车辆。目前支持以下三种车型：
+
+1. **model3** - 特斯拉Model 3
+2. **a2** - 奥迪A2  
+3. 
+2026-01-15 17:03:40 | INFO     | __main__:chat:593 - 💬 用户消息: model3
+2026-01-15 17:03:40 | DEBUG    | __main__:call_deepseek_with_tools:403 - 📤 调用Deepseek API，消息数: 2
+2026-01-15 17:03:40 | DEBUG    | __main__:call_deepseek_with_tools:404 - 📤 最后一条消息: {"role": "user", "content": "model3"}
+2026-01-15 17:03:44 | DEBUG    | __main__:call_deepseek_with_tools:410 - 📥 API响应状态: 200
+2026-01-15 17:03:44 | DEBUG    | __main__:call_deepseek_with_tools:413 - 📥 响应内容长度: 149
+2026-01-15 17:03:44 | DEBUG    | __main__:call_deepseek_with_tools:414 - 📥 响应内容预览: 看起来您想要生成一辆Model 3车辆。不过，我需要先连接到CARLA仿真服务器才能生成车辆。
+
+您希望我连接到CARLA服务器吗？如果是的话，请告诉我服务器地址和端口（默认是localhost:20
+2026-01-15 17:03:56 | INFO     | __main__:chat:593 - 💬 用户消息: 已经链接了
+2026-01-15 17:03:56 | DEBUG    | __main__:call_deepseek_with_tools:403 - 📤 调用Deepseek API，消息数: 2
+2026-01-15 17:03:56 | DEBUG    | __main__:call_deepseek_with_tools:404 - 📤 最后一条消息: {"role": "user", "content": "已经链接了"}
+2026-01-15 17:04:00 | DEBUG    | __main__:call_deepseek_with_tools:410 - 📥 API响应状态: 200
+2026-01-15 17:04:00 | DEBUG    | __main__:call_deepseek_with_tools:413 - 📥 响应内容长度: 152
+2026-01-15 17:04:00 | DEBUG    | __main__:call_deepseek_with_tools:414 - 📥 响应内容预览: 我看到您已经连接了CARLA服务器。现在我可以为您提供CARLA仿真相关的服务了。请问您需要什么帮助？
+
+我可以帮您：
+1. 生成车辆（model3/a2/mustang）
+2. 生成行人
+3. 设置
+2026-01-15 17:04:11 | INFO     | __main__:chat:593 - 💬 用户消息: 生成车辆model3
+2026-01-15 17:04:11 | DEBUG    | __main__:call_deepseek_with_tools:403 - 📤 调用Deepseek API，消息数: 2
+2026-01-15 17:04:11 | DEBUG    | __main__:call_deepseek_with_tools:404 - 📤 最后一条消息: {"role": "user", "content": "生成车辆model3"}
+2026-01-15 17:04:15 | DEBUG    | __main__:call_deepseek_with_tools:410 - 📥 API响应状态: 200
+2026-01-15 17:04:15 | DEBUG    | __main__:call_deepseek_with_tools:413 - 📥 响应内容长度: 40
+2026-01-15 17:04:15 | DEBUG    | __main__:call_deepseek_with_tools:414 - 📥 响应内容预览: 我来为您生成一辆model3车辆。首先我需要连接CARLA服务器，然后生成车辆。
+2026-01-15 17:04:15 | INFO     | __main__:chat:603 - 🔧 检测到 1 个FastMCP工具调用
+2026-01-15 17:04:15 | INFO     | __main__:chat:606 - 🔨 执行FastMCP工具: connect_carla
+2026-01-15 17:04:15 | INFO     | __main__:execute_fastmcp_tool_call:425 - 🔧 执行FastMCP工具: connect_carla
+2026-01-15 17:04:15 | INFO     | __main__:execute_fastmcp_tool_call:426 - 📝 参数: {'host': 'localhost', 'port': 2000}
+2026-01-15 17:04:17 | INFO     | __main__:connect:58 - ✅ CARLA服务器连接成功
+2026-01-15 17:04:17 | INFO     | __main__:chat:608 - ✅ FastMCP工具执行完成，结果长度: 43
+2026-01-15 17:04:17 | INFO     | __main__:chat:618 - 🤖 正在生成最终回答...
+2026-01-15 17:04:17 | DEBUG    | __main__:chat:619 - 📤 发送给API的消息数量: 4
+2026-01-15 17:04:17 | DEBUG    | __main__:chat:620 - 📤 最后一条消息类型: tool
+2026-01-15 17:04:17 | DEBUG    | __main__:call_deepseek_with_tools:403 - 📤 调用Deepseek API，消息数: 4
+2026-01-15 17:04:17 | DEBUG    | __main__:call_deepseek_with_tools:404 - 📤 最后一条消息: {"role": "tool", "tool_call_id": "call_00_U2buxEP3Jd12KhqWt2aYuBxm", "content": "{\"success\": true, \"data\": \"✅ CARLA服务器连接成功\"}"}
+2026-01-15 17:04:20 | DEBUG    | __main__:call_deepseek_with_tools:410 - 📥 API响应状态: 200
+2026-01-15 17:04:20 | DEBUG    | __main__:call_deepseek_with_tools:413 - 📥 响应内容长度: 20
+2026-01-15 17:04:20 | DEBUG    | __main__:call_deepseek_with_tools:414 - 📥 响应内容预览: 现在连接成功，我来生成model3车辆：
+2026-01-15 17:04:20 | DEBUG    | __main__:chat:624 - 📥 API响应: {
+  "id": "285e03bf-7af8-4cb6-bf73-5825acb415bd",
+  "object": "chat.completion",
+  "created": 1768467859,
+  "model": "deepseek-chat",
+  "choices": [
+    {
+      "index": 0,
+      "message": {
+        "role": "assistant",
+        "content": "现在连接成功，我来生成model3车辆：",
+        "tool_calls": [
+          {
+            "index": 0,
+            "id": "call_00_B7s1yUyx40ua7QUFb4Ez2SzB",
+            "type": "function",
+            "function": {
+              "name": "spawn_vehicle",
+              "arguments": "{\"query\": \"model3\"}"
+            }
+          }
+        ]
+      },
+      "logprobs": null,
+      "finish_reason": "tool_calls"
+    }
+  ],
+  "usage": {
+    "prompt_tokens": 1228,
+    "completion_tokens": 55,
+    "total_tokens": 1283,
+    "prompt_tokens_details": {
+      "cached_tokens": 1216
+    },
+    "prompt_cache_hit_tokens": 1216,
+    "prompt_cache_miss_tokens": 12
+  },
+  "system_fingerprint": "fp_eaab8d114b_prod0820_fp8_kvcache"
+}
+2026-01-15 17:04:20 | INFO     | __main__:chat:627 - ✅ 最终回答生成成功，长度: 20
+2026-01-15 17:04:20 | DEBUG    | __main__:chat:628 - 📝 最终回答内容: 现在连接成功，我来生成model3车辆：
+2026-01-15 17:04:43 | INFO     | __main__:chat:593 - 💬 用户消息: 生成行人
+2026-01-15 17:04:43 | DEBUG    | __main__:call_deepseek_with_tools:403 - 📤 调用Deepseek API，消息数: 2
+2026-01-15 17:04:43 | DEBUG    | __main__:call_deepseek_with_tools:404 - 📤 最后一条消息: {"role": "user", "content": "生成行人"}
+2026-01-15 17:04:47 | DEBUG    | __main__:call_deepseek_with_tools:410 - 📥 API响应状态: 200
+2026-01-15 17:04:47 | DEBUG    | __main__:call_deepseek_with_tools:413 - 📥 响应内容长度: 32
+2026-01-15 17:04:47 | DEBUG    | __main__:call_deepseek_with_tools:414 - 📥 响应内容预览: 我来为您生成行人。首先我需要连接CARLA服务器，然后生成行人。
+2026-01-15 17:04:47 | INFO     | __main__:chat:603 - 🔧 检测到 1 个FastMCP工具调用
+2026-01-15 17:04:47 | INFO     | __main__:chat:606 - 🔨 执行FastMCP工具: connect_carla
+2026-01-15 17:04:47 | INFO     | __main__:execute_fastmcp_tool_call:425 - 🔧 执行FastMCP工具: connect_carla
+2026-01-15 17:04:47 | INFO     | __main__:execute_fastmcp_tool_call:426 - 📝 参数: {'host': 'localhost', 'port': 2000}
+2026-01-15 17:04:49 | INFO     | __main__:connect:58 - ✅ CARLA服务器连接成功
+2026-01-15 17:04:49 | INFO     | __main__:chat:608 - ✅ FastMCP工具执行完成，结果长度: 43
+2026-01-15 17:04:49 | INFO     | __main__:chat:618 - 🤖 正在生成最终回答...
+2026-01-15 17:04:49 | DEBUG    | __main__:chat:619 - 📤 发送给API的消息数量: 4
+2026-01-15 17:04:49 | DEBUG    | __main__:chat:620 - 📤 最后一条消息类型: tool
+2026-01-15 17:04:49 | DEBUG    | __main__:call_deepseek_with_tools:403 - 📤 调用Deepseek API，消息数: 4
+2026-01-15 17:04:49 | DEBUG    | __main__:call_deepseek_with_tools:404 - 📤 最后一条消息: {"role": "tool", "tool_call_id": "call_00_Pvm64C3JU0SyWCwa9omRY5td", "content": "{\"success\": true, \"data\": \"✅ CARLA服务器连接成功\"}"}
+2026-01-15 17:04:52 | DEBUG    | __main__:call_deepseek_with_tools:410 - 📥 API响应状态: 200
+2026-01-15 17:04:52 | DEBUG    | __main__:call_deepseek_with_tools:413 - 📥 响应内容长度: 14
+2026-01-15 17:04:52 | DEBUG    | __main__:call_deepseek_with_tools:414 - 📥 响应内容预览: 现在连接成功，我来生成行人：
+2026-01-15 17:04:52 | DEBUG    | __main__:chat:624 - 📥 API响应: {
+  "id": "be4557b9-cbb7-4c6c-ad6e-27bcff453f7a",
+  "object": "chat.completion",
+  "created": 1768467892,
+  "model": "deepseek-chat",
+  "choices": [
+    {
+      "index": 0,
+      "message": {
+        "role": "assistant",
+        "content": "现在连接成功，我来生成行人：",
+        "tool_calls": [
+          {
+            "index": 0,
+            "id": "call_00_Uy3q6nzfiThmqpnzORYbmcfM",
+            "type": "function",
+            "function": {
+              "name": "spawn_pedestrian",
+              "arguments": "{\"query\": \"walker\"}"
+            }
+          }
+        ]
+      },
+      "logprobs": null,
+      "finish_reason": "tool_calls"
+    }
+  ],
+  "usage": {
+    "prompt_tokens": 1223,
+    "completion_tokens": 53,
+    "total_tokens": 1276,
+    "prompt_tokens_details": {
+      "cached_tokens": 1216
+    },
+    "prompt_cache_hit_tokens": 1216,
+    "prompt_cache_miss_tokens": 7
+  },
+  "system_fingerprint": "fp_eaab8d114b_prod0820_fp8_kvcache"
+}
+2026-01-15 17:04:52 | INFO     | __main__:chat:627 - ✅ 最终回答生成成功，长度: 14
+2026-01-15 17:04:52 | DEBUG    | __main__:chat:628 - 📝 最终回答内容: 现在连接成功，我来生成行人：
+2026-01-15 17:05:51 | INFO     | __main__:chat:593 - 💬 用户消息: 设置天气（clear
+2026-01-15 17:05:51 | DEBUG    | __main__:call_deepseek_with_tools:403 - 📤 调用Deepseek API，消息数: 2
+2026-01-15 17:05:51 | DEBUG    | __main__:call_deepseek_with_tools:404 - 📤 最后一条消息: {"role": "user", "content": "设置天气（clear"}
+2026-01-15 17:06:10 | DEBUG    | __main__:call_deepseek_with_tools:410 - 📥 API响应状态: 200
+2026-01-15 17:06:10 | DEBUG    | __main__:call_deepseek_with_tools:413 - 📥 响应内容长度: 44
+2026-01-15 17:06:10 | DEBUG    | __main__:call_deepseek_with_tools:414 - 📥 响应内容预览: 我来帮您设置天气为晴天（clear）。根据工具要求，我需要提供owner和repo参数。
+2026-01-15 17:06:10 | INFO     | __main__:chat:603 - 🔧 检测到 1 个FastMCP工具调用
+2026-01-15 17:06:10 | INFO     | __main__:chat:606 - 🔨 执行FastMCP工具: set_weather
+2026-01-15 17:06:10 | INFO     | __main__:execute_fastmcp_tool_call:425 - 🔧 执行FastMCP工具: set_weather
+2026-01-15 17:06:10 | INFO     | __main__:execute_fastmcp_tool_call:426 - 📝 参数: {'owner': 'weather', 'repo': 'clear'}
+2026-01-15 17:06:10 | INFO     | __main__:chat:608 - ✅ FastMCP工具执行完成，结果长度: 40
+2026-01-15 17:06:10 | INFO     | __main__:chat:618 - 🤖 正在生成最终回答...
+2026-01-15 17:06:10 | DEBUG    | __main__:chat:619 - 📤 发送给API的消息数量: 4
+2026-01-15 17:06:10 | DEBUG    | __main__:chat:620 - 📤 最后一条消息类型: tool
+2026-01-15 17:06:10 | DEBUG    | __main__:call_deepseek_with_tools:403 - 📤 调用Deepseek API，消息数: 4
+2026-01-15 17:06:10 | DEBUG    | __main__:call_deepseek_with_tools:404 - 📤 最后一条消息: {"role": "tool", "tool_call_id": "call_00_A1cSSmQeadc2KSY74rXdUcaw", "content": "{\"success\": true, \"data\": \"✅ 天气已设置为 晴天\"}"}
+2026-01-15 17:06:12 | DEBUG    | __main__:call_deepseek_with_tools:410 - 📥 API响应状态: 200
+2026-01-15 17:06:12 | DEBUG    | __main__:call_deepseek_with_tools:413 - 📥 响应内容长度: 31
+2026-01-15 17:06:12 | DEBUG    | __main__:call_deepseek_with_tools:414 - 📥 响应内容预览: 天气已成功设置为晴天！现在CARLA仿真环境中的天气是晴朗的。
+2026-01-15 17:06:12 | DEBUG    | __main__:chat:624 - 📥 API响应: {
+  "id": "abe3cbd2-ab05-4dce-8d92-4efa21a78c26",
+  "object": "chat.completion",
+  "created": 1768467973,
+  "model": "deepseek-chat",
+  "choices": [
+    {
+      "index": 0,
+      "message": {
+        "role": "assistant",
+        "content": "天气已成功设置为晴天！现在CARLA仿真环境中的天气是晴朗的。"
+      },
+      "logprobs": null,
+      "finish_reason": "stop"
+    }
+  ],
+  "usage": {
+    "prompt_tokens": 1230,
+    "completion_tokens": 17,
+    "total_tokens": 1247,
+    "prompt_tokens_details": {
+      "cached_tokens": 1152
+    },
+    "prompt_cache_hit_tokens": 1152,
+    "prompt_cache_miss_tokens": 78
+  },
+  "system_fingerprint": "fp_eaab8d114b_prod0820_fp8_kvcache"
+}
+2026-01-15 17:06:12 | INFO     | __main__:chat:627 - ✅ 最终回答生成成功，长度: 31
+2026-01-15 17:06:12 | DEBUG    | __main__:chat:628 - 📝 最终回答内容: 天气已成功设置为晴天！现在CARLA仿真环境中的天气是晴朗的。
+2026-01-15 17:08:26 | INFO     | __main__:chat:593 - 💬 用户消息: 连接CARLA仿真服务器
+2026-01-15 17:08:26 | DEBUG    | __main__:call_deepseek_with_tools:403 - 📤 调用Deepseek API，消息数: 2
+2026-01-15 17:08:26 | DEBUG    | __main__:call_deepseek_with_tools:404 - 📤 最后一条消息: {"role": "user", "content": "连接CARLA仿真服务器"}
+2026-01-15 17:08:30 | DEBUG    | __main__:call_deepseek_with_tools:410 - 📥 API响应状态: 200
+2026-01-15 17:08:30 | DEBUG    | __main__:call_deepseek_with_tools:413 - 📥 响应内容长度: 17
+2026-01-15 17:08:30 | DEBUG    | __main__:call_deepseek_with_tools:414 - 📥 响应内容预览: 我将为您连接CARLA仿真服务器。
+2026-01-15 17:08:30 | INFO     | __main__:chat:608 - 🔧 第1轮：检测到 1 个FastMCP工具调用
+2026-01-15 17:08:30 | INFO     | __main__:chat:612 - 🔨 执行FastMCP工具: connect_carla
+2026-01-15 17:08:30 | INFO     | __main__:execute_fastmcp_tool_call:425 - 🔧 执行FastMCP工具: connect_carla
+2026-01-15 17:08:30 | INFO     | __main__:execute_fastmcp_tool_call:426 - 📝 参数: {'host': 'localhost', 'port': 2000}
+2026-01-15 17:08:33 | INFO     | __main__:connect:58 - ✅ CARLA服务器连接成功
+2026-01-15 17:08:33 | INFO     | __main__:chat:614 - ✅ FastMCP工具执行完成，结果长度: 43
+2026-01-15 17:08:33 | INFO     | __main__:chat:624 - 🤖 第1轮：正在生成回答...
+2026-01-15 17:08:33 | DEBUG    | __main__:chat:625 - � 发送给API的消息数量: 4
+2026-01-15 17:08:33 | DEBUG    | __main__:chat:626 - 📤 最后一条消息类型: tool
+2026-01-15 17:08:33 | DEBUG    | __main__:call_deepseek_with_tools:403 - 📤 调用Deepseek API，消息数: 4
+2026-01-15 17:08:33 | DEBUG    | __main__:call_deepseek_with_tools:404 - 📤 最后一条消息: {"role": "tool", "tool_call_id": "call_00_sLQLpluDAQIf5RLrsvp84N0i", "content": "{\"success\": true, \"data\": \"✅ CARLA服务器连接成功\"}"}
+2026-01-15 17:08:36 | DEBUG    | __main__:call_deepseek_with_tools:410 - 📥 API响应状态: 200
+2026-01-15 17:08:36 | DEBUG    | __main__:call_deepseek_with_tools:413 - 📥 响应内容长度: 117
+2026-01-15 17:08:36 | DEBUG    | __main__:call_deepseek_with_tools:414 - 📥 响应内容预览: ✅ CARLA服务器连接成功！现在您可以：
+1. 生成车辆（model3/a2/mustang）
+2. 生成行人
+3. 设置天气（clear/rain/fog）
+4. 查看交通灯状态
+5. 清理仿真场
+2026-01-15 17:08:36 | DEBUG    | __main__:chat:630 - 📥 API响应: {
+  "id": "49a04602-25cf-4cee-bd4f-876b23e153d0",
+  "object": "chat.completion",
+  "created": 1768468115,
+  "model": "deepseek-chat",
+  "choices": [
+    {
+      "index": 0,
+      "message": {
+        "role": "assistant",
+        "content": "✅ CARLA服务器连接成功！现在您可以：\n1. 生成车辆（model3/a2/mustang）\n2. 生成行人\n3. 设置天气（clear/rain/fog）\n4. 查看交通灯状态\n5. 清理仿真场景\n\n请告诉我您想要进行什么操作？"
+      },
+      "logprobs": null,
+      "finish_reason": "stop"
+    }
+  ],
+  "usage": {
+    "prompt_tokens": 1218,
+    "completion_tokens": 65,
+    "total_tokens": 1283,
+    "prompt_tokens_details": {
+      "cached_tokens": 1216
+    },
+    "prompt_cache_hit_tokens": 1216,
+    "prompt_cache_miss_tokens": 2
+  },
+  "system_fingerprint": "fp_eaab8d114b_prod0820_fp8_kvcache"
+}
+2026-01-15 17:08:36 | INFO     | __main__:chat:641 - ✅ 最终回答生成成功，长度: 117
+2026-01-15 17:08:36 | DEBUG    | __main__:chat:642 - 📝 最终回答内容: ✅ CARLA服务器连接成功！现在您可以：
+1. 生成车辆（model3/a2/mustang）
+2. 生成行人
+3. 设置天气（clear/rain/fog）
+4. 查看交通灯状态
+5. 清理仿真场景
+
+请告诉我您想要进行什么操作？
+2026-01-15 17:08:48 | INFO     | __main__:chat:593 - 💬 用户消息: 生成车辆（model3
+2026-01-15 17:08:48 | DEBUG    | __main__:call_deepseek_with_tools:403 - 📤 调用Deepseek API，消息数: 2
+2026-01-15 17:08:48 | DEBUG    | __main__:call_deepseek_with_tools:404 - 📤 最后一条消息: {"role": "user", "content": "生成车辆（model3"}
+2026-01-15 17:08:52 | DEBUG    | __main__:call_deepseek_with_tools:410 - 📥 API响应状态: 200
+2026-01-15 17:08:52 | DEBUG    | __main__:call_deepseek_with_tools:413 - 📥 响应内容长度: 71
+2026-01-15 17:08:52 | DEBUG    | __main__:call_deepseek_with_tools:414 - 📥 响应内容预览: 我注意到您想要生成一辆model3车辆。不过，要使用CARLA仿真功能，首先需要连接到CARLA服务器。让我先为您连接服务器，然后再生成车辆。
+2026-01-15 17:08:52 | INFO     | __main__:chat:608 - 🔧 第1轮：检测到 1 个FastMCP工具调用
+2026-01-15 17:08:52 | INFO     | __main__:chat:612 - 🔨 执行FastMCP工具: connect_carla
+2026-01-15 17:08:52 | INFO     | __main__:execute_fastmcp_tool_call:425 - 🔧 执行FastMCP工具: connect_carla
+2026-01-15 17:08:52 | INFO     | __main__:execute_fastmcp_tool_call:426 - 📝 参数: {'host': 'localhost', 'port': 2000}
+2026-01-15 17:08:54 | INFO     | __main__:connect:58 - ✅ CARLA服务器连接成功
+2026-01-15 17:08:54 | INFO     | __main__:chat:614 - ✅ FastMCP工具执行完成，结果长度: 43
+2026-01-15 17:08:54 | INFO     | __main__:chat:624 - 🤖 第1轮：正在生成回答...
+2026-01-15 17:08:54 | DEBUG    | __main__:chat:625 - � 发送给API的消息数量: 4
+2026-01-15 17:08:54 | DEBUG    | __main__:chat:626 - 📤 最后一条消息类型: tool
+2026-01-15 17:08:54 | DEBUG    | __main__:call_deepseek_with_tools:403 - 📤 调用Deepseek API，消息数: 4
+2026-01-15 17:08:54 | DEBUG    | __main__:call_deepseek_with_tools:404 - 📤 最后一条消息: {"role": "tool", "tool_call_id": "call_00_JPpRgUvARXNdGqgGJAXUsz1A", "content": "{\"success\": true, \"data\": \"✅ CARLA服务器连接成功\"}"}
+2026-01-15 17:08:57 | DEBUG    | __main__:call_deepseek_with_tools:410 - 📥 API响应状态: 200
+2026-01-15 17:08:57 | DEBUG    | __main__:call_deepseek_with_tools:413 - 📥 响应内容长度: 35
+2026-01-15 17:08:57 | DEBUG    | __main__:call_deepseek_with_tools:414 - 📥 响应内容预览: 很好！CARLA服务器连接成功。现在我来为您生成一辆model3车辆：
+2026-01-15 17:08:57 | DEBUG    | __main__:chat:630 - 📥 API响应: {
+  "id": "d7ff428b-f5f9-481b-88e3-466dfb847192",
+  "object": "chat.completion",
+  "created": 1768468137,
+  "model": "deepseek-chat",
+  "choices": [
+    {
+      "index": 0,
+      "message": {
+        "role": "assistant",
+        "content": "很好！CARLA服务器连接成功。现在我来为您生成一辆model3车辆：",
+        "tool_calls": [
+          {
+            "index": 0,
+            "id": "call_00_i6PpFYOyzVtJzkQh7SRtx1k3",
+            "type": "function",
+            "function": {
+              "name": "spawn_vehicle",
+              "arguments": "{\"query\": \"model3\"}"
+            }
+          }
+        ]
+      },
+      "logprobs": null,
+      "finish_reason": "tool_calls"
+    }
+  ],
+  "usage": {
+    "prompt_tokens": 1246,
+    "completion_tokens": 62,
+    "total_tokens": 1308,
+    "prompt_tokens_details": {
+      "cached_tokens": 1152
+    },
+    "prompt_cache_hit_tokens": 1152,
+    "prompt_cache_miss_tokens": 94
+  },
+  "system_fingerprint": "fp_eaab8d114b_prod0820_fp8_kvcache"
+}
+2026-01-15 17:08:57 | INFO     | __main__:chat:654 - 🔄 检测到更多工具调用，继续执行...
+2026-01-15 17:08:57 | INFO     | __main__:chat:608 - 🔧 第2轮：检测到 1 个FastMCP工具调用
+2026-01-15 17:08:57 | INFO     | __main__:chat:612 - 🔨 执行FastMCP工具: spawn_vehicle
+2026-01-15 17:08:57 | INFO     | __main__:execute_fastmcp_tool_call:425 - 🔧 执行FastMCP工具: spawn_vehicle
+2026-01-15 17:08:57 | INFO     | __main__:execute_fastmcp_tool_call:426 - 📝 参数: {'query': 'model3'}
+2026-01-15 17:08:57 | INFO     | __main__:execute_fastmcp_tool_call:441 - 🚗 spawn_vehicle参数详情: {'query': 'model3'}
+2026-01-15 17:08:57 | INFO     | __main__:spawn_vehicle:71 - 🚗 生成车辆: model3
+2026-01-15 17:08:57 | INFO     | __main__:execute_fastmcp_tool_call:445 - 🚗 spawn_vehicle执行结果: ✅ 已生成车辆: model3 (ID: 24)
+2026-01-15 17:08:57 | INFO     | __main__:chat:614 - ✅ FastMCP工具执行完成，结果长度: 53
+2026-01-15 17:08:57 | INFO     | __main__:chat:624 - 🤖 第2轮：正在生成回答...
+2026-01-15 17:08:57 | DEBUG    | __main__:chat:625 - � 发送给API的消息数量: 6
+2026-01-15 17:08:57 | DEBUG    | __main__:chat:626 - 📤 最后一条消息类型: tool
+2026-01-15 17:08:57 | DEBUG    | __main__:call_deepseek_with_tools:403 - 📤 调用Deepseek API，消息数: 6
+2026-01-15 17:08:57 | DEBUG    | __main__:call_deepseek_with_tools:404 - 📤 最后一条消息: {"role": "tool", "tool_call_id": "call_00_i6PpFYOyzVtJzkQh7SRtx1k3", "content": "{\"success\": true, \"data\": \"✅ 已生成车辆: model3 (ID: 24)\"}"}
+2026-01-15 17:09:02 | DEBUG    | __main__:call_deepseek_with_tools:410 - 📥 API响应状态: 200
+2026-01-15 17:09:02 | DEBUG    | __main__:call_deepseek_with_tools:413 - 📥 响应内容长度: 154
+2026-01-15 17:09:02 | DEBUG    | __main__:call_deepseek_with_tools:414 - 📥 响应内容预览: 完美！我已经成功为您生成了一辆model3车辆，车辆ID为24。车辆现在已经在CARLA仿真场景中生成了。
+
+您还可以：
+1. 生成其他类型的车辆（如a2或mustang）
+2. 设置不同的天气条件（
+2026-01-15 17:09:02 | DEBUG    | __main__:chat:630 - 📥 API响应: {
+  "id": "27d493a4-ae02-4abb-a27a-1ac9dd296f0c",
+  "object": "chat.completion",
+  "created": 1768468140,
+  "model": "deepseek-chat",
+  "choices": [
+    {
+      "index": 0,
+      "message": {
+        "role": "assistant",
+        "content": "完美！我已经成功为您生成了一辆model3车辆，车辆ID为24。车辆现在已经在CARLA仿真场景中生成了。\n\n您还可以：\n1. 生成其他类型的车辆（如a2或mustang）\n2. 设置不同的天气条件（晴天、雨天、雾天）\n3. 生成行人\n4. 查看交通灯状态\n5. 清理场景重新开始\n\n有什么其他需要帮助的吗？"
+      },
+      "logprobs": null,
+      "finish_reason": "stop"
+    }
+  ],
+  "usage": {
+    "prompt_tokens": 1348,
+    "completion_tokens": 88,
+    "total_tokens": 1436,
+    "prompt_tokens_details": {
+      "cached_tokens": 1280
+    },
+    "prompt_cache_hit_tokens": 1280,
+    "prompt_cache_miss_tokens": 68
+  },
+  "system_fingerprint": "fp_eaab8d114b_prod0820_fp8_kvcache"
+}
+2026-01-15 17:09:02 | INFO     | __main__:chat:641 - ✅ 最终回答生成成功，长度: 154
+2026-01-15 17:09:02 | DEBUG    | __main__:chat:642 - 📝 最终回答内容: 完美！我已经成功为您生成了一辆model3车辆，车辆ID为24。车辆现在已经在CARLA仿真场景中生成了。
+
+您还可以：
+1. 生成其他类型的车辆（如a2或mustang）
+2. 设置不同的天气条件（晴天、雨天、雾天）
+3. 生成行人
+4. 查看交通灯状态
+5. 清理场景重新开始
+
+有什么其他需要帮助的吗？
+2026-01-15 17:09:29 | INFO     | __main__:chat:593 - 💬 用户消息: 生成行人
+2026-01-15 17:09:29 | DEBUG    | __main__:call_deepseek_with_tools:403 - 📤 调用Deepseek API，消息数: 2
+2026-01-15 17:09:29 | DEBUG    | __main__:call_deepseek_with_tools:404 - 📤 最后一条消息: {"role": "user", "content": "生成行人"}
+2026-01-15 17:09:33 | DEBUG    | __main__:call_deepseek_with_tools:410 - 📥 API响应状态: 200
+2026-01-15 17:09:33 | DEBUG    | __main__:call_deepseek_with_tools:413 - 📥 响应内容长度: 38
+2026-01-15 17:09:33 | DEBUG    | __main__:call_deepseek_with_tools:414 - 📥 响应内容预览: 我来为您生成行人。根据工具要求，我需要指定行人类型，默认是"walker"。
+2026-01-15 17:09:33 | INFO     | __main__:chat:608 - 🔧 第1轮：检测到 1 个FastMCP工具调用
+2026-01-15 17:09:33 | INFO     | __main__:chat:612 - 🔨 执行FastMCP工具: spawn_pedestrian
+2026-01-15 17:09:33 | INFO     | __main__:execute_fastmcp_tool_call:425 - 🔧 执行FastMCP工具: spawn_pedestrian
+2026-01-15 17:09:33 | INFO     | __main__:execute_fastmcp_tool_call:426 - 📝 参数: {'query': 'walker'}
+2026-01-15 17:09:33 | INFO     | __main__:spawn_pedestrian:129 - 🚶 生成行人: walker
+2026-01-15 17:09:33 | INFO     | __main__:set_spectator_view:162 - 👁️  视角已对准actor 25
+2026-01-15 17:09:33 | INFO     | __main__:chat:614 - ✅ FastMCP工具执行完成，结果长度: 53
+2026-01-15 17:09:33 | INFO     | __main__:chat:624 - 🤖 第1轮：正在生成回答...
+2026-01-15 17:09:33 | DEBUG    | __main__:chat:625 - � 发送给API的消息数量: 4
+2026-01-15 17:09:33 | DEBUG    | __main__:chat:626 - 📤 最后一条消息类型: tool
+2026-01-15 17:09:33 | DEBUG    | __main__:call_deepseek_with_tools:403 - 📤 调用Deepseek API，消息数: 4
+2026-01-15 17:09:33 | DEBUG    | __main__:call_deepseek_with_tools:404 - 📤 最后一条消息: {"role": "tool", "tool_call_id": "call_00_KqRHe9btwOtu6A4ErMzLQNo7", "content": "{\"success\": true, \"data\": \"✅ 已生成行人: walker (ID: 25)\"}"}
+2026-01-15 17:09:35 | DEBUG    | __main__:call_deepseek_with_tools:410 - 📥 API响应状态: 200
+2026-01-15 17:09:35 | DEBUG    | __main__:call_deepseek_with_tools:413 - 📥 响应内容长度: 64
+2026-01-15 17:09:35 | DEBUG    | __main__:call_deepseek_with_tools:414 - 📥 响应内容预览: 已成功生成一个行人！行人类型为walker，ID为25。行人已经添加到CARLA仿真场景中，可以在仿真环境中看到这个行人的活动。
+2026-01-15 17:09:35 | DEBUG    | __main__:chat:630 - 📥 API响应: {
+  "id": "1b4c0ab8-afff-4785-bba7-e63750850cc9",
+  "object": "chat.completion",
+  "created": 1768468175,
+  "model": "deepseek-chat",
+  "choices": [
+    {
+      "index": 0,
+      "message": {
+        "role": "assistant",
+        "content": "已成功生成一个行人！行人类型为walker，ID为25。行人已经添加到CARLA仿真场景中，可以在仿真环境中看到这个行人的活动。"
+      },
+      "logprobs": null,
+      "finish_reason": "stop"
+    }
+  ],
+  "usage": {
+    "prompt_tokens": 1219,
+    "completion_tokens": 33,
+    "total_tokens": 1252,
+    "prompt_tokens_details": {
+      "cached_tokens": 1152
+    },
+    "prompt_cache_hit_tokens": 1152,
+    "prompt_cache_miss_tokens": 67
+  },
+  "system_fingerprint": "fp_eaab8d114b_prod0820_fp8_kvcache"
+}
+2026-01-15 17:09:35 | INFO     | __main__:chat:641 - ✅ 最终回答生成成功，长度: 64
+2026-01-15 17:09:35 | DEBUG    | __main__:chat:642 - 📝 最终回答内容: 已成功生成一个行人！行人类型为walker，ID为25。行人已经添加到CARLA仿真场景中，可以在仿真环境中看到这个行人的活动。
+2026-01-15 17:10:21 | INFO     | __main__:chat:593 - 💬 用户消息: 连接CARLA仿真服务器
+2026-01-15 17:10:21 | DEBUG    | __main__:call_deepseek_with_tools:403 - 📤 调用Deepseek API，消息数: 2
+2026-01-15 17:10:21 | DEBUG    | __main__:call_deepseek_with_tools:404 - 📤 最后一条消息: {"role": "user", "content": "连接CARLA仿真服务器"}
+2026-01-15 17:10:25 | DEBUG    | __main__:call_deepseek_with_tools:410 - 📥 API响应状态: 200
+2026-01-15 17:10:25 | DEBUG    | __main__:call_deepseek_with_tools:413 - 📥 响应内容长度: 17
+2026-01-15 17:10:25 | DEBUG    | __main__:call_deepseek_with_tools:414 - 📥 响应内容预览: 我来帮您连接CARLA仿真服务器。
+2026-01-15 17:10:25 | INFO     | __main__:chat:608 - 🔧 第1轮：检测到 1 个FastMCP工具调用
+2026-01-15 17:10:25 | INFO     | __main__:chat:612 - 🔨 执行FastMCP工具: connect_carla
+2026-01-15 17:10:25 | INFO     | __main__:execute_fastmcp_tool_call:425 - 🔧 执行FastMCP工具: connect_carla
+2026-01-15 17:10:25 | INFO     | __main__:execute_fastmcp_tool_call:426 - 📝 参数: {'host': 'localhost', 'port': 2000}
+2026-01-15 17:10:27 | INFO     | __main__:connect:58 - ✅ CARLA服务器连接成功
+2026-01-15 17:10:27 | INFO     | __main__:chat:614 - ✅ FastMCP工具执行完成，结果长度: 43
+2026-01-15 17:10:27 | INFO     | __main__:chat:624 - 🤖 第1轮：正在生成回答...
+2026-01-15 17:10:27 | DEBUG    | __main__:chat:625 - � 发送给API的消息数量: 4
+2026-01-15 17:10:27 | DEBUG    | __main__:chat:626 - 📤 最后一条消息类型: tool
+2026-01-15 17:10:27 | DEBUG    | __main__:call_deepseek_with_tools:403 - 📤 调用Deepseek API，消息数: 4
+2026-01-15 17:10:27 | DEBUG    | __main__:call_deepseek_with_tools:404 - 📤 最后一条消息: {"role": "tool", "tool_call_id": "call_00_SLTLyNXHeoSKZI5j7J27s8ye", "content": "{\"success\": true, \"data\": \"✅ CARLA服务器连接成功\"}"}
+2026-01-15 17:10:30 | DEBUG    | __main__:call_deepseek_with_tools:410 - 📥 API响应状态: 200
+2026-01-15 17:10:30 | DEBUG    | __main__:call_deepseek_with_tools:413 - 📥 响应内容长度: 117
+2026-01-15 17:10:30 | DEBUG    | __main__:call_deepseek_with_tools:414 - 📥 响应内容预览: CARLA仿真服务器连接成功！现在您可以：
+1. 生成车辆（model3/a2/mustang）
+2. 生成行人
+3. 设置天气（clear/rain/fog）
+4. 查看交通灯状态
+5. 清理仿真场
+2026-01-15 17:10:30 | DEBUG    | __main__:chat:630 - 📥 API响应: {
+  "id": "60fc1da9-d27c-486d-bd30-017c5fdca726",
+  "object": "chat.completion",
+  "created": 1768468230,
+  "model": "deepseek-chat",
+  "choices": [
+    {
+      "index": 0,
+      "message": {
+        "role": "assistant",
+        "content": "CARLA仿真服务器连接成功！现在您可以：\n1. 生成车辆（model3/a2/mustang）\n2. 生成行人\n3. 设置天气（clear/rain/fog）\n4. 查看交通灯状态\n5. 清理仿真场景\n\n请告诉我您想要进行什么操作？"
+      },
+      "logprobs": null,
+      "finish_reason": "stop"
+    }
+  ],
+  "usage": {
+    "prompt_tokens": 1219,
+    "completion_tokens": 65,
+    "total_tokens": 1284,
+    "prompt_tokens_details": {
+      "cached_tokens": 1216
+    },
+    "prompt_cache_hit_tokens": 1216,
+    "prompt_cache_miss_tokens": 3
+  },
+  "system_fingerprint": "fp_eaab8d114b_prod0820_fp8_kvcache"
+}
+2026-01-15 17:10:30 | INFO     | __main__:chat:641 - ✅ 最终回答生成成功，长度: 117
+2026-01-15 17:10:30 | DEBUG    | __main__:chat:642 - 📝 最终回答内容: CARLA仿真服务器连接成功！现在您可以：
+1. 生成车辆（model3/a2/mustang）
+2. 生成行人
+3. 设置天气（clear/rain/fog）
+4. 查看交通灯状态
+5. 清理仿真场景
+
+请告诉我您想要进行什么操作？
+2026-01-15 17:11:21 | INFO     | __main__:chat:593 - 💬 用户消息: 生成车辆（model3
+2026-01-15 17:11:21 | DEBUG    | __main__:call_deepseek_with_tools:403 - 📤 调用Deepseek API，消息数: 2
+2026-01-15 17:11:21 | DEBUG    | __main__:call_deepseek_with_tools:404 - 📤 最后一条消息: {"role": "user", "content": "生成车辆（model3"}
+2026-01-15 17:11:25 | DEBUG    | __main__:call_deepseek_with_tools:410 - 📥 API响应状态: 200
+2026-01-15 17:11:25 | DEBUG    | __main__:call_deepseek_with_tools:413 - 📥 响应内容长度: 69
+2026-01-15 17:11:25 | DEBUG    | __main__:call_deepseek_with_tools:414 - 📥 响应内容预览: 我看到您想要生成一辆model3车辆。不过，要使用CARLA仿真功能，我需要先连接到CARLA服务器。让我先连接服务器，然后为您生成车辆。
+2026-01-15 17:11:25 | INFO     | __main__:chat:608 - 🔧 第1轮：检测到 1 个FastMCP工具调用
+2026-01-15 17:11:25 | INFO     | __main__:chat:612 - 🔨 执行FastMCP工具: connect_carla
+2026-01-15 17:11:25 | INFO     | __main__:execute_fastmcp_tool_call:425 - 🔧 执行FastMCP工具: connect_carla
+2026-01-15 17:11:25 | INFO     | __main__:execute_fastmcp_tool_call:426 - 📝 参数: {'host': 'localhost', 'port': 2000}
+2026-01-15 17:11:27 | INFO     | __main__:connect:58 - ✅ CARLA服务器连接成功
+2026-01-15 17:11:27 | INFO     | __main__:chat:614 - ✅ FastMCP工具执行完成，结果长度: 43
+2026-01-15 17:11:27 | INFO     | __main__:chat:624 - 🤖 第1轮：正在生成回答...
+2026-01-15 17:11:27 | DEBUG    | __main__:chat:625 - � 发送给API的消息数量: 4
+2026-01-15 17:11:27 | DEBUG    | __main__:chat:626 - 📤 最后一条消息类型: tool
+2026-01-15 17:11:27 | DEBUG    | __main__:call_deepseek_with_tools:403 - 📤 调用Deepseek API，消息数: 4
+2026-01-15 17:11:27 | DEBUG    | __main__:call_deepseek_with_tools:404 - 📤 最后一条消息: {"role": "tool", "tool_call_id": "call_00_tLaQQcCZ5leBOqqVVxXXvjXt", "content": "{\"success\": true, \"data\": \"✅ CARLA服务器连接成功\"}"}
+2026-01-15 17:11:30 | DEBUG    | __main__:call_deepseek_with_tools:410 - 📥 API响应状态: 200
+2026-01-15 17:11:30 | DEBUG    | __main__:call_deepseek_with_tools:413 - 📥 响应内容长度: 35
+2026-01-15 17:11:30 | DEBUG    | __main__:call_deepseek_with_tools:414 - 📥 响应内容预览: 很好！CARLA服务器连接成功。现在我来为您生成一辆model3车辆：
+2026-01-15 17:11:30 | DEBUG    | __main__:chat:630 - 📥 API响应: {
+  "id": "3ae22dae-b8ce-4619-94a1-edbd50cfa48d",
+  "object": "chat.completion",
+  "created": 1768468290,
+  "model": "deepseek-chat",
+  "choices": [
+    {
+      "index": 0,
+      "message": {
+        "role": "assistant",
+        "content": "很好！CARLA服务器连接成功。现在我来为您生成一辆model3车辆：",
+        "tool_calls": [
+          {
+            "index": 0,
+            "id": "call_00_tkysfdUGXo9869wHxmo0lkL8",
+            "type": "function",
+            "function": {
+              "name": "spawn_vehicle",
+              "arguments": "{\"query\": \"model3\"}"
+            }
+          }
+        ]
+      },
+      "logprobs": null,
+      "finish_reason": "tool_calls"
+    }
+  ],
+  "usage": {
+    "prompt_tokens": 1245,
+    "completion_tokens": 62,
+    "total_tokens": 1307,
+    "prompt_tokens_details": {
+      "cached_tokens": 1152
+    },
+    "prompt_cache_hit_tokens": 1152,
+    "prompt_cache_miss_tokens": 93
+  },
+  "system_fingerprint": "fp_eaab8d114b_prod0820_fp8_kvcache"
+}
+2026-01-15 17:11:30 | INFO     | __main__:chat:654 - 🔄 检测到更多工具调用，继续执行...
+2026-01-15 17:11:30 | INFO     | __main__:chat:608 - 🔧 第2轮：检测到 1 个FastMCP工具调用
+2026-01-15 17:11:30 | INFO     | __main__:chat:612 - 🔨 执行FastMCP工具: spawn_vehicle
+2026-01-15 17:11:30 | INFO     | __main__:execute_fastmcp_tool_call:425 - 🔧 执行FastMCP工具: spawn_vehicle
+2026-01-15 17:11:30 | INFO     | __main__:execute_fastmcp_tool_call:426 - 📝 参数: {'query': 'model3'}
+2026-01-15 17:11:30 | INFO     | __main__:execute_fastmcp_tool_call:441 - 🚗 spawn_vehicle参数详情: {'query': 'model3'}
+2026-01-15 17:11:31 | INFO     | __main__:spawn_vehicle:71 - 🚗 生成车辆: model3
+2026-01-15 17:11:31 | INFO     | __main__:execute_fastmcp_tool_call:445 - 🚗 spawn_vehicle执行结果: ✅ 已生成车辆: model3 (ID: 24)
+2026-01-15 17:11:31 | INFO     | __main__:chat:614 - ✅ FastMCP工具执行完成，结果长度: 53
+2026-01-15 17:11:31 | INFO     | __main__:chat:624 - 🤖 第2轮：正在生成回答...
+2026-01-15 17:11:31 | DEBUG    | __main__:chat:625 - � 发送给API的消息数量: 6
+2026-01-15 17:11:31 | DEBUG    | __main__:chat:626 - 📤 最后一条消息类型: tool
+2026-01-15 17:11:31 | DEBUG    | __main__:call_deepseek_with_tools:403 - 📤 调用Deepseek API，消息数: 6
+2026-01-15 17:11:31 | DEBUG    | __main__:call_deepseek_with_tools:404 - 📤 最后一条消息: {"role": "tool", "tool_call_id": "call_00_tkysfdUGXo9869wHxmo0lkL8", "content": "{\"success\": true, \"data\": \"✅ 已生成车辆: model3 (ID: 24)\"}"}
+2026-01-15 17:11:34 | DEBUG    | __main__:call_deepseek_with_tools:410 - 📥 API响应状态: 200
+2026-01-15 17:11:34 | DEBUG    | __main__:call_deepseek_with_tools:413 - 📥 响应内容长度: 119
+2026-01-15 17:11:34 | DEBUG    | __main__:call_deepseek_with_tools:414 - 📥 响应内容预览: 成功！我已经为您在CARLA仿真环境中生成了一辆model3车辆，车辆ID为24。
+
+现在您可以在仿真环境中看到这辆model3车辆了。如果您还需要生成其他类型的车辆（如a2或mustang）、设置天
+2026-01-15 17:11:34 | DEBUG    | __main__:chat:630 - 📥 API响应: {
+  "id": "e10227ad-c8c7-46eb-b781-4b8d58f51930",
+  "object": "chat.completion",
+  "created": 1768468293,
+  "model": "deepseek-chat",
+  "choices": [
+    {
+      "index": 0,
+      "message": {
+        "role": "assistant",
+        "content": "成功！我已经为您在CARLA仿真环境中生成了一辆model3车辆，车辆ID为24。\n\n现在您可以在仿真环境中看到这辆model3车辆了。如果您还需要生成其他类型的车辆（如a2或mustang）、设置天气、生成行人或进行其他操作，请告诉我！"
+      },
+      "logprobs": null,
+      "finish_reason": "stop"
+    }
+  ],
+  "usage": {
+    "prompt_tokens": 1347,
+    "completion_tokens": 61,
+    "total_tokens": 1408,
+    "prompt_tokens_details": {
+      "cached_tokens": 1280
+    },
+    "prompt_cache_hit_tokens": 1280,
+    "prompt_cache_miss_tokens": 67
+  },
+  "system_fingerprint": "fp_eaab8d114b_prod0820_fp8_kvcache"
+}
+2026-01-15 17:11:34 | INFO     | __main__:chat:641 - ✅ 最终回答生成成功，长度: 119
+2026-01-15 17:11:34 | DEBUG    | __main__:chat:642 - 📝 最终回答内容: 成功！我已经为您在CARLA仿真环境中生成了一辆model3车辆，车辆ID为24。
+
+现在您可以在仿真环境中看到这辆model3车辆了。如果您还需要生成其他类型的车辆（如a2或mustang）、设置天气、生成行人或进行其他操作，请告诉我！
+2026-01-15 17:11:59 | INFO     | __main__:chat:593 - 💬 用户消息: 生成行人
+2026-01-15 17:11:59 | DEBUG    | __main__:call_deepseek_with_tools:403 - 📤 调用Deepseek API，消息数: 2
+2026-01-15 17:11:59 | DEBUG    | __main__:call_deepseek_with_tools:404 - 📤 最后一条消息: {"role": "user", "content": "生成行人"}
+2026-01-15 17:12:03 | DEBUG    | __main__:call_deepseek_with_tools:410 - 📥 API响应状态: 200
+2026-01-15 17:12:03 | DEBUG    | __main__:call_deepseek_with_tools:413 - 📥 响应内容长度: 32
+2026-01-15 17:12:03 | DEBUG    | __main__:call_deepseek_with_tools:414 - 📥 响应内容预览: 我来为您生成行人。首先我需要连接CARLA服务器，然后生成行人。
+2026-01-15 17:12:03 | INFO     | __main__:chat:608 - 🔧 第1轮：检测到 1 个FastMCP工具调用
+2026-01-15 17:12:03 | INFO     | __main__:chat:612 - 🔨 执行FastMCP工具: connect_carla
+2026-01-15 17:12:03 | INFO     | __main__:execute_fastmcp_tool_call:425 - 🔧 执行FastMCP工具: connect_carla
+2026-01-15 17:12:03 | INFO     | __main__:execute_fastmcp_tool_call:426 - 📝 参数: {'host': 'localhost', 'port': 2000}
+2026-01-15 17:12:05 | INFO     | __main__:connect:58 - ✅ CARLA服务器连接成功
+2026-01-15 17:12:05 | INFO     | __main__:chat:614 - ✅ FastMCP工具执行完成，结果长度: 43
+2026-01-15 17:12:05 | INFO     | __main__:chat:624 - 🤖 第1轮：正在生成回答...
+2026-01-15 17:12:05 | DEBUG    | __main__:chat:625 - � 发送给API的消息数量: 4
+2026-01-15 17:12:05 | DEBUG    | __main__:chat:626 - 📤 最后一条消息类型: tool
+2026-01-15 17:12:05 | DEBUG    | __main__:call_deepseek_with_tools:403 - 📤 调用Deepseek API，消息数: 4
+2026-01-15 17:12:05 | DEBUG    | __main__:call_deepseek_with_tools:404 - 📤 最后一条消息: {"role": "tool", "tool_call_id": "call_00_cNfw1ii3Ri1u8wh42WYiqS4R", "content": "{\"success\": true, \"data\": \"✅ CARLA服务器连接成功\"}"}
+2026-01-15 17:12:08 | DEBUG    | __main__:call_deepseek_with_tools:410 - 📥 API响应状态: 200
+2026-01-15 17:12:08 | DEBUG    | __main__:call_deepseek_with_tools:413 - 📥 响应内容长度: 14
+2026-01-15 17:12:08 | DEBUG    | __main__:call_deepseek_with_tools:414 - 📥 响应内容预览: 现在连接成功，我来生成行人：
+2026-01-15 17:12:08 | DEBUG    | __main__:chat:630 - 📥 API响应: {
+  "id": "0701e17c-48ed-442d-a510-c13d25f75651",
+  "object": "chat.completion",
+  "created": 1768468327,
+  "model": "deepseek-chat",
+  "choices": [
+    {
+      "index": 0,
+      "message": {
+        "role": "assistant",
+        "content": "现在连接成功，我来生成行人：",
+        "tool_calls": [
+          {
+            "index": 0,
+            "id": "call_00_vLK3n3HrRHMFq9KohGz1it8j",
+            "type": "function",
+            "function": {
+              "name": "spawn_pedestrian",
+              "arguments": "{\"query\": \"walker\"}"
+            }
+          }
+        ]
+      },
+      "logprobs": null,
+      "finish_reason": "tool_calls"
+    }
+  ],
+  "usage": {
+    "prompt_tokens": 1223,
+    "completion_tokens": 53,
+    "total_tokens": 1276,
+    "prompt_tokens_details": {
+      "cached_tokens": 1216
+    },
+    "prompt_cache_hit_tokens": 1216,
+    "prompt_cache_miss_tokens": 7
+  },
+  "system_fingerprint": "fp_eaab8d114b_prod0820_fp8_kvcache"
+}
+2026-01-15 17:12:08 | INFO     | __main__:chat:654 - 🔄 检测到更多工具调用，继续执行...
+2026-01-15 17:12:08 | INFO     | __main__:chat:608 - 🔧 第2轮：检测到 1 个FastMCP工具调用
+2026-01-15 17:12:08 | INFO     | __main__:chat:612 - 🔨 执行FastMCP工具: spawn_pedestrian
+2026-01-15 17:12:08 | INFO     | __main__:execute_fastmcp_tool_call:425 - 🔧 执行FastMCP工具: spawn_pedestrian
+2026-01-15 17:12:08 | INFO     | __main__:execute_fastmcp_tool_call:426 - 📝 参数: {'query': 'walker'}
+2026-01-15 17:12:08 | INFO     | __main__:spawn_pedestrian:129 - 🚶 生成行人: walker
+2026-01-15 17:12:08 | INFO     | __main__:set_spectator_view:162 - 👁️  视角已对准actor 25
+2026-01-15 17:12:08 | INFO     | __main__:chat:614 - ✅ FastMCP工具执行完成，结果长度: 53
+2026-01-15 17:12:08 | INFO     | __main__:chat:624 - 🤖 第2轮：正在生成回答...
+2026-01-15 17:12:08 | DEBUG    | __main__:chat:625 - � 发送给API的消息数量: 6
+2026-01-15 17:12:08 | DEBUG    | __main__:chat:626 - 📤 最后一条消息类型: tool
+2026-01-15 17:12:08 | DEBUG    | __main__:call_deepseek_with_tools:403 - 📤 调用Deepseek API，消息数: 6
+2026-01-15 17:12:08 | DEBUG    | __main__:call_deepseek_with_tools:404 - 📤 最后一条消息: {"role": "tool", "tool_call_id": "call_00_vLK3n3HrRHMFq9KohGz1it8j", "content": "{\"success\": true, \"data\": \"✅ 已生成行人: walker (ID: 25)\"}"}
+2026-01-15 17:12:11 | DEBUG    | __main__:call_deepseek_with_tools:410 - 📥 API响应状态: 200
+2026-01-15 17:12:11 | DEBUG    | __main__:call_deepseek_with_tools:413 - 📥 响应内容长度: 129
+2026-01-15 17:12:11 | DEBUG    | __main__:call_deepseek_with_tools:414 - 📥 响应内容预览: 成功！我已经在CARLA仿真环境中生成了一个行人（ID: 25）。行人类型为"walker"，这是CARLA中标准的行人模型。
+
+如果您想要生成更多行人，或者需要调整行人的位置、行为等，请告诉我。您也
+2026-01-15 17:12:11 | DEBUG    | __main__:chat:630 - 📥 API响应: {
+  "id": "ff49cfb4-fcae-4576-8649-d935586c06c7",
+  "object": "chat.completion",
+  "created": 1768468331,
+  "model": "deepseek-chat",
+  "choices": [
+    {
+      "index": 0,
+      "message": {
+        "role": "assistant",
+        "content": "成功！我已经在CARLA仿真环境中生成了一个行人（ID: 25）。行人类型为\"walker\"，这是CARLA中标准的行人模型。\n\n如果您想要生成更多行人，或者需要调整行人的位置、行为等，请告诉我。您也可以尝试其他操作，比如生成车辆、设置天气或查看交通灯状态。"
+      },
+      "logprobs": null,
+      "finish_reason": "stop"
+    }
+  ],
+  "usage": {
+    "prompt_tokens": 1316,
+    "completion_tokens": 68,
+    "total_tokens": 1384,
+    "prompt_tokens_details": {
+      "cached_tokens": 1216
+    },
+    "prompt_cache_hit_tokens": 1216,
+    "prompt_cache_miss_tokens": 100
+  },
+  "system_fingerprint": "fp_eaab8d114b_prod0820_fp8_kvcache"
+}
+2026-01-15 17:12:11 | INFO     | __main__:chat:641 - ✅ 最终回答生成成功，长度: 129
+2026-01-15 17:12:11 | DEBUG    | __main__:chat:642 - 📝 最终回答内容: 成功！我已经在CARLA仿真环境中生成了一个行人（ID: 25）。行人类型为"walker"，这是CARLA中标准的行人模型。
+
+如果您想要生成更多行人，或者需要调整行人的位置、行为等，请告诉我。您也可以尝试其他操作，比如生成车辆、设置天气或查看交通灯状态。
