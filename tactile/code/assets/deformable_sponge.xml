@@ -1,0 +1,66 @@
+<mujoco model="deformable_sponge">
+  <!-- 
+    可变形海绵场景
+    用于测试多孔弹性材质的触觉反馈
+  -->
+  
+  <compiler angle="radian" meshdir="." autolimits="true"/>
+  
+  <option timestep="0.001" iterations="50" solver="Newton" gravity="0 0 -9.81">
+    <flag warmstart="enable"/>
+  </option>
+  
+  <size memory="100M"/>
+  
+  <visual>
+    <global offwidth="1920" offheight="1080"/>
+    <quality shadowsize="4096" offsamples="8"/>
+  </visual>
+  
+  <asset>
+    <!-- 海绵材质 - 多孔弹性 -->
+    <texture name="sponge_texture" type="cube" builtin="flat" rgb1="0.9 0.8 0.4" rgb2="0.85 0.75 0.35" width="256" height="256"/>
+    <material name="sponge_material" texture="sponge_texture" rgba="0.9 0.8 0.4 1" specular="0.05" shininess="0.1"/>
+    
+    <!-- 地面材质 -->
+    <texture name="grid" type="2d" builtin="checker" width="512" height="512"
+             rgb1="0.9 0.9 0.9" rgb2="0.7 0.7 0.7"/>
+    <material name="grid_material" texture="grid" texrepeat="8 8" reflectance="0.1"/>
+  </asset>
+  
+  <worldbody>
+    <!-- 地面 -->
+    <geom name="floor" type="plane" size="2 2 0.1" material="grid_material"/>
+    
+    <!-- 灯光 -->
+    <light directional="true" diffuse="0.8 0.8 0.8" specular="0.3 0.3 0.3" pos="0 0 3" dir="0 0 -1"/>
+    <light directional="true" diffuse="0.4 0.4 0.4" specular="0.1 0.1 0.1" pos="2 2 2" dir="-1 -1 -1"/>
+    
+    <!-- 可变形海绵 - 使用flex (软体, 扁平方形) -->
+    <flexcomp name="sponge" type="grid" count="6 6 4" spacing="0.03 0.03 0.025"
+              pos="0 0 0.2" radius="0.008" rgba="0.9 0.8 0.4 1"
+              mass="0.3" dim="3">
+      <contact friction="0.9" solimp="0.8 0.9 0.001" solref="0.02 1"/>
+      <edge equality="true" damping="20"/>
+    </flexcomp>
+    
+    <!-- 探针 -->
+    <body name="probe" pos="0 0 0.8">
+      <freejoint name="probe_joint"/>
+      <geom name="probe_geom" type="sphere" size="0.02" rgba="0.2 0.6 1 1" mass="0.1"/>
+      <site name="probe_tip" pos="0 0 -0.02" size="0.01"/>
+    </body>
+    
+  </worldbody>
+  
+  <actuator>
+    <motor name="probe_x" joint="probe_joint" gear="1 0 0 0 0 0" ctrlrange="-1 1"/>
+    <motor name="probe_y" joint="probe_joint" gear="0 1 0 0 0 0" ctrlrange="-1 1"/>
+    <motor name="probe_z" joint="probe_joint" gear="0 0 1 0 0 0" ctrlrange="-1 1"/>
+  </actuator>
+  
+  <sensor>
+    <force name="probe_contact_force" site="probe_tip"/>
+  </sensor>
+  
+</mujoco>
