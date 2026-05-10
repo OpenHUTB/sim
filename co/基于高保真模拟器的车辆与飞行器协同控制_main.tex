@@ -1,0 +1,1479 @@
+% !TeX program = xelatex
+\documentclass[UTF8,a4paper,12pt]{ctexart}
+
+% 页面与字体设置
+\usepackage{geometry}
+\geometry{left=2.8cm,right=2.5cm,top=2.5cm,bottom=2.5cm}
+\usepackage{setspace}
+\onehalfspacing
+\setlength{\parindent}{2em}
+\setlength{\parskip}{0pt}
+
+% 数学、图表、长表格
+\usepackage{amsmath,amssymb,bm}
+\usepackage{graphicx}
+\usepackage{float}
+\usepackage{booktabs,longtable,array,tabularx,multirow}
+\usepackage{calc}
+\usepackage{caption}
+\captionsetup{font=small,labelsep=quad}
+\usepackage{enumitem}
+\setlist{nosep}
+
+% 代码环境
+\usepackage{xcolor}
+\usepackage{listings}
+\lstset{
+  basicstyle=\ttfamily\small,
+  breaklines=true,
+  breakatwhitespace=false,
+  columns=fullflexible,
+  keepspaces=true,
+  showstringspaces=false,
+  frame=single,
+  numbers=left,
+  numberstyle=\tiny,
+  xleftmargin=2em,
+  framexleftmargin=1.5em,
+  tabsize=4
+}
+
+% 链接与目录
+\usepackage{hyperref}
+\usepackage{bookmark}
+\hypersetup{hidelinks,unicode=true}
+
+% Pandoc 图像宽度兼容定义
+\makeatletter
+\def\maxwidth{\ifdim\Gin@nat@width>\linewidth\linewidth\else\Gin@nat@width\fi}
+\def\maxheight{\ifdim\Gin@nat@height>0.9\textheight 0.9\textheight\else\Gin@nat@height\fi}
+\makeatother
+\setkeys{Gin}{width=\maxwidth,height=\maxheight,keepaspectratio}
+\providecommand{\tightlist}{\setlength{\itemsep}{0pt}\setlength{\parskip}{0pt}}
+
+% 标题层级
+\setcounter{secnumdepth}{3}
+\setcounter{tocdepth}{3}
+\ctexset{
+  section={format=\centering\heiti\zihao{3},beforeskip=1.5em,afterskip=1em},
+  subsection={format=\heiti\zihao{4},beforeskip=1em,afterskip=0.5em},
+  subsubsection={format=\heiti\zihao{-4},beforeskip=0.8em,afterskip=0.4em}
+}
+
+% 常用字号别名
+\newcommand{\sanhao}{\zihao{3}}
+\newcommand{\sihao}{\zihao{4}}
+
+\begin{document}
+
+
+\includegraphics[width=3.61739in,height=0.78261in]{figures/image1.png}
+
+\textbf{毕业设计}
+
+
+\begin{longtable}[]{@{}
+  >{\raggedright\arraybackslash}p{(\columnwidth - 2\tabcolsep) * \real{0.1882}}
+  >{\raggedright\arraybackslash}p{(\columnwidth - 2\tabcolsep) * \real{0.8118}}@{}}
+\toprule\noalign{}
+\begin{minipage}[b]{\linewidth}\raggedright
+\textbf{题 目}
+\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedright
+基于高保真模拟器的车辆与飞行器协同控制
+\end{minipage} \\
+\midrule\noalign{}
+\endhead
+\bottomrule\noalign{}
+\endlastfoot
+\textbf{学生姓名} & 雷宇杰 \\
+\textbf{学 号} & 2209040011 \\
+\textbf{学 院} & 智能机器人学院 \\
+\textbf{专业班级} & 机器人2201 \\
+\textbf{指导教师} & 王海东 \\
+\textbf{职 称} & 讲师 \\
+\end{longtable}
+
+\textbf{2026年 5 月}
+
+\textbf{湖南工商大学本科毕业设计诚信声明}
+
+本人郑重声明：所呈交的本科毕业设计是本人在指导老师的指导下，独立进行研究工作所取得的成果，成果不存在知识产权争议，除文中已经注明引用的内容外，本设计不含任何其他个人或集体已经发表或撰写过的作品成果。对本文的研究做出重要贡献的个人和集体均已在文中以明确方式标明。本人完全意识到本声明的法律结果由本人承担。
+
+作者签名：
+
+日期： 2026 年 4 月 30 日
+
+\textbf{湖南工商大学本科毕业设计}
+
+\textbf{版权使用授权书}
+
+本毕业设计《基于高保真模拟器的车辆与飞行器协同控制》是本人在校期间所完成学业的组成部分，是在学校教师的指导下完成的。因此，本人特授权学校可将本毕业设计的全部或部分内容编入有关书籍、数据库保存，可采用复制、印刷、网页制作等方式将设计文本和经过编辑、批注等处理的设计文本提供给读者查阅、参考，可向有关学术部门和国家有关教育主管部门呈送复印件和电子文档。本毕业设计无论做何种处理，必须尊重本人的著作权，署明本人姓名。
+
+设计作者 (签字) 时间 2026 年 4 月 30 日
+
+指导教师已阅(签字) 时间 年 月 日
+
+\clearpage
+\tableofcontents
+\clearpage
+
+\section*{摘 要}\label{_Toc229105287}
+\addcontentsline{toc}{section}{摘 要}
+
+随着机场地面运行智能化水平的不断提升，飞机牵引与对接作业对自动化、精确化和安全性的要求日益提高。针对传统人工牵引方式存在操作依赖性强、作业效率受限及安全风险较高等问题，本文以自动牵引车与飞机对接作业为研究对象，基于ROS与Gazebo平台开展联合仿真系统设计与实现。
+
+本文首先对自动牵引对接、机器人运动控制、路径规划、多传感器融合及智能车辆仿真等相关技术进行文献调研，分析国内外研究现状与关键方法。在此基础上，设计自动牵引车与飞机对接仿真系统总体方案，明确系统功能模块与工作流程。随后，基于Gazebo构建牵引车、机场作业环境及飞机目标模型，并在ROS框架下完成车辆运动控制、传感器数据获取、目标识别与系统通信等模块搭建。系统集成深度视觉相机、激光雷达、超声波等传感器，用于环境感知和对接目标定位；同时建立车辆运动学模型，设计路径规划与轨迹跟踪控制策略，实现牵引车向飞机目标位置的自主接近、姿态调整与对接控制。
+
+最后，通过典型仿真实验对系统功能进行验证，分析牵引车运动稳定性、路径跟踪效果及对接过程可行性。实验结果表明，所设计的ROS-Gazebo联合仿真系统能够较好地模拟自动牵引车在机场环境中的运动与对接过程，为后续真实样机开发、控制算法优化及多传感器融合研究提供了一定的仿真基础和工程参考。
+
+\textbf{关键词：} 自动牵引车；飞机对接；ROS；Gazebo；路径规划；多传感器融合；联合仿真
+
+\section*{Abstract}\addcontentsline{toc}{section}{Abstract}
+
+With the continuous improvement of intelligent airport ground operations, aircraft towing and docking tasks have increasingly higher requirements for automation, accuracy, and safety. Traditional manual towing operations are highly dependent on human experience, limited in efficiency, and subject to certain safety risks. To address these issues, this thesis focuses on the automatic docking process between an airport towing vehicle and an aircraft, and designs a co-simulation system based on ROS and Gazebo.
+
+First, related studies on automatic towing and docking, robot motion control, path planning, multi-sensor fusion, and intelligent vehicle simulation are reviewed. Based on the literature investigation, the overall architecture of the automatic towing and docking simulation system is designed, including its functional modules and workflow. Then, the towing vehicle model, airport operation environment, and aircraft target model are built in Gazebo. Under the ROS framework, key modules such as vehicle motion control, sensor data acquisition, target recognition, and system communication are developed. The system integrates depth cameras, LiDAR, ultrasonic sensors, and other sensing devices to support environmental perception and docking target localization. Meanwhile, a vehicle kinematic model is established, and path planning and trajectory tracking control strategies are designed to realize autonomous approaching, attitude adjustment, and docking control of the towing vehicle.
+
+Finally, typical simulation experiments are carried out to verify the proposed system. The motion stability, path tracking performance, and feasibility of the docking process are analyzed. The experimental results show that the designed ROS-Gazebo co-simulation system can effectively simulate the motion and docking process of an automatic towing vehicle in an airport environment. It provides a useful simulation basis and engineering reference for future prototype development, control algorithm optimization, and multi-sensor fusion research.
+
+\textbf{Keywords:} automatic towing vehicle; aircraft docking; ROS; Gazebo; path planning; multi-sensor fusion; co-simulation
+
+\begin{center}
+{\sanhao\heiti 基于高保真模拟器的车辆与飞行器的协同控制}
+\end{center}
+
+\section{绪论}\label{_Toc229105288}
+
+\subsection{研究背景与意义}\label{_Toc229105289}
+
+在一次航班离港流程中，飞机从停机位推出到进入滑行路线，看起来只是周转链条中的一个短环节，但它实际上同时牵涉机坪交通、廊桥区域安全、地勤人员协同和后续放行节奏。牵引车需要在飞机前起落架附近低速靠近，车身周围又存在机翼、发动机、廊桥、保障车辆和地面标线等多种约束。任何一次偏航过大、停车不及时或目标识别错误，都可能使简单的推出作业演变为安全事件。因此，飞机牵引与推出并不是单纯的``车辆驾驶''问题，而是一个典型的低速、高精度、多约束协同作业问题\textsuperscript{[5-6]}。
+
+目前多数机场的推出与牵引仍以人工驾驶牵引车、机务或指挥员目视协同为主。该方式在经验丰富、交通密度较低的情况下较为可靠，但其稳定性很大程度取决于人员状态和现场沟通质量。航班高峰、夜航、雨雾天气以及机坪车辆交叉运行时，人工判断容易受到视距、噪声和遮挡影响，牵引路径规划、翼尖安全距离判断、前起落架对准等环节都可能出现误差。对智慧机场而言，这类高度依赖人工经验的作业环节，会限制地面运行系统继续向闭环调度和自动执行方向发展。
+
+相关资料表明，机场地面运行阶段的安全风险并不低，推出、牵引和低速滑行是典型的风险集中环节之一，常见问题包括牵引车与机体接触、翼尖剐蹭、人员误入作业区域等。同时，地面运行延误还会沿航班计划向后传递，使单个机位或单个航班的问题进一步影响后续起飞排序和机坪资源利用。因此，提高牵引作业的自动化水平，不仅有助于降低局部操作风险，也有助于提升机场地面运行的整体稳定性\textsuperscript{[1-4]}。
+
+从技术发展看，机场场面运行系统正由传统SMGCS向A-SMGCS（Advanced Surface Movement Guidance and Control System）升级。A-SMGCS强调对地面目标的监视、引导、冲突预警和运行协同，为机场车辆与航空器的统一管理提供了系统框架\textsuperscript{[2-4]}。不过，现有研究和工程应用更多集中在飞机滑行监视、场面交通管理和冲突告警层面，对``牵引车---飞机''这一强耦合、近距离、低速精对准对象的自动控制研究仍不充分。尤其是在牵引车接近前起落架、姿态对齐、低速停车和后续推出这一连续过程中，仍缺少面向仿真验证的完整方法。
+
+基于上述背景，本文选择以高保真仿真环境为研究支撑，围绕机场牵引车与飞行器的协同控制展开建模、感知、路径规划和控制验证。通过在ROS与Gazebo环境中构建牵引车、飞机目标和机坪作业场景，可以在较低成本下复现实车试验中难以频繁开展的对接过程，观察车辆转向、速度、目标识别和安全约束之间的相互影响\textsuperscript{[11-13]}。这对于后续自动牵引系统的样机设计、控制算法调试以及机场地面作业智能化研究都具有现实意义。
+
+\subsection{国内外研究现状}\label{_Toc229105290}
+
+\subsubsection{机场牵引与地面自动化研究现状}\label{_Toc229105291}
+
+机场地面自动化研究的出发点，是在不降低安全裕度的前提下减少人工重复操作，并提高机坪资源的利用效率\textsuperscript{[1-4]}。飞机推出与牵引处在航班周转和场面交通之间：一方面，它需要服从停机位、滑行通道、速度限制和指挥流程等机场运行规则；另一方面，它又要求牵引车在飞机前起落架附近完成低速对准、连接和稳定牵引。因此，该环节既有车辆控制问题，也有机场运行组织问题。
+
+国外较早围绕``无发动机滑行''和自动牵引开展研究。以TaxiBot、e-Taxi等方案为代表，相关工作尝试通过牵引车或机轮电驱系统减少飞机发动机地面运行时间，从而降低燃油消耗、噪声和排放\textsuperscript{[6,8-9]}。Zaninotto等面向自动牵引作业提出调度与路径规划方法，通过冲突检测和时序优化减少牵引车之间、牵引车与飞机之间的运行冲突，说明自动牵引在提高滑行效率和减少人为差错方面具有可行性\textsuperscript{[7]}。此外，也有研究从牵引车---飞机组合体的制动、转向和纵向耦合特性入手，为低速牵引控制提供动力学基础\textsuperscript{[6,10,19]}。
+
+在机场系统层面，SESAR等项目持续推动场面运行从单点自动化向系统协同自动化发展。A-SMGCS的相关研究强调将监视、路径引导、冲突预警与运行管理结合起来，使机场能够对航空器和车辆目标进行更精细的状态管理\textsuperscript{[2-4]}。这类研究为自动牵引提供了上层运行框架，但其重点通常不在牵引车末端对接控制本身，而在于更大范围的场面交通监视与运行调度。
+
+国内关于飞机牵引滑行和地面运行智能化的研究起步相对较晚，但近年来进展明显。孙艳坤等对飞机牵引滑行技术进行了系统综述，内容涉及牵引装备类型、动力学特性、运行模式和发展趋势，并指出自动牵引与智能调度是后续重要方向\textsuperscript{[6]}。在规范层面，中国民航局发布的A-SMGCS相关技术指南和行业标准，也为机场场面运行的信息化和智能化建设提供了依据\textsuperscript{[1-2]}。不过，从现有公开研究看，国内工作仍较多停留在系统规划、装备综述或单一算法分析层面，对牵引车自动接近飞机、对准前起落架并完成安全停车这一末端过程的仿真验证仍然不足。
+
+因此，本文的研究切入点并不是重新讨论机场自动化的宏观框架，而是将问题压缩到一个更具体的作业单元：在给定机场作业规则和车辆结构约束下，牵引车如何识别飞机目标、生成可执行路径，并以稳定方式完成对接。这个问题更贴近实际工程调试，也更适合通过ROS-Gazebo联合仿真进行反复验证。
+
+\subsubsection{协同控制与路径规划方法研究现状}\label{_Toc229105292}
+
+从方法上看，机场牵引自动化可归入移动机器人导航和智能车辆控制范畴，但它又不能完全照搬普通道路自动驾驶或仓储AGV的方案\textsuperscript{[17-20,28]}。原因在于，牵引车面对的是航空器这一高价值目标，运行区域空间狭窄、规则刚性强，而且最终对接阶段对横向误差和姿态误差都十分敏感。也就是说，路径规划不仅要``走得到''，还要``转得过、停得住、对得准''。
+
+图搜索与采样类算法是路径规划研究中的基础方法。A*、Dijkstra等图搜索算法结构清晰、结果可解释性强，适合在机场滑行道、机坪通道等规则环境中生成全局参考路径\textsuperscript{[22-23]}；RRT及其改进算法则更适合在连续空间中快速搜索可行路径，常用于机器人和自动车辆的运动规划\textsuperscript{[20-21,24]}。这类方法的优势在于稳定和易于检查，但在动态障碍较多、局部空间受限或车辆曲率约束较强时，单独使用往往需要额外的平滑、重规划和可行性筛选。
+
+智能优化算法也被广泛用于路径规划问题。例如蚁群算法、粒子群算法等可以把路径长度、安全距离、能耗或时间代价写入统一目标函数，对多约束规划具有一定灵活性。但这类算法通常对参数设置较敏感，收敛速度和解的稳定性会随场景复杂度变化而波动。机场牵引属于安全敏感任务，若规划结果难以解释或每次计算结果差异较大，工程应用就会受到限制。
+
+近年来，强化学习和深度强化学习在复杂动态环境决策中受到关注。它们能够通过与环境交互学习策略，对未知障碍或非结构化场景具有一定适应能力。但机场场景对安全性、可验证性和监管合规性要求较高，单纯依赖黑箱策略并不合适；同时，强化学习对训练数据规模和仿真真实性依赖较强，若仿真与真实机坪差异较大，策略迁移效果也难以保证。
+
+综合来看，适合本课题的路线应是分层式、融合式的。上层规划尽量保留机场规则、车辆曲率和安全距离等显式约束，保证路径可解释、可检查；下层控制根据实时感知误差进行局部修正，解决对接过程中的小偏差和动态干扰。这样的框架既不过分依赖单一智能算法，也能避免纯规则方法在复杂局部场景中反应不足的问题，为后续牵引车---飞机协同控制提供了更稳妥的技术基础\textsuperscript{[25,28]}。
+
+\subsection{研究内容与技术路线}\label{_Toc229105293}
+
+本文以机场飞机推出与牵引作业为应用背景，重点研究牵引车与飞行器在低速近距场景下的协同控制问题。课题并不追求单一算法指标，而是围绕``建模---感知---规划---控制---仿真验证''这条链路展开：先把机场牵引作业抽象成可计算的问题，再利用仿真平台检验车辆能否按预期完成目标识别、接近、对准和停车。结合本文已经开展的ROS/Gazebo建模、SolidWorks车辆模型导入、双桥转向控制调试等工作，主要研究内容如下\textsuperscript{[11-16]}。
+
+（1）机场牵引作业流程建模与问题抽象
+
+从停机位推出和前起落架对接过程出发，分析牵引车、飞机、机坪通道、禁行区域和障碍物之间的关系。根据作业顺序，将自动牵引过程划分为目标确认、初始接近、姿态对准、微动对接和停车保持等阶段，并把实际约束转化为状态变量、控制输入和安全边界。该部分的目的，是为后续控制算法提供一个统一的问题描述，而不是只停留在场景文字说明上。
+
+（2）面向自动对接的飞机辅助感知方法
+
+在仿真环境中，飞机前起落架区域被设计为主要识别对象，通过设置可识别标识，使牵引车能够获取目标身份、相对距离、横向偏差和姿态偏差等信息。视觉传感器用于目标确认与相对位姿估计，激光雷达、超声波或等效近距传感器用于安全距离判断。该部分重点解决``牵引车如何知道自己应该接近哪一架飞机、朝哪个方向对准、何时需要停车''的问题。
+
+（3）多约束条件下的路径规划与协同控制方法
+
+在车辆运动学模型和感知误差接口的基础上，设计自动接近与对接控制方法。全局层面，根据机场运行规则和车辆曲率约束生成可执行参考路径；局部层面，根据实时感知误差对速度和转向进行在线修正。控制策略需要同时考虑低速稳定性、转向角限制、安全距离、终端停车阈值和对接姿态要求。本文采用分层控制思路，将模式管理、局部规划、误差反馈和执行器映射分开处理，使算法结构更便于在ROS节点中实现。
+
+（4）基于高保真模拟器的系统集成与验证
+
+依托ROS与Gazebo搭建牵引车---飞机对接仿真系统。车辆模型由SolidWorks建立并经URDF/STL等形式导入Gazebo，前后桥转向关节和四个驱动车轮通过控制器实现位置和速度控制，传感器模型挂载于车体前部。通过设置典型机场作业场景，对牵引车模型加载、转向回中、轮速控制、目标接近和停车判定等功能进行验证，并从安全性、路径平滑性和控制稳定性等角度分析系统表现。
+
+（5）牵引车辆结构与动力系统的工程化思考
+
+在完成仿真和控制算法研究的同时，结合机场牵引车实际需求，对车辆结构、动力布置和维护便利性进行初步分析。该部分不作为完整机械设计展开，而是从工程实现角度讨论车辆硬件结构与控制策略之间的关系，例如双桥转向结构对小半径机动和精细对位的影响、动力响应对低速控制稳定性的影响等，为后续实物样机或半实物平台研究提供参考。
+
+\section{机场牵引车辆系统建模与问题理论基础}\label{_Toc229105294}
+
+\subsection{机场牵引作业场景抽象}\label{_Toc229105295}
+
+机场牵引作业通常发生在停机位、廊桥附近和机坪连接滑行通道区域。与普通道路车辆行驶相比，牵引车的运行速度很低，但控制难度并不低：车辆要在有限空间内靠近飞机前起落架，既要避免车体、机翼和地面保障设备之间发生干涉，又要保证车头方向、横向位置和停车距离满足后续机械连接要求。对于本课题中的双桥转向牵引车而言，前后转向桥能够提高机动性，但也使车辆运动模式和控制输入之间的关系更加复杂。
+
+结合本文研究目标，可将自动牵引对接过程抽象为五个连续阶段。第一阶段为任务初始化与目标确认，牵引车接收目标飞机信息并通过辅助识别标识完成身份判断；第二阶段为初始接近，车辆从给定初始位姿向飞机前起落架附近的预对接区域运动；第三阶段为姿态对准，车辆重点减小横向偏差和航向误差，使车体中心线逐步贴近目标对接方向；第四阶段为微动对接，牵引车在低速状态下完成小范围位置修正；第五阶段为停车保持，系统在满足距离、姿态和安全阈值后发布停车与转向回中命令。
+
+由此可见，飞机推出不是一条轨迹从起点跟到终点这么简单，而是目标识别、车辆运动学约束、安全边界和模式切换共同作用的状态演化过程\textsuperscript{[17-21]}。本章只先处理牵引车本体在机坪平面内如何运动的问题，即建立位姿状态、曲率关系和输入约束；飞机辅助识别、局部安全判断和最终对接控制将在第三章统一展开。
+
+\subsection{坐标系与状态变量定义}\label{_Toc229105296}
+
+为统一描述牵引车在机坪平面内的运动状态，建立全局惯性坐标系 \(O\text{ } - \text{ }XY\)与车体坐标系 \(C\text{ } - \text{ }xy\)。其中，全局坐标系固定于地面，主要用于描述车辆在场景中的绝对位置；车体坐标系原点取在车辆参考点 \(C\)处，该点可取车辆几何中心、质心或控制参考中心，\(x\) 轴沿车辆纵向前进方向，\(y\) 轴沿车辆横向方向。
+
+定义车辆位姿状态为\(\mathbf{q} = \begin{bmatrix}
+x & y & \theta
+\end{bmatrix}^{T}\) 。其中，\(x\) 与 \(y\)分别表示车辆参考点在全局坐标系中的位置坐标，\(\theta\) 表示车体纵向轴相对于全局 \(X\)轴的夹角，即车辆航向角。进一步地，为描述车辆运动过程中的速度状态，引入线速度 \(v\)作为系统运动输入或状态扩展量，则可将系统状态写为\(\mathbf{x} = \begin{bmatrix}
+x & y & \theta & v
+\end{bmatrix}^{T}\) 。式中\(v\) 表示车辆沿车体纵向的速度分量。该状态定义方式具有两点作用：一方面，\(\left( x,y,\theta \right)\) 可直接用于描述车辆轨迹；另一方面，\(v\) 可与转向输入共同决定系统状态的实时演化。
+
+对于本课题所研究的双桥转向牵引车，前桥和后桥均具有独立转向能力，因此进一步定义前桥转角与后桥转角分别为 \(\delta_{f}\)与 \(\delta_{r}\)。若将系统控制输入写为\(\mathbf{u} = \begin{bmatrix}
+v & \delta_{f} & \delta_{r}
+\end{bmatrix}^{T}，\)则后续运动学模型即可统一写成关于 \(\mathbf{x}\)与 \(\mathbf{u}\)的非线性状态方程。
+
+\subsection{车辆运动学模型建立}\label{_Toc229105297}
+
+\subsubsection{非完整约束条件}\label{_Toc229105298}
+
+牵引车在机坪低速运行过程中，车轮主要满足纯滚动约束，即轮胎可沿轮平面方向滚动，但不能在垂直于轮平面的方向上发生理想横向滑移。因此，车辆系统属于典型非完整约束系统。对于车体参考点 \(C\)，其速度在车体横向方向上的投影应为零，可写为\(\dot{y}\cos\theta - \dot{x}\sin\theta = 0\)。该式的物理意义在于：车辆不能瞬时``侧向平移''，其平面运动只能由纵向速度与航向变化共同形成。这一约束是移动机器人与地面车辆运动学建模中的基本条件，也是后续推导轨迹方程的前提\textsuperscript{[17,19]}。
+
+\subsubsection{单轨等效模型}\label{_Toc229105299}
+
+由于前桥左右轮、后桥左右轮在同一转向控制下可近似视为对称运动，因此可采用单轨等效方法，将实际四轮结构抽象为前后两虚拟轮\textsuperscript{[19]}。设前、后桥中心点分别位于车体参考点前后，车辆轴距为 \(L\)。在低速、小侧偏工况下，车辆瞬时旋转中心满足几何关系，车辆平面运动可表示为
+
+\[
+\begin{cases}
+\dot{x}=v\cos\theta,\\
+\dot{y}=v\sin\theta,\\
+\dot{\theta}=\omega.
+\end{cases}
+\]
+
+式2-1
+
+式中，\(\omega\) 为车辆偏航角速度。前两式给出了车辆质点速度在全局坐标系中的分解形式，第三式给出了车辆姿态随时间的演化规律。由此可见，车辆轨迹由两个因素共同决定：一是沿当前朝向的平移速度 \(v\)，二是决定航向变化速率的角速度 \(\omega\)。
+
+\subsubsection{双桥转向角速度表达式}\label{_Toc229105300}
+
+对于普通前轮转向车辆，角速度通常由单一前轮转角决定；而对于双桥转向车辆，前桥和后桥转向均会对瞬时旋转中心位置产生影响。根据单轨几何关系，前桥与后桥分别对应的曲率贡献为 \(\tan\delta_{f}/L\)与 \(\tan\delta_{r}/L\)。在统一参考方向下，车辆偏航角速度可表示为：\(\dot{\theta} = \omega = \frac{v}{L}\left( \tan\delta_{f} - \tan\delta_{r} \right)。\delta_{f}\) 为前桥转角，\(\delta_{r}\) 为后桥转角，\(L\) 为前后桥中心距。该式表明，前桥转向与后桥转向对车辆角速度的作用方向相反。当后桥不转向，即 \(\delta_{r} = 0\)时，模型退化为普通前轮转向模型；当前后桥反向转向时，\(\tan\delta_{f} - \tan\delta_{r}\) 的绝对值增大，车辆角速度提高，转弯半径减小；当前后桥同向转向时，两者效应相互抵消，车辆偏航角速度下降，车辆运动趋于``蟹行''模式。
+
+将上述关系代入状态方程，可得双桥转向牵引车的运动学模型（式2-2）
+
+\(\left\{ \begin{array}{r}
+\dot{x} = v\cos\theta \\
+\dot{y} = v\sin\theta \\
+\dot{\theta} = \frac{v}{L}\left( \tan\delta_{f} - \tan\delta_{r} \right)
+\end{array} \right.\ \) （式2-2）
+
+该模型是本课题后续路径规划、轨迹跟踪与对接控制设计的基础模型\textsuperscript{[17,19,28]}。
+
+\subsection{转弯半径与曲率模型}\label{_Toc229105301}
+
+车辆轨迹几何特性通常由曲率或转弯半径刻画。设车辆瞬时转弯半径为 \(R\)，则有
+
+\(\omega = \frac{v}{R}\) （式2-3）
+
+结合上一节所得角速度表达式，可得双桥转向牵引车的等效转弯半径为
+
+\(R = \frac{L}{\tan\delta_{f} - \tan\delta_{r}}\) （式2-4）
+
+若进一步定义轨迹曲率 \(\kappa\)为转弯半径的倒数，则有
+
+\(\kappa = \frac{1}{R} = \frac{\tan\delta_{f} - \tan\delta_{r}}{L}\) （式2-5）
+
+上述两式给出了车辆转向输入与轨迹几何属性之间的直接联系。式中，\(R\) 用于衡量车辆完成转弯所需空间尺度，\(R\) 越小，表明车辆机动性越强；\(\kappa\) 用于衡量轨迹弯曲程度，\(\kappa\) 越大，表明车辆航向变化越快。对机场牵引作业而言，车辆能否在狭窄区域内完成姿态调整，本质上取决于其可实现的最小转弯半径或最大曲率\textsuperscript{[19,28]}。
+
+需要指出的是，理论上当 \(\tan\delta_{f} - \tan\delta_{r} = 0\)时，\(R \rightarrow \infty\)，车辆轨迹退化为直线或近似平移；而当 \(\mid tan\delta_{f} - \tan\delta_{r} \mid\)增大时，车辆可实现更强的转向能力。但在工程应用中，前后桥转角均受机械结构、执行器能力和稳定性要求限制，因此曲率不可能无限增大，而必须满足可实现性约束。
+
+\subsection{典型转向模式分析}\label{_Toc229105302}
+
+双桥转向车辆较普通单桥转向车辆具有更丰富的运动模式。为明确不同转向策略对车辆机动性的影响，分别讨论以下三种典型工况。
+
+\subsubsection{前桥单独转向模式}\label{_Toc229105303}
+
+当后桥不参与转向，即\(\delta_{r} = 0\)时，车辆运动学模型退化为
+
+\(\dot{\theta} = \frac{v}{L}\tan\delta_{f}\) （式2-6）
+
+此时车辆行为与传统前轮转向车辆基本一致（图2-1）。该模式实现简单、控制逻辑清晰，但在对接空间受限的场景下，其最小转弯半径较大，不利于快速完成姿态调整。
+
+\includegraphics[width=4.66955in,height=2.34883in]{figures/image2.png}
+
+图2-1 传统转向模式
+
+\subsubsection{前后桥反向转向模式}\label{_Toc229105304}
+
+当后桥转角与前桥转角方向相反，且幅值近似相等，即\(\delta_{r} = - \delta_{f}\)代入角速表达式可得
+
+\(\dot{\theta} = \frac{v}{L}\left( \tan\delta_{f} - \tan( - \delta_{f}) \right) = \frac{2v}{L}\tan\delta_{f}\) （式2-7）
+
+此时车辆偏航角速度约为单桥转向工况的两倍，转弯半径显著减小（图2-2），适用于牵引车在狭小机坪空间内快速调整姿态、靠近飞机前轮或完成局部避障。该模式是本课题中实现高机动性接近控制的重要运动模式。
+
+\includegraphics[width=5.05627in,height=2.83251in]{figures/image3.png}
+
+图2-2 前后桥反向转向模式
+
+\subsubsection{前后桥同向转向模式}\label{_Toc229105305}
+
+当\(\delta_{r} = \delta_{f}\)时，有\(\dot{\theta} = \frac{v}{L}\left( \tan\delta_{f} - \tan\delta_{f} \right) = 0\)
+
+当车辆偏航角速度为零，此时车辆整体保持原有航向并沿车轮切线方向斜向平移，表现为 ``蟹行''运动（图2-3）。该模式并不适合大幅姿态修正，但对于微小横向误差修正、精细对位和低速贴近控制具有较高实用价值。
+
+通过上述分析可知，双桥转向结构使牵引车不再局限于单一的``直行---转弯''运动，而具备在姿态快速修正与横向精细调节之间切换的能力，这也是其适用于飞机自动对接场景的重要原因。
+
+\includegraphics[width=4.99734in,height=2.99864in]{figures/image4.png}
+
+图2-3 前后桥同向转向模式
+
+\subsection{速度、转角与曲率约束建模}\label{_Toc229105306}
+
+运动学模型给出了系统状态演化规律，但在实际推引作业中，车辆运动必须满足结构约束与运行约束。因此，需要进一步建立输入与状态约束。
+
+\subsubsection{速度约束}\label{_Toc229105307}
+
+牵引车在机场作业环境中通常处于低速运行状态，故其线速度应满足\(0 \leq v \leq v_{\max}
+\) 其中，\(v_{\max}\) 为车辆允许的最大作业速度。该约束保证车辆在接近、对接和牵引过程中具有足够的可控性，同时减小碰撞风险。
+
+\subsubsection{转向角约束}\label{_Toc229105308}
+
+由于前后桥转向机构存在机械极限，故应满足
+
+\[{\mid \delta_{f} \mid \leq \delta_{f,\max}
+}{\mid \delta_{r} \mid \leq \delta_{r,\max}
+}\] 其中，\(\delta_{f,\max}\) 与 \(\delta_{r,\max}\)分别为前桥与后桥最大允许转角。该约束直接限制车辆最大可实现曲率，也是最小转弯半径存在下界的原因。
+
+\subsubsection{曲率约束}\label{_Toc229105309}
+
+由转向角约束可进一步得到曲率约束\(\mid \kappa \mid \leq \kappa_{\max}\)。其中，
+
+\(\kappa_{\max} = \frac{\tan\delta_{f,\max} - \tan( - \delta_{r,\max})}{L}\) （式2-8）
+
+\[
+\] 当车辆采用对称反向转向策略时，上式取到较大值。曲率约束在路径规划中具有重要作用，因为若规划轨迹的局部曲率超过车辆可实现上限，则该轨迹在物理上不可执行\textsuperscript{[20-21,28]}。
+
+\subsection{车辆动力学简化与驱动关系}\label{_Toc229105310}
+
+本课题以低速自主牵引控制为研究重点，后续控制层主要关注位姿演化与轨迹误差收敛，因此在第二章中不引入完整轮胎力学模型，而仅保留纵向驱动的简化动力学关系\textsuperscript{[19]}。设车辆等效质量为 \(m\)，驱动力为 \(F\)，纵向加速度为 \(a\)，则有\(F = ma\) ；若用速度导数表示，则有\(a = \dot{v}\)。\(
+\) 从而可得
+
+\(F = m\dot{v}\ \ \) （式2-9）
+
+上述表达式的意义在于建立控制输入与速度变化之间的基本联系。式中，\(F\) 不再作为独立控制量直接参与路径规划，而是通过车轮速度控制器间接实现。对本课题而言，该简化处理已经足以支撑Gazebo中的低速驱动仿真；若后续需要研究载荷变化、附着系数变化或高精度制动响应，再在此基础上扩展更高阶动力学模型即可。
+
+\subsection{状态方程统一表达}\label{_Toc229105311}
+
+综合车辆位姿状态、双桥转向输入与速度演化关系，可将系统模型统一表示为非线性状态方程\(\dot{\mathbf{x}} = f(\mathbf{x},\mathbf{u})\)。\(
+\) 其中，\(\mathbf{x} = \begin{bmatrix}
+x & y & \theta & v
+\end{bmatrix}^{T}，\mathbf{u} = \begin{bmatrix}
+v & \delta_{f} & \delta_{r}
+\end{bmatrix}^{T}\text{或}\mathbf{u} = \begin{bmatrix}
+a & \delta_{f} & \delta_{r}
+\end{bmatrix}^{T}\)；\(
+\) 若采用速度直接控制形式，则状态方程可写为
+
+\(\left\{ \begin{array}{r}
+\dot{x} = v\cos\theta \\
+\dot{y} = v\sin\theta \\
+\dot{\theta} = \frac{v}{L}\left( \tan\delta_{f} - \tan\delta_{r} \right)
+\end{array} \right.\ \) （式2-10）
+
+若进一步考虑纵向加速度，则可扩展为
+
+\(\left\{ \begin{array}{r}
+\dot{x} = v\cos\theta \\
+\dot{y} = v\sin\theta \\
+\dot{\theta} = \frac{v}{L}\left( \tan\delta_{f} - \tan\delta_{r} \right) \\
+\dot{v} = a
+\end{array} \right.\ \) （式2-11）
+
+后一形式更适合用于模型预测控制、轨迹平滑优化及速度规划问题，而前三维形式更适合用于基本路径跟踪与状态传播计算。考虑到本课题当前阶段主要完成仿真验证与控制策略设计，后续章节可根据算法需求在两种表达之间进行选取。
+
+\subsection{仿真实现中的参数映射关系}\label{_Toc229105312}
+
+在ROS-Gazebo联合仿真中，理论模型并非直接以连续方程形式运行，而是通过URDF关节、控制器与话题通信进行离散实现\textsuperscript{[11-16]}。为保证理论模型与仿真实体一致，需要建立控制量到仿真执行量之间的映射关系。
+
+首先，前桥转角 \(\delta_{f}\)与后桥转角 \(\delta_{r}\)分别对应转向关节的位置控制输入，其本质为关节目标角度；其次，车辆线速度 \(v\)需要映射为车轮角速度命令。设车轮半径为 \(r_{w}\)，则车轮角速度 \(\omega_{w}\)与车辆线速度之间满足
+
+\(\omega_{w} = \frac{v}{r_{w}}\) （式2-12）
+
+若四个驱动轮采用相同滚动半径并同步驱动，则其控制目标可统一写为
+
+\[\omega_{fl} = \omega_{fr} = \omega_{rl} = \omega_{rr} = \frac{v}{r_{w}}
+\]
+
+其中，\(\omega_{fl},\omega_{fr},\omega_{rl},\omega_{rr}\) 分别表示四个车轮的角速度。该关系建立了车辆运动学速度与Gazebo关节控制量之间的直接映射，是仿真中实现``给定线速度---车辆前进''行为的基础。
+
+此外，为减小仿真过程中车辆初始松垮、溜车和转向漂移等现象，通常需要在关节层引入阻尼与摩擦参数\textsuperscript{[13-14,16]}。若转向关节阻尼系数记为 \(c_{d}\)，摩擦系数记为 \(c_{f}\)，则其作用在于抑制关节自由振荡和无控制输入下的残余摆动。虽然这些参数不显式写入上述运动学方程，但它们决定了仿真模型是否能够稳定呈现理论轨迹。因此，第二章中的理论建模与仿真实现并不是相互割裂的，而是通过参数映射与控制接口紧密关联。
+
+\subsection{本章小结}\label{_Toc229105313}
+
+本章针对机场飞机自动牵引场景，建立了双桥转向牵引车的平面运动学模型。首先，通过坐标系定义与状态变量选取，给出了车辆位姿与控制输入的统一描述；其次，在纯滚动与低速假设下，建立了车辆非完整约束条件，并推导了双桥转向工况下的状态方程、转弯半径表达式与曲率模型；随后，结合前桥单独转向、前后桥反向转向和同向转向三种典型模式，分析了不同转向策略对车辆机动能力的影响；最后，引入速度、转角与曲率约束，并说明了理论模型在ROS-Gazebo环境中的参数映射方式。
+
+本章所建立的模型为后续自动接近控制、路径规划与仿真实验设计提供了统一的数学基础。与普通道路车辆模型相比，该模型能够更准确反映双桥转向牵引车在狭窄机场作业空间中的运动特性，因此更适用于飞机自动对接与牵引任务的研究。
+
+\section{基于飞机辅助感知的自动接近与对接控制方法}\label{_Toc228997183}
+
+\subsection{感知任务分析与总体方案设计}\label{_Toc228997184}
+
+在机场飞机自动牵引作业过程中，牵引车能否安全、准确地完成对接，不仅取决于车辆本体的运动控制能力，还取决于其对目标飞机及作业环境的感知能力。特别是在接近飞机前起落架并执行最终对接时，系统需要同时解决目标身份确认、目标位置识别、姿态估计及近距离安全态势判断等问题。因此，感知系统是实现自动牵引作业闭环控制的关键组成部分\textsuperscript{[18,29-30]}。
+
+结合本课题的研究目标与仿真实现条件，本文引入飞机辅助感知方案，即在飞机前起落架区域设置可识别的特征标识，通过牵引车搭载的视觉与近距离传感器完成目标识别与态势获取。该方案的核心思想是：将原本难以直接观测、难以稳定识别的前起落架对接区域，转化为具有明确标志特征和身份属性的感知目标，使牵引车能够在接近过程中实现``先确认、后接近、再对准''的分阶段感知决策\textsuperscript{[29-30]}。
+
+与传统依赖人工目视判断的作业方式相比，该方案具有以下特点：\\
+其一，能够为牵引车提供明确的目标身份信息，避免牵引对象识别错误；\\
+其二，能够在接近过程中持续提供目标相对位置与姿态信息，为控制器提供实时反馈；\\
+其三，能够将飞机对接区域的局部环境显式化，使碰撞风险、偏航误差和横向偏差能够被量化描述。\\
+因此，飞机辅助感知并不是单纯的``加一个二维码''或``加一个标签''，而是将目标飞机前起落架区域设计为牵引系统可识别、可验证、可跟踪的感知节点，从而为后续自动控制提供稳定的先验信息和观测依据。
+
+基于上述分析，本文构建的感知总体方案由三部分组成：\\
+第一部分为目标身份确认模块，用于确认当前牵引任务对应的飞机对象是否与预设目标一致；\\
+第二部分为相对位姿感知模块，用于估计牵引车与飞机前起落架之间的相对距离、横向偏差和姿态偏差；\\
+第三部分为近距态势判断模块，用于在对接过程中识别安全边界、碰撞风险与姿态偏离程度，并向控制层输出约束信息。
+
+从系统结构上看，该方案形成了由``飞机端目标标识---牵引车端感知模块---控制决策节点''构成的信息链路。飞机前起落架不再只是被动的对接对象，而是成为局部识别信息载体；牵引车通过传感器采集这些信息，再将其转换为控制层能够使用的状态量。这样一来，第二章中的车辆运动学模型与本章中的感知输出自然衔接：前者解决牵引车如何运动，后者解决车辆如何获得目标、误差和停车依据。
+
+\subsection{飞机辅助感知目标与识别信息设计}\label{_Toc228997185}
+
+为使牵引车能够稳定获取飞机前起落架区域的目标信息，本文将飞机辅助感知对象限定为前起落架附近的局部功能区域，并对该区域引入结构化识别信息。该识别信息并不改变飞机本体的运动学特性，而是作为一种面向自动牵引任务的感知标识，用于提升牵引车对目标区域的可识别性与可确认性。
+
+具体而言，本文在飞机前起落架区域设置特殊识别码，用以表征以下信息：\\
+（1）目标飞机身份编号；\\
+（2）对接区域中心参考位置；\\
+（3）局部方向参考特征；\\
+（4）用于视觉识别的几何轮廓特征。
+
+上述信息在仿真环境中可通过纹理标识、平面标记、特征板或特定图案实现，其本质是为牵引车提供一个稳定的局部观测基准\textsuperscript{[29-30]}。与仅依赖起落架自然外形特征相比，这种方式具有识别特征清晰、误识别率低、对光照与视角变化更鲁棒等优点\textsuperscript{[30]}。
+
+在功能上，该识别码作用是身份确认作用。牵引车在进入接近区域后，首先应判断当前视野中的目标是否为任务指定飞机，防止在多机位、多目标环境中出现识别混淆。使牵引车能够从图像观测中计算出目标中心偏移量与方向偏差，从而将视觉结果映射为控制器可直接使用的误差信号。进而实现课题上对``车机互动''的指标要求。
+
+为了表述方便，设飞机辅助感知标识的中心点在飞机局部坐标系中的位置为 \(P_{a}\)，其在牵引车传感器坐标系中的观测位置为 \(P_{s}\)。则通过图像解算或传感器映射后，可得到牵引车与目标之间的相对位置关系。若进一步以对接目标中心作为参考点，则可将识别码的中心点看作前起落架对接区域的等效特征点，后续所有相对偏差计算均围绕该特征点展开。这样做的目的在于将复杂的机械接触区域抽象为一个可观测、可追踪、可控制的数学目标，从而显著降低系统的感知复杂度。
+
+\subsection{感知系统组成与传感器配置}\label{_Toc228997186}
+
+结合本课题当前的仿真实现路线，牵引车感知系统采用``视觉识别为主、近距测量为辅''的配置方式。其中，视觉传感器主要负责飞机辅助感知标识的检测与识别，激光雷达或近距传感器主要负责障碍物检测、距离补偿和安全边界判断。该配置既符合现有ROS-Gazebo仿真平台的实现条件，也能够较好覆盖自动接近与对接阶段的主要感知需求。
+
+\subsubsection{视觉识别模块}\label{_Toc228997187}
+
+视觉识别模块安装于牵引车前部，主要面向飞机前起落架区域进行图像采集。其核心任务包括：\\
+（1）检测比对目标识别码；\\
+（2）提取目标区域方向特征；\\
+（3）输出目标身份确认结果。
+
+在实际实现中，该模块可基于深度相机或RGB相机完成\textsuperscript{[29]}。如果采用深度视觉相机，则除可获取二维图像信息外，还可同步获得目标区域的深度信息，有助于提升相对距离估计精度。鉴于本课题当前重点为仿真验证与控制逻辑建立，本文将视觉模块的功能重点放在``目标检测+中心定位+方向识别''三个方面，而不展开复杂的深度神经网络识别框架\textsuperscript{[29-30]}。
+
+\subsubsection{近距测量模块}\label{_Toc228997188}
+
+近距测量模块用于补充视觉感知在近距离工况下的局部测量能力。由于牵引车在最终对接阶段距离飞机前起落架较近，此时即使视觉系统能够识别目标，也可能受到视角遮挡、自动对焦的影响。因此，有必要引入激光雷达、超声或等效测距模块，对前方局部区域的距离边界进行测量，以作为视觉估计的校核或补充\textsuperscript{[18]}。
+
+该模块的主要作用包括：\\
+（1）判断牵引车前端与飞机局部结构之间的最近距离；\\
+（2）检测非目标障碍物是否进入安全边界；\\
+（3）在最终接近阶段为停车判定提供阈值依据。
+
+通过视觉与近距测量的组合，牵引车能够在不同距离区间内采用不同感知主导方式：中远距离阶段以视觉为主，近距离阶段以视觉与测距联合判断为主，从而提升系统整体鲁棒性。
+
+\subsection{目标身份确认模型}\label{_Toc228997189}
+
+目标身份确认是自动牵引作业的首要感知任务。只有在确认当前目标为预定飞机对象之后，牵引车才应进入自动接近与对接控制阶段。否则，即使轨迹控制精度足够高，也可能因目标对象错误而导致整个作业任务失败。
+
+设任务调度系统下发的目标飞机身份编码为 \(I_{t}\)，牵引车视觉模块从识别码中解算得到的观测身份编码为 \(I_{o}\)。则目标身份确认条件可表示为
+
+\[I_{o} = I_{t}
+\]
+
+当上式成立时，判定目标身份匹配；当上式不成立时，系统应保持等待状态、重新识别或发出异常警告，而不应直接进入对接控制流程。
+
+上述表达式的物理含义非常明确：它并不是一个几何模型，而是一个任务逻辑判定模型。其作用在于建立从``任务分配''到``目标确认''的第一道闭环。对于机坪多机位、多牵引任务并行的应用场景而言，这一步尤其重要。若无身份确认过程，系统只能依赖``看见一个起落架就去接近''的局部策略，这在真实机场环境中是不可靠的。
+
+进一步地，考虑到识别系统存在误检、漏检或图像丢失的情况，可引入确认置信度 \(C_{I}\)，并设置确认阈值 \(C_{\min}\)。则身份确认判据可扩展为\(C_{I} \geq C_{\min}\) \textsuperscript{[18,30]}。\(
+\) 该式表示：只有当识别结果的置信度高于设定阈值时，系统才认为目标身份识别有效。尽管在当前论文阶段可以不深入展开具体置信度计算方法，但在表述上引入这一概念，有助于增强论文在工程实现层面的严谨性。
+
+\subsection{相对位姿感知模型}\label{_Toc228997190}
+
+在完成目标身份确认后，牵引车还需进一步获取自身与飞机前起落架区域之间的相对几何关系。自动接近与对接控制的本质，并不是让牵引车``接近某个图像目标''，而是让其在物理空间中逐渐消除相对位置误差与方向误差。因此，感知系统必须将图像信息转化为可用于控制的相对位姿量\textsuperscript{[18,29-30]}。
+
+为此，定义牵引车参考点为 \(P_{v}\)，飞机辅助感知目标中心为 \(P_{a}\)，则两者之间的相对位置误差向量可表示为
+
+\[
+\mathbf{e}_{p} = \begin{bmatrix}
+e_x \\
+e_y
+\end{bmatrix}
+\]
+（式3-1）
+
+其中，\(e_{x}\) 表示沿牵引车纵向方向的距离误差，\(e_{y}\) 表示沿牵引车横向方向的偏移误差。若从控制意义出发，\(e_{x}\) 主要决定前进或减速行为，\(e_{y}\) 主要决定转向修正行为。
+
+同时，定义飞机辅助感知目标区域的参考方向角为 \(\theta_{a}\)，牵引车当前航向角为 \(\theta_{v}\)，则相对姿态误差可表示为
+
+\[e_{\theta} = \theta_{a} - \theta_{v}\]
+
+该式表示牵引车当前朝向与目标对接方向之间的夹角偏差。其物理意义在于：即使车辆已经接近目标中心区域，如果 \(e_{\theta}\)仍较大，则机械对接过程仍可能失败。因此，在最终对接阶段，姿态误差控制通常与横向误差控制具有同等重要性。
+
+综合来看，牵引车在自动接近过程中需要实时感知的核心状态量可归纳为\(\mathbf{z} = \begin{bmatrix}
+e_{x} & e_{y} & e_{\theta}
+\end{bmatrix}^{T}
+\)
+
+该状态向量构成本章感知环节向控制环节输出的核心接口。换言之，感知层的任务不是直接控制车辆，而是持续向控制层提供``还差多远、偏了多少、方向还差多少''的量化描述。
+
+\subsection{近距离态势感知与安全判定}\label{_Toc228997191}
+
+当牵引车进入飞机前起落架附近的近距离区域后，系统感知重点将从``识别并接近目标''转向``评估局部态势并安全完成对接''。在这一阶段，局部环境中的安全边界、机械接触风险与障碍物侵入风险将显著上升，因此有必要建立近距离态势判断机制。设牵引车前部关键点到飞机局部结构的最小距离为 \(d_{\min}\)，系统设定的安全阈值为 \(d_{s}\)。则基本安全约束可写为\(d_{\min} \geq d_{s}\) 。\(
+\) 该式的含义是：在非接触阶段，牵引车与飞机局部结构之间必须始终保持不小于安全阈值的距离，以防止由于感知误差或控制滞后导致提前碰撞\textsuperscript{[5,18]}。
+
+对于最终对接阶段，还可设置停车触发阈值 \(d_{t}\)。当系统判定牵引车与目标对接位置之间的剩余距离满足\(e_{x} \leq d_{t}\) 。\(
+\) 且同时满足横向误差与姿态误差均处于允许范围内时，系统可进入停止或低速微调状态。设横向误差允许阈值为 \(e_{y,\max}\)，姿态误差允许阈值为 \(e_{\theta,\max}\)，则对接有效条件可表示为
+
+\[
+\begin{cases}
+|e_y|\leq e_{y,\max},\\
+|e_\theta|\leq e_{\theta,\max}.
+\end{cases}
+\]
+
+这组三重约束共同定义了自动对接的局部成功条件。只有当纵向距离足够接近、横向偏差足够小且方向偏差足够小时，系统才可判定当前已具备机械对接条件。由此可见，近距态势感知并非孤立地``测个距离''，而是要将距离信息、位置误差和姿态误差统一纳入同一判定框架中。
+
+\subsection{感知流程设计}\label{_Toc228997192}
+
+结合上述模型，本文将飞机辅助感知系统的工作流程划分为以下步骤：
+
+（1）牵引车进入任务区域后，启动视觉识别模块，对前方目标进行搜索；\\
+（2）检测到飞机辅助感知识别码后，解析目标身份信息，并与任务目标编号进行匹配；\\
+（3）若身份匹配成功，则提取目标中心点和方向参考特征，计算相对位置误差与姿态误差；\\
+（4）结合近距测量模块输出，对当前局部安全状态进行判断；\\
+（5）将 \(e_{x}\)、\(e_{y}\)、\(e_{\theta}\) 及安全边界状态发送给控制模块，驱动牵引车完成接近与对准；\\
+（6）当对接有效条件满足后，系统进入低速停止或机械连接准备状态。
+
+上述流程体现了``目标确认---误差提取---安全判定---控制反馈''的感知闭环逻辑。与传统单纯依赖图像中心偏差的视觉伺服方法相比，该流程更适合机场牵引这种高安全要求、低速精对位作业任务，因为其将身份确认与近距安全判断一并纳入感知体系，使系统具有更完整的任务语义理解能力。
+
+\subsection{控制任务描述与总体思路}\label{_Toc228997195}
+
+在完成第二章牵引车运动学建模以及前文飞机辅助感知方案设计后，系统已经具备了两类基础：其一，双桥转向牵引车的平面运动规律可以用数学模型表示；其二，飞机前起落架区域能够向牵引车提供身份确认结果以及相对位置、相对姿态等感知信息。在此基础上，本节进一步研究牵引车如何利用这些信息完成自动接近与最终对接控制。
+
+从实际作业过程看，牵引车对接飞机前起落架并不是一次性完成的单步动作，而是一个具有明显阶段特征的连续过程。牵引车首先需要确认当前目标是否为任务指定飞机；在确认目标有效后，车辆应由较远位置向飞机前起落架方向稳定接近；当进入近距离区域后，系统控制重点应从``尽快接近目标''转变为``尽快减小横向偏差和姿态偏差''；在最后的微动阶段，车辆需要以极低速度缓慢推进，并在满足安全距离和几何对准条件时稳定停车。因此，自动对接控制的本质不是简单的路径跟踪，而是一个包含任务逻辑、局部轨迹生成、误差反馈控制和终端停车判定的分层闭环控制问题\textsuperscript{[25,27-28]}。
+
+为此，本文采用``模式管理---局部规划---误差反馈---执行器映射''的分层控制方法。其基本思想是：由感知系统实时提供牵引车与飞机辅助感知目标之间的相对误差；由上层逻辑根据当前距离、障碍物情况和识别有效性确定控制模式；由局部规划器生成短时域可行参考轨迹；再由下层控制器根据相对位姿误差计算期望速度和期望转向需求，并进一步映射为前后桥转角与车轮速度命令。该方法既能够保证控制结构清晰，也便于在ROS与Gazebo环境中分模块实现\textsuperscript{[11-16]}。
+
+\subsection{状态变量、控制输入与误差定义}\label{_Toc228997196}
+
+\subsubsection{车辆状态与控制输入}\label{_Toc228997197}
+
+依据第二章建立的车辆模型，定义牵引车状态向量为
+
+\(\mathbf{x} = \begin{bmatrix}
+x & y & \theta & v
+\end{bmatrix}^{T}\) （式3-2）
+
+其中，\(x\) 与 \(y\)表示牵引车参考点在全局坐标系中的位置坐标，\(\theta\) 表示车辆航向角，\(v\) 表示车辆纵向线速度。
+
+双桥转向牵引车的控制输入定义为
+
+\(\mathbf{u} = \begin{bmatrix}
+v & \delta_{f} & \delta_{r}
+\end{bmatrix}^{T}\) （式3-3）
+
+或扩展为
+
+\(\mathbf{u} = \begin{bmatrix}
+a & \delta_{f} & \delta_{r}
+\end{bmatrix}^{T}\) （式3-4）
+
+其中，\(\delta_{f}\) 与 \(\delta_{r}\)分别为前桥和后桥转角，\(a\) 为车辆纵向加速度。前一种形式适用于直接速度控制实现，后一种形式更适合做速度平滑约束或模型预测控制扩展。
+
+车辆的基本运动学关系为
+
+\[
+\begin{cases}
+\dot{x}=v\cos\theta,\\
+\dot{y}=v\sin\theta,\\
+\dot{\theta}=\omega=\dfrac{v}{L}\left(\tan\delta_f-\tan\delta_r\right).
+\end{cases}
+\]
+
+（式3-5）
+
+其中，\(L\) 为前后桥中心距，\(\omega\) 为车辆偏航角速度。
+
+\subsubsection{感知误差接口}\label{_Toc228997198}
+
+前文已经将飞机辅助感知结果统一表示为相对误差向量\(\mathbf{z} = \begin{bmatrix}
+e_{x} & e_{y} & e_{\theta}
+\end{bmatrix}^{T}\) \(\ \)------\(e_{x}\)表示牵引车与目标区域之间的纵向距离误差； \(e_{y}\)表示牵引车相对于目标轴线的横向偏差； \(e_{\theta}\)表示牵引车当前朝向与目标参考方向之间的姿态误差。
+
+在控制意义上，\(e_{x}\) 主要决定车辆应继续前进多少距离，\(e_{y}\) 主要决定车辆应向哪一侧修正，\(e_{\theta}\) 则决定车辆当前朝向是否已经满足对接要求。三者共同构成牵引车自动接近和对准控制的核心反馈量。
+
+\subsection{对接过程分析与分层控制架构}\label{_Toc228997199}
+
+\subsubsection{对接过程分阶段描述}\label{_Toc228997200}
+
+为了使控制方法与真实作业过程保持一致，本文将牵引车自动对接过程划分为以下五个阶段。
+
+（1）搜索与等待阶段
+
+牵引车进入任务区域后，首先由视觉模块搜索飞机前起落架区域的特殊识别码，并与任务编号进行匹配。若当前识别结果与任务目标不一致，或者识别置信度低于阈值，则系统保持等待状态，不进入自动接近控制。此时输出为零速度、零转角保持命令，以防止误接近。
+
+（2）自动接近阶段
+
+当目标身份确认有效后，系统开始进入自动接近阶段。该阶段的主要目标是让牵引车从较远初始位置稳定接近飞机前起落架前方的预对接区域。此时控制重点不在于最终精确对位，而在于快速减小纵向距离，同时保持可接受的横向误差和姿态误差。
+
+（3）姿态对准阶段
+
+当牵引车与目标之间的纵向距离降低到一定阈值后，系统切换到姿态对准阶段。该阶段中，车辆不再追求较高接近速度，而是优先减小横向误差 \(e_{y}\)和姿态误差 \(e_{\theta}\)，使牵引车中心线逐步与飞机前起落架对接方向重合。
+
+（4）微动对接阶段
+
+当姿态误差和横向误差已经较小，且车辆进入最终接近区域后，系统进入微动对接阶段。此时车辆以低速蠕动方式向前推进，控制重点从``大范围修正''转为``小范围精调''，避免出现冲撞、擦碰或越位现象。
+
+（5）停车保持阶段
+
+当牵引车与目标区域之间的纵向、横向和姿态误差同时满足终端条件，且安全距离约束有效时，系统进入停车保持阶段。此时发布零速度命令，并将前后桥转角回中，保持车辆稳定等待后续机械连接或任务切换。
+
+\subsubsection{分层控制架构}\label{_Toc228997201}
+
+根据上述阶段分析，本文建立的分层控制架构如图3-1所示。
+
+\includegraphics[width=3.09015in,height=4.63523in]{figures/image5.png}
+
+图3-1 分层控制架构
+
+这种架构的优点在于：可以把任务逻辑与连续控制分离，从而降低算法复杂度，并且更加符合ROS节点化实现习惯。
+
+\subsection{误差动力学模型建立}\label{_Toc228997202}
+
+为了构造适用于对接过程的控制律，需要首先建立牵引车相对于参考轨迹或参考目标点的误差动力学模型。
+
+设局部参考状态为\(\mathbf{q}_{r} = \begin{bmatrix}
+x_{r} & y_{r} & \theta_{r}
+\end{bmatrix}^{T}\)。\(
+\)
+
+其中，\(\left( x_{r},y_{r} \right)\) 为局部参考点位置，\(\theta_{r}\) 为参考航向。进一步定义参考速度和参考角速度分别为 \(v_{r}\)与 \(\omega_{r}\)。
+
+将全局位置误差变换到车体坐标系，可以得到
+
+\[{\left\lbrack \begin{array}{r}
+e_{x} \\
+e_{y}
+\end{array} \right\rbrack = \begin{bmatrix}
+\cos\theta & \sin\theta \\
+ - \sin\theta & \cos\theta
+\end{bmatrix}\left\lbrack \begin{array}{r}
+x_{r} - x \\
+y_{r} - y
+\end{array} \right\rbrack
+}{e_{\theta} = \theta_{r} - \theta}\]
+
+（式3-6）
+
+该式的作用是把全局误差转化为车体系误差，使纵向和横向误差具有明确物理意义。其中，\(e_{x}\) 表示车辆前方还剩多少距离，\(e_{y}\) 表示车辆当前偏离对接轴线的程度。
+
+对上述误差求导，并代入车辆运动学方程，可得误差动力学：
+
+\[{{\dot{e}}_{x} = v_{r}\cos e_{\theta} - v + \omega e_{y}
+}{{\dot{e}}_{y} = v_{r}\sin e_{\theta} - \omega e_{x}
+}{{\dot{e}}_{\theta} = \omega_{r} - \omega
+}\]
+
+（式3-7）
+
+上述误差方程表明：
+
+\begin{enumerate}
+\def\labelenumi{\arabic{enumi}.}
+\item
+  纵向误差 \(e_{x}\)的变化不仅与前进速度 \(v\)有关，还受姿态误差和横向运动耦合影响；
+\item
+  横向误差 \(e_{y}\)的变化主要由角速度控制；
+\item
+  姿态误差 \(e_{\theta}\)的变化取决于参考角速度与实际角速度的差异。
+\end{enumerate}
+
+这说明自动对接控制本质上是一个非线性耦合误差调节问题，不能简单把纵向和横向完全独立看待\textsuperscript{[19,27-28]}。
+
+\subsection{局部参考轨迹生成方法}\label{_Toc228997203}
+
+\subsubsection{预对接点与对接点构造}\label{_Toc228997204}
+
+为了避免车辆直接朝最终机械连接位置冲击，本文采用两级目标点设计，即``预对接点''和``对接点''。
+
+设飞机辅助感知系统给出的目标中心点为
+
+\[\mathbf{p}_{a} = \left\lbrack \begin{array}{r}
+x_{a} \\
+y_{a}
+\end{array} \right\rbrack
+\]
+
+目标方向为 \(\theta_{a}\)。则预对接点定义为
+
+\(\mathbf{p}_{p} = \mathbf{p}_{a} - d_{pre}\left\lbrack \begin{array}{r}
+\cos\theta_{a} \\
+\sin\theta_{a}
+\end{array} \right\rbrack\) （式3-8）
+
+\(d_{pre}\) 为预留接近距离。该点位于最终目标点前方一定距离处，主要用于完成姿态调整。最终对接点定义为
+
+\(\mathbf{p}_{d} = \mathbf{p}_{a} - d_{hook}\left\lbrack \begin{array}{r}
+\cos\theta_{a} \\
+\sin\theta_{a}
+\end{array} \right\rbrack\) （式3-9）
+
+\(d_{hook}\) 为机械连接前的停车距离。该点用于微动对接阶段的最终停靠。如果牵引车从较远位置直接朝最终对接点收敛，往往会导致中后段横向修正不足或姿态调节过猛；引入预对接点后，车辆可以先对准姿态，再进行最后的缓慢接近\textsuperscript{[20-21,26-28]}。
+
+\subsection{参考速度调度策略}\label{_Toc228997205}
+
+在机场牵引对接作业中，恒定速度控制并不合适。当路径弯曲程度较大时，高速运行会导致横向误差难以收敛； 而当障碍物距离较小时，必须主动减速保证停车裕度； 当进入微动阶段时，也需要明显降低速度以提高最终对位精度。 因此，参照相关文献资料，认为可以采用如下速度调度公式：
+
+\(v_{r} = \min\left( v_{stage},\sqrt{\frac{a_{y,\max}}{\mid \kappa_{r} \mid + \varepsilon_{\kappa}}},k_{d}\lbrack d_{\min} - d_{s}\rbrack_{+} \right)\) （式3-10）
+
+其中：\(v_{stage}\)为当前控制模式允许的最大速度； \(a_{y,\max}\)为允许的最大横向加速度； \(\kappa_{r}\)为参考轨迹曲率； \(d_{\min}\)为前方最近障碍距离； \(d_{s}\)为安全距离阈值； \(k_{d}\)为距离---速度缩放系数\textsuperscript{[25,27-28]}。
+
+\subsection{误差反馈控制律设计}\label{_Toc228997206}
+
+\subsubsection{纵向速度控制律}\label{_Toc228997207}
+
+纵向控制律设计为
+
+\(v_{d} = {sat}_{\left\lbrack 0,v_{\max} \right\rbrack}\left( v_{r}\cos e_{\theta} + k_{x}e_{x} \right)\) （式3-11）
+
+其中，\(k_{x}\) 为纵向误差增益，\(sat\) 表示饱和函数。
+
+该控制律由两部分组成：\(v_{r}\cos e_{\theta}\)：表示当车辆姿态误差较大时，自动减小前进速度，防止车辆在未对准状态下强行推进； \(k_{x}e_{x}\)：表示根据纵向误差大小补偿推进速度，使车辆逐步靠近目标。
+
+这种设计符合车辆对接实际过程：距离远时可较快前进；姿态偏差大时必须主动减速\textsuperscript{[19]}。
+
+\subsubsection{角速度控制律}\label{_Toc228997208}
+
+角速度控制律设计为
+
+\(\omega_{d} = {sat}_{\left\lbrack - \omega_{\max},\omega_{\max} \right\rbrack}\left( \omega_{r} + v_{r}(k_{y}e_{y} + k_{\theta}\sin e_{\theta}) \right)\) （式3-12）
+
+其中，\(k_{y}\) 和 \(k_{\theta}\)分别为横向误差增益和姿态误差增益。
+
+该控制律的物理意义如下\textsuperscript{[17,26-28]}：
+
+\(\omega_{r}\)：参考轨迹自身的前馈角速度，用于保证车辆沿局部参考曲线运行；
+
+\(v_{r}k_{y}e_{y}\)：根据横向偏差调节转向，使车辆向目标轴线靠拢；
+
+\(v_{r}k_{\theta}\sin e_{\theta}\)：根据姿态误差修正车辆方向。
+
+之所以采用 \(\sin e_{\theta}\)而不是直接用 \(e_{\theta}\)，是因为前者在大角度误差情况下更平滑，且在小角度时近似等于 \(e_{\theta}\)，便于后续稳定性分析。
+
+\subsubsection{对接过程中的控制行为分析}\label{_Toc228997209}
+
+结合车辆对接全过程，上述控制律在不同阶段表现如下：
+
+\begin{enumerate}
+\def\labelenumi{\arabic{enumi}.}
+\item
+  自动接近阶段\\
+  此时 \(e_{x}\)较大，速度项 \(k_{x}e_{x}\)占主导，车辆以较快速度向预对接点推进。
+\item
+  姿态对准阶段\\
+  随着 \(e_{x}\)逐步减小，横向误差 \(e_{y}\)和姿态误差 \(e_{\theta}\)开始主导控制器输出，角速度命令增大，车辆重点完成方向修正。
+\item
+  微动对接阶段\\
+  此时 \(v_{r}\)已被速度调度压低，车辆角速度输出较平缓，控制器主要进行细小偏差修正，避免出现末端振荡。
+\end{enumerate}
+
+因此，这组控制律不仅在数学上闭合，而且在物理意义上能够与整个对接过程自然对应。
+
+\subsection{四轮转向映射与约束处理}\label{_Toc228997210}
+
+\subsubsection{曲率计算}\label{_Toc228997211}
+
+由期望线速度和角速度得到期望曲率
+
+\(\kappa_{d} = \frac{\omega_{d}}{\max(v_{d},\varepsilon_{v})}\) （式3-13）
+
+其中 \(\varepsilon_{v}\)为防止低速时分母趋近于零的安全常数。
+
+\subsubsection{双桥反向转向模式}\label{_Toc228997212}
+
+在自动接近阶段，如果需要较大机动能力，则采用双桥反向转向模式\textsuperscript{[19,28]}：
+
+\[{\delta_{f}^{\star} = sat\left( \arctan\frac{L\kappa_{d}}{2}, - \delta_{f,\max},\delta_{f,\max} \right)
+}{\delta_{r}^{\star} = - \delta_{f}^{\star}
+}\]（式3-14）
+
+该模式可以显著减小等效转弯半径，适合从较远位置快速接近飞机前起落架区域。
+
+\subsubsection{前桥单转向模式}\label{_Toc228997213}
+
+在姿态对准和微动阶段，为了提高控制平稳性，采用前桥单转向模式：
+
+\[{\delta_{f}^{\star} = sat\left( \arctan(L\kappa_{d}), - \delta_{f,\max},\delta_{f,\max} \right)
+}{\delta_{r}^{\star} = 0
+}\]（式3-15）
+
+该模式虽然机动性不如双桥反向转向，但执行器协调更简单，转向响应更平顺，适合最终精调。
+
+\subsubsection{速度与转角限幅}\label{_Toc228997214}
+
+为了保证控制命令可执行，还需对速度与转角进行约束处理：
+
+\[{0 \leq v_{d} \leq v_{\max}
+}{\mid \delta_{f}^{\star} \mid \leq \delta_{f,\max}
+}{\mid \delta_{r}^{\star} \mid \leq \delta_{r,\max}
+}\]
+
+同时对速度变化率和转角变化率限制为
+
+\[{\mid v_{d}(k) - v_{d}(k - 1) \mid \leq a_{\max}T_{s}
+}{\mid \delta_{i}(k) - \delta_{i}(k - 1) \mid \leq {\dot{\delta}}_{\max}T_{s},i \in \{ f,r\}
+}\]
+
+这样可以避免由于离散控制导致的命令突变，从而减小Gazebo中常见的抖振与过冲现象。
+
+\subsection{终端停车判定与模式切换}\label{_Toc228997215}
+
+\subsubsection{终端停车集合}\label{_Toc228997216}
+
+在最终微动阶段，当牵引车同时满足以下条件时，可判定已具备停车条件：
+
+\[{\mid e_{x} \mid \leq d_{t}
+}{\mid e_{y} \mid \leq e_{y,\max}
+}{\mid e_{\theta} \mid \leq e_{\theta,\max}
+}{d_{\min} \geq d_{s}
+}\]将其定义为终端停车集合
+
+\[\Omega_{t} = \left\{ \mid e_{x} \mid \leq d_{t},\text{ } \mid e_{y} \mid \leq e_{y,\max},\text{ } \mid e_{\theta} \mid \leq e_{\theta,\max},\text{ }d_{\min} \geq d_{s} \right\}
+\]
+
+与单纯依靠纵向距离判定停车不同，这种集合式判定可以避免``距离够近但方向没对准''的错误停车问题。
+
+\subsubsection{模式切换规则}\label{_Toc228997217}
+
+系统模式切换规则如下：
+
+搜索-自动接近：识别码身份确认成功且置信度满足阈值；
+
+自动接近-姿态对准：\(e_{x}\) 进入近距阈值；
+
+姿态对准-微动对接：\(e_{x}\) 足够小且 \(e_{\theta}\)已较小；
+
+任意模式-中止：目标丢失或最近距离低于中止阈值；
+
+微动对接-停车保持：进入终端集合 \(\Omega_{t}\)。
+
+这意味着控制系统并不是依赖一条连续控制律从头走到尾，而是通过``阶段切换 + 连续控制''的混合方式实现更符合工程需求的动作组织。
+
+\subsection{控制算法主流程}\label{_Toc228997218}
+
+图3-2给出自动接近与对接控制算法主流程。
+
+\includegraphics[width=3.37255in,height=5.02593in]{figures/image6.png}
+
+图3-2 全过程算法流程图
+
+\subsection{本章小结}\label{_Toc228997219}
+
+本章将原有飞机辅助感知与自动接近控制内容整合为同一技术链路。首先，围绕飞机前起落架对接区域设计了目标标识、视觉识别和近距测量方案，并给出了目标身份确认、相对位姿误差和安全边界判定方法；其次，在第二章双桥转向运动学模型基础上，建立了车体系误差动力学模型，设计了预对接点、对接点、速度调度、误差反馈控制和四轮转向映射方法；最后，通过终端停车集合与模式切换规则，将目标确认、接近、姿态对准、微动对接和停车保持组织为完整闭环。
+
+与单纯的路径跟踪控制相比，本章方法更加贴合机场低速高精度对接工况，能够把目标身份确认、局部态势感知、轨迹可行性、误差收敛性和停车安全性放在同一控制框架中，为后续仿真实验与系统实现提供算法基础。
+
+\section{仿真系统构建与实现}\label{_Toc228997220}
+
+\subsection{系统总体架构与软硬件环境}\label{_Toc228997221}
+
+仿真平台由五个层次组成：其一，Ubuntu 18.04 提供系统运行基础；其二，ROS Noetic 提供节点通信、参数服务器、TF 与消息系统；其三，Gazebo 11 提供刚体动力学、碰撞、接触与传感器仿真；其四，gazebo\_ros\_pkgs~和~gazebo\_ros\_control~将 Gazebo 的模型、传感器与控制接口映射到 ROS；其五，项目自定义节点完成飞机辅助感知、局部规划、牵引对接控制与任务调度\textsuperscript{[11-13,16]}。Gazebo 官方 ROS 教程明确指出，gazebo\_ros\_pkgs~负责 ROS 与 Gazebo 的接口层，而~gazebo\_ros\_control~通过解析 URDF 中的~\textless transmission\textgreater~与插件配置，实现对仿真关节的 controllers 接入\textsuperscript{[13,16]}。
+
+在实际工程目录上，推荐采用``*\_description~+~*\_gazebo~+~*\_control~+~*\_bringup''四包式组织方式：tug\_description~保存 xacro/URDF、网格模型与材料；tug\_gazebo~保存 world、spawn 与传感器插件；tug\_control~保存控制器参数、接口桥接与控制节点；tug\_bringup~保存联调 launch 文件。Gazebo 的~roslaunch~教程还给出了较为稳定的包层级约定，即~MYROBOT\_description/urdf、MYROBOT\_gazebo/worlds~与~MYROBOT\_gazebo/launch~的分离组织，这一约定适合本课题的工程化管理\textsuperscript{[11-16]}。
+
+下表给出本文采用的基准软件栈。（表4-1）
+
+表4-1
+
+\begin{longtable}[]{@{}
+  >{\raggedright\arraybackslash}p{(\columnwidth - 4\tabcolsep) * \real{0.2678}}
+  >{\raggedright\arraybackslash}p{(\columnwidth - 4\tabcolsep) * \real{0.3713}}
+  >{\raggedright\arraybackslash}p{(\columnwidth - 4\tabcolsep) * \real{0.3608}}@{}}
+\toprule\noalign{}
+\begin{minipage}[b]{\linewidth}\raggedright
+组件
+\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedright
+版本/状态
+\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedright
+用途
+\end{minipage} \\
+\midrule\noalign{}
+\endhead
+\bottomrule\noalign{}
+\endlastfoot
+Ubuntu & 18.04 LTS & 主机操作系统 \\
+ROS & Noetic Ninjemys & 节点通信、参数、消息、TF \\
+Gazebo & 11 & 刚体动力学、传感器与场景仿真 \\
+gazebo\_ros\_pkgs & Noetic 对应发行 & Gazebo 与 ROS 接口桥 \\
+gazebo\_ros\_control & Noetic 对应发行 & ros\_control 接入 Gazebo \\
+ros\_control & ROS 1 经典控制框架 & 控制器抽象与管理 \\
+robot\_state\_publisher & Noetic 对应发行 & 根据 URDF +~joint\_states~发布 TF \\
+tf2\_ros & Noetic 对应发行 & 坐标变换管理 \\
+xacro & Noetic 对应发行 & 宏化 URDF 生成 \\
+image\_pipeline & Noetic 对应发行 & 相机标定与图像处理链 \\
+OpenCV & ROS Noetic 兼容版本 & 飞机辅助感知标识识别 \\
+\end{longtable}
+
+如下系统架构图适合在论文中绘制为 PNG 或 SVG，用于说明 ROS/Gazebo 联合仿真的模块层级关系。其图元关系与 Gazebo ROS 插件、ros\_control~和~robot\_state\_publisher~的官方工作方式一致。
+
+\subsection{牵引车模型与传感器建模}\label{_Toc228997222}
+
+URDF 从结构上将机器人表示为 link--joint 树；Gazebo 官方教程进一步指出，若要把 URDF 真正用于动力学仿真，除~visual~外还必须补充~collision、inertial、Gazebo 专用~\textless gazebo\textgreater~标签以及~ros\_control~所需的~\textless transmission\textgreater{}\textsuperscript{[13-16]}。同时，URDF 本身无法描述世界中的模型摆放、闭环关节与部分接触参数，因此世界摆放与环境物体建议放在~.world~中，机器人本体保持单一树形结构\textsuperscript{[12-14]}。
+
+对于双桥转向牵引车，面向第三章算法实现，推荐将车体模型拆分为以下 link：、base\_link、front\_ateer、back\_steer、四个车轮 link、相机 link、深度相机 link、激光雷达 link，以及飞机辅助感知所需的可视化或调试 link。关节层面至少需要：前桥转向关节、后桥转向关节、四个轮子的转动关节，以及各传感器与车体的固定关节。该拆分方式既符合 URDF 树结构，也便于单独对前后桥转向与轮速控制器建模\textsuperscript{[14,16]}。
+
+车辆基础仿真与机械模型都基于SOLIDWORKS实现。考虑到ROS与Gazebo在虚拟机环境下性能受限的影响，将模型分为两种建立------仿真模型与机械模型。其中仿真面向基本运行逻辑的测试与较为极端的算法测试，保证项目推进速度的同时最大程度降低硬件成本。其结构较为简单，隐藏了不必要的机械结构部分，只保留最基础的车辆外形与少量运动模块；机械模型是最终提交到现实生产的版本，其结构更为复杂，相比仿真模型要考虑更多的机械及电气布局。首篇幅限制，下面给出仿真模型（图5-1）
+
+\includegraphics[width=4.97629in,height=3.08022in]{figures/image7.png}
+
+图4-1 模型图总览
+
+模型设计完成后，需要对各个活动关节进行定义与功能区分。根据实际功能------continuous（关节持续转动）、fixed（关节固定）、revolute（关节有限制有角度旋转），对车轮、转向桥以及功能部件定义。下表给出面向论文复现的一组牵引车 URDF 结构定义。表中``用途''与``建议参数''基于本项目双桥转向、小尺度机场地面车辆仿真的工程需求给出；若项目后续补充了 CAD/BOM 或实测参数，应以实测量替换。（表4-2）
+
+表4-2
+
+\begin{longtable}[]{@{}
+  >{\raggedright\arraybackslash}p{(\columnwidth - 6\tabcolsep) * \real{0.2552}}
+  >{\raggedright\arraybackslash}p{(\columnwidth - 6\tabcolsep) * \real{0.2294}}
+  >{\raggedright\arraybackslash}p{(\columnwidth - 6\tabcolsep) * \real{0.1982}}
+  >{\raggedright\arraybackslash}p{(\columnwidth - 6\tabcolsep) * \real{0.3172}}@{}}
+\toprule\noalign{}
+\begin{minipage}[b]{\linewidth}\raggedright
+组件
+\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedright
+类型
+\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedright
+命名
+\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedright
+说明
+\end{minipage} \\
+\midrule\noalign{}
+\endhead
+\bottomrule\noalign{}
+\endlastfoot
+车体根坐标 & link & base\_link & 仅作平面参考，不带惯量 \\
+主车体 & link & base\_link & 车体惯量、碰撞主体 \\
+前桥 & link & front\_steer\_link & 前转向桥中间体 \\
+后桥 & link & back\_steer\_link & 后转向桥中间体 \\
+前桥转向 & revolute & front\_steer & 绕 z 轴转向 \\
+后桥转向 & revolute & rear\_steer & 绕 z 轴转向 \\
+相机 & fixed & front\_camera\_joint & 识别飞机辅助码主相机 \\
+深度相机 & fixed & depth\_camera\_joint & 近距深度感知 \\
+激光雷达 & fixed & lidar\_joint & 前向近距安全监测 \\
+\end{longtable}
+
+在此示例部分关节定义：
+
+~~\textless link
+
+~~~~name="base\_link"\textgreater{}
+
+~~~~\textless inertial\textgreater{}
+
+~~~~~~\textless origin
+
+~~~~~~~~xyz="0.052294~1.5562E-06~0.061913"
+
+~~~~~~~~rpy="0~0~0"~/\textgreater{}
+
+~~~~~~\textless mass
+
+~~~~~~~~value="34.871"~/\textgreater{}
+
+~~~~~~\textless inertia
+
+~~~~~~~~ixx="0.51812"
+
+~~~~~~~~ixy="-2.2269E-05"
+
+~~~~~~~~ixz="0.18429"
+
+~~~~~~~~iyy="2.6761"
+
+~~~~~~~~iyz="-2.8808E-06"
+
+~~~~~~~~izz="3.0257"~/\textgreater{}
+
+~~~~\textless/inertial\textgreater{}
+
+~~~~\textless visual\textgreater{}
+
+~~~~~~\textless origin
+
+~~~~~~~~xyz="0~0~0"
+
+~~~~~~~~rpy="0~0~0"~/\textgreater{}
+
+~~~~~~\textless geometry\textgreater{}
+
+~~~~~~~~\textless mesh
+
+~~~~~~~~~~filename="package://zongzhuang/meshes/base\_link.STL"~/\textgreater{}
+
+~~~~~~\textless/geometry\textgreater{}
+
+~~~~~~\textless material
+
+~~~~~~~~name=""\textgreater{}
+
+~~~~~~~~\textless color
+
+~~~~~~~~~~rgba="0.79216~0.81961~0.93333~1"~/\textgreater{}
+
+~~~~~~\textless/material\textgreater{}
+
+~~~~\textless/visual\textgreater{}
+
+~~~~\textless collision\textgreater{}
+
+~~~~~~\textless origin
+
+~~~~~~~~xyz="0~0~0"
+
+~~~~~~~~rpy="0~0~0"~/\textgreater{}
+
+~~~~~~\textless geometry\textgreater{}
+
+~~~~~~~~\textless mesh
+
+~~~~~~~~~~filename="package://zongzhuang/meshes/base\_link.STL"~/\textgreater{}
+
+~~~~~~\textless/geometry\textgreater{}
+
+~~~~\textless/collision\textgreater{}
+
+~~\textless/link\textgreater{}
+
+\subsection{任务与模式管理}\label{_Toc228997223}
+
+任务与模式管理器在整个控制系统中起着核心作用\textsuperscript{[25,28]}。该模块的主要任务是根据感知系统提供的信息（如目标身份确认、位姿识别结果、障碍物检测等），决定当前的控制模式。具体模式包括\textsuperscript{[5,7,28]}：
+
+\begin{enumerate}
+\def\labelenumi{\arabic{enumi}.}
+\item
+  搜索模式：当目标身份未确认时，系统处于搜索模式，牵引车保持静止或缓慢扫描。
+\item
+  自动接近模式：当目标身份确认并且距离较远时，系统启动自动接近模式，牵引车沿预设路径接近目标飞机。
+\item
+  姿态对准模式：当牵引车距离目标飞机较近时，系统切换到姿态对准模式，通过调整转向角度和速度逐步减少横向误差和姿态误差。
+\item
+  微动对接模式：在接近阶段，系统切换到微动对接模式，牵引车以非常低的速度精确接近并最终完成对接。
+\item
+  停车模式：当目标对接完成或无法继续推进时，系统进入停车模式，发布停车命令。
+\end{enumerate}
+
+\subsection{系统全流程测试}\label{_Toc228997224}
+
+为验证自动牵引对接系统在完整作业流程中的可行性与连续性，本文在ROS与Gazebo联合仿真环境中设计了自动牵引车全流程测试。测试过程按照机场地面牵引作业的基本逻辑展开，主要包括车辆前往飞行器区域、车辆对接飞行器、车辆推出飞行器、解除牵引以及车辆撤离五个阶段\textsuperscript{[5-7]}。通过该测试，可以较为直观地观察牵引车在不同作业阶段下的运动状态、姿态变化以及控制指令执行效果。
+
+1. 车辆前往飞行器区域
+
+测试开始，牵引车从模拟航站楼附近出发，根据地勤车辆道路向飞行器所在区域移动。在该阶段，系统主要完成车辆启动、路径跟踪和环境感知等任务。牵引车通过传感器获取周围环境信息，并结合控制算法调整自身速度与转向角，使车辆能够沿规划路径稳定行驶至飞行器附近。
+
+在仿真过程中，车辆需要保持较低且平稳的行驶速度，避免因速度过高造成轨迹偏差或姿态调整不及时。当前往飞行器区域时，系统重点关注车辆行驶方向是否稳定、路径跟踪是否连续，以及车辆是否能够准确进入后续对接准备区域。（图4-2）
+
+\includegraphics[width=4.35304in,height=2.07799in]{figures/image8.png}
+
+图4-2 车辆在航站楼下运行，前往目标飞行器
+
+2. 车辆对接飞行器
+
+当牵引车进入飞行器附近区域后，系统切换至对接控制阶段。该阶段的核心任务是使牵引车与飞行器牵引点逐步对准，并在满足位置和姿态要求的情况下完成接近动作。系统根据感知模块提供的飞行器相对位姿信息，计算牵引车与目标对接点之间的位置误差和航向误差，并通过控制算法修正车辆运动状态。（图4-3）
+
+在对接过程中，牵引车首先进入预对接位置，然后以低速向最终对接点靠近。相比普通路径跟踪阶段，对接阶段对控制精度和车辆稳定性要求更高，因此需要限制车辆速度，并使转向角变化更加平缓，避免出现车身摆动过大或对接偏差过大的情况。（图4-4）
+
+\includegraphics[width=4.42872in,height=2.49642in]{figures/image9.png}
+
+图4-3 尝试对接。此时车辆没有正对飞行器，正在通过蟹行平移进行调整
+
+\includegraphics[width=4.57559in,height=2.01842in]{figures/image10.png}
+
+图4-4 对接成功，拖把末端固定装置放下。等待推出命令
+
+该阶段主要验证牵引车是否能够根据飞行器目标位置完成姿态调整，并稳定接近指定对接点。
+
+3. 车辆推出飞行器
+
+完成对接后，系统进入飞行器推出阶段。此时牵引车与飞行器被视为一个整体运动系统，牵引车根据预设推出路径向指定方向行驶，将飞行器从停放区域推出至目标位置。在该阶段，牵引车需要保持稳定牵引状态，并避免转向过大导致飞行器姿态变化不平顺。
+
+推出过程中，控制系统重点保证车辆速度平稳、转向连续，并使飞行器整体运动轨迹满足预设作业要求。由于推出阶段涉及车辆与飞行器之间的相对约束关系，因此相比单车行驶更需要关注运动过程的稳定性和路径偏差。（图4-5）
+
+\includegraphics[width=4.50022in,height=1.95374in]{figures/image11.png}
+
+\includegraphics[width=4.50145in,height=1.97in]{figures/image12.png}
+
+\includegraphics[width=4.55202in,height=2.00583in]{figures/image13.png}
+
+图4-5 飞行器被推出过程
+
+4. 解除牵引
+
+当飞行器被推出至指定位置后，牵引车停止运动，并执行解除牵引动作。该阶段主要用于模拟实际机场作业中牵引车与飞行器之间的脱离过程。系统首先控制车辆减速至停止状态，随后解除与飞行器之间的连接关系，使飞行器保持在目标位置，牵引车进入独立运动状态。
+
+解除牵引阶段的关键在于保证车辆停止平稳，避免因惯性造成飞行器位置偏移。同时，解除牵引后应确认飞行器姿态稳定，牵引车与飞行器之间保持安全距离，为后续车辆撤离提供空间。（图4-6）
+
+\includegraphics[width=4.5629in,height=1.83483in]{figures/image14.png}
+
+图4-6 拖把解除，车辆倒退一部分距离等待飞行器报告
+
+5. 车辆撤离
+
+完成解除牵引后，牵引车按照预设撤离路径离开飞行器区域。撤离阶段主要验证牵引车在完成作业任务后能否安全驶离，并避免与飞行器或周围环境发生干涉。系统根据撤离方向控制车辆转向与速度，使其逐步远离飞行器，并回到指定待命区域或安全区域。
+
+在该阶段，车辆应保持稳定行驶状态，转向过程应尽量平缓，避免因急转或急停影响仿真效果。车辆撤离后，整个自动牵引对接与推出流程结束。（图4-7）
+
+\includegraphics[width=4.97258in,height=2.28573in]{figures/image15.png}
+
+图4-7 车辆撤离
+
+\subsection{本章小结}\label{_Toc228997225}
+
+本章围绕ROS-Gazebo联合仿真系统的构建与实现展开，重点说明了仿真软件栈、牵引车模型、传感器挂载、任务模式管理以及ROS与Gazebo之间的接口关系。通过URDF模型、Gazebo场景、ros\_control控制器和ROS节点通信，牵引车模型能够完成加载、转向回中、轮速控制、目标接近和停车保持等基础动作，为第三章提出的感知与控制方法提供了验证环境。由此，本章搭建的不是单一演示场景，而是一套可继续扩展的仿真平台，后续可在此基础上替换车辆模型、调整控制器参数或增加更复杂的机场地图与传感器配置。
+
+\section{总结与展望}\label{_Toc228997226}
+
+\subsection{总结}\label{_Toc228997227}
+
+本文围绕机场飞机牵引与自动对接作业需求，以自动牵引车和飞机协同控制为研究对象，基于ROS与Gazebo联合仿真平台，开展了作业问题抽象、车辆运动学建模、感知与控制方法设计以及仿真实现等方面的研究。
+
+首先，本文对机场牵引作业场景进行了分析，将飞机推出与前起落架对接过程抽象为低速、高精度、多约束的车辆控制问题。在此基础上，建立了双桥转向牵引车平面运动学模型，分析前桥单独转向、前后桥反向转向和同向转向等典型模式，并推导速度、转角和曲率之间的约束关系，为后续自动接近与对接控制提供数学基础。
+
+其次，本文将飞机辅助感知与自动接近控制合并为一条完整技术链路。通过在飞机前起落架区域设置可识别标识，牵引车能够获得目标身份、相对距离、横向偏差和姿态偏差；在此基础上，结合近距测量和安全阈值判断，建立目标确认、误差提取、安全判定和终端停车条件。
+
+再次，本文设计了基于相对位姿误差的分层控制方法。对接过程被划分为搜索等待、自动接近、姿态对准、微动对接和停车保持等阶段，并采用``模式管理---局部规划---误差反馈---执行器映射''的结构，使牵引车能够从目标识别开始，逐步完成低速接近、方向修正和最终停车。
+
+最后，本文完成了ROS-Gazebo联合仿真系统的搭建。通过SolidWorks车辆模型、URDF结构描述、Gazebo场景、控制器配置和ROS节点通信，实现牵引车模型加载、转向控制、轮速控制、传感器挂载和自动接近对接流程验证。仿真结果表明，该系统能够支持牵引车在机场作业场景中的低速运动和对接过程分析，为后续实物样机开发、控制参数优化和传感器融合研究提供参考。
+
+总体来看，本文完成了自动牵引车与飞机对接任务从理论建模、感知控制方法到仿真实现的初步研究，验证了基于ROS与Gazebo开展机场牵引车联合仿真的可行性。
+
+\subsection{展望}\label{_Toc228997228}
+
+虽然本文完成了自动牵引对接系统的基本设计与仿真验证，但受研究周期和实验条件限制，仍存在一些需要进一步完善的方面。
+
+第一，建模/车辆设计阶段耗时过长且采用了非常高精度的建模（首轮导出.stl模型文件达到了1.8G），直接导致模型预览困难、仿真模拟效率低下的问题；同时，本文对车辆动力学、轮胎接触、牵引连接机构和飞机受力过程进行了简化，后续需要建立更加完整的牵引车---飞机组合体动力学模型，使仿真结果更接近真实机场作业工况。
+
+第二，受设备性能限制，没有考虑多变气候环境对车辆飞行器之间的影响，后续可进一步完善感知系统。可引入更复杂的视觉识别、点云处理和多传感器融合方法，提高系统在光照变化、遮挡和复杂环境下的可靠性。
+
+第三，此次模拟环境较为简单，只放置了一架飞行器和牵引车模型，对现今大型国际机场起到的参考作用很小，后续可结合模型预测控制、动态避障算法和智能优化方法，在添加多机协作的同时，提高系统在动态障碍物、多车辆协同和复杂机场场景下的适应能力\textsuperscript{[20,24-25,28]}。
+
+综上，机场自动牵引与飞机对接是一个融合车辆控制、机器人感知、路径规划和系统仿真的综合性课题。本文完成了基础平台和核心方法的搭建，后续仍可在模型精细化、感知鲁棒性、控制智能化和工程实用化方面继续深入研究。
+
+\section*{附录1 主要符号与缩写说明}\label{_Toc229105358}
+\addcontentsline{toc}{section}{附录1 主要符号与缩写说明}
+
+\begin{longtable}[]{@{}
+  >{\raggedright\arraybackslash}p{(\columnwidth - 2\tabcolsep) * \real{0.1552}}
+  >{\raggedright\arraybackslash}p{(\columnwidth - 2\tabcolsep) * \real{0.8448}}@{}}
+\toprule\noalign{}
+\begin{minipage}[b]{\linewidth}\raggedright
+\textbf{缩写/符号}
+\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedright
+\textbf{含义}
+\end{minipage} \\
+\midrule\noalign{}
+\endhead
+\bottomrule\noalign{}
+\endlastfoot
+ROS & Robot Operating System，机器人操作系统 \\
+Gazebo & 机器人三维物理仿真平台 \\
+URDF & Unified Robot Description Format，机器人统一描述格式 \\
+A-SMGCS & 高级场面活动引导与控制系统 \\
+LiDAR & 激光雷达 \\
+\(v\) & 车辆纵向速度 \\
+\(\omega\) & 车辆偏航角速度 \\
+\(\delta_{f}\) & 前桥转角 \\
+\(\delta_{r}\) & 后桥转角 \\
+\(e_{x}\) & 纵向误差 \\
+\(e_{y}\) & 横向误差 \\
+\(e_{\theta}\) & 姿态误差 \\
+\end{longtable}
+
+\section*{附录2 ROS-Gazebo仿真系统主要运行命令}\label{_Toc229105359}
+\addcontentsline{toc}{section}{附录2 ROS-Gazebo仿真系统主要运行命令}
+\noindent\textbf{启动命令：}
+\begin{lstlisting}[language=bash]
+cd ~/tug_ws
+catkin_make
+source devel/setup.bash
+roslaunch zongzhuang gazebo.launch
+\end{lstlisting}
+\noindent\textbf{控制器加载命令：}
+\begin{lstlisting}[language=bash]
+rosrun controller_manager spawner \
+/zongzhuang/front_left_wheel_velocity_controller \
+/zongzhuang/front_right_wheel_velocity_controller \
+/zongzhuang/back_left_wheel_velocity_controller \
+/zongzhuang/back_right_wheel_velocity_controller
+\end{lstlisting}
+\noindent\textbf{测试脚本运行命令：}
+\begin{lstlisting}[language=bash]
+chmod +x test_control.py
+rosrun tug_control test_control.py
+\end{lstlisting}
+\section*{附录3 自动牵引作业核心程序节选}
+\addcontentsline{toc}{section}{附录3 自动牵引作业核心程序节选}
+\noindent\textbf{1.目标点生成}
+\begin{lstlisting}[language=Python]
+    def transform_local_to_world(self, base_pose, local_x, local_y, local_yaw=0.0):
+        """
+        将飞机局部坐标系下的点转换到 Gazebo 世界坐标系。
+        """
+        c = math.cos(base_pose.yaw)
+        s = math.sin(base_pose.yaw)
+        world_x = base_pose.x + c * local_x - s * local_y
+        world_y = base_pose.y + s * local_x + c * local_y
+        world_yaw = wrap_to_pi(base_pose.yaw + local_yaw)
+        return Pose2D(world_x, world_y, world_yaw)
+    def generate_task_points(self, aircraft_pose):
+        """
+        根据飞机位姿生成自动牵引作业所需的关键点：
+        1. 前起落架点；
+        2. 牵引车对接点；
+        3. 预对接点；
+        4. 飞机推出目标点；
+        5. 牵引车撤离点。
+        """
+        # 飞机前起落架点
+        nose_gear_pose = self.transform_local_to_world(
+            aircraft_pose,
+            self.nose_gear_offset_x,
+            self.nose_gear_offset_y,
+            0.0
+        )
+        # 对接点：牵引车前牵引钩与飞机前起落架重合
+        dock_pose = self.transform_local_to_world(
+            nose_gear_pose,
+            -self.hitch_offset_x,
+            -self.hitch_offset_y,
+            0.0
+        )
+        # 预对接点：沿飞机航向反方向后退一定距离
+        pre_dock_pose = self.transform_local_to_world(
+            dock_pose,
+            -self.pre_dock_distance,
+            0.0,
+            0.0
+        )
+        # 推出目标点：飞机沿机身反方向推出
+        pushback_pose = self.transform_local_to_world(
+            dock_pose,
+            -self.pushback_distance,
+            0.0,
+            0.0
+        )
+        # 撤离点：牵引车完成解挂后向侧后方撤离
+        retreat_pose = self.transform_local_to_world(
+            pushback_pose,
+            self.retreat_offset_x,
+            self.retreat_offset_y,
+            0.0
+        )
+        return pre_dock_pose, dock_pose, pushback_pose, retreat_pose
+\end{lstlisting}
+\noindent\textbf{2. 相对位姿误差控制}
+\begin{lstlisting}[language=Python]
+  def compute_pose_control(self, current_pose, target_pose, max_speed):
+        """
+        基于相对位姿误差的车辆控制律。
+        current_pose：牵引车当前位姿
+        target_pose：目标位姿
+        max_speed：当前阶段最大速度
+        输出：
+        speed：车辆线速度
+        curvature：参考路径曲率
+        distance：当前位置到目标点的距离
+        yaw_error：航向角误差
+        """
+        dx = target_pose.x - current_pose.x
+        dy = target_pose.y - current_pose.y
+        # 将世界坐标误差转换到车辆自身坐标系
+        c = math.cos(current_pose.yaw)
+        s = math.sin(current_pose.yaw)
+        ex = c * dx + s * dy
+        ey = -s * dx + c * dy
+        distance = math.sqrt(dx * dx + dy * dy)
+        target_angle_body = math.atan2(ey, ex)
+        # 判断目标点位于车辆前方还是后方
+        direction = 1.0
+        alpha = target_angle_body
+        if abs(target_angle_body) > math.pi / 2.0:
+            direction = -1.0
+            alpha = wrap_to_pi(target_angle_body - math.pi)
+        yaw_error = wrap_to_pi(target_pose.yaw - current_pose.yaw)
+        # 距离误差生成线速度
+        speed = self.k_rho * distance
+        speed = clamp(speed, self.min_motion_speed, max_speed)
+        speed *= direction
+        # 横向误差与航向误差共同生成角速度
+        if distance > 0.8:
+            omega = self.k_alpha * alpha
+        else:
+            omega = self.k_alpha * alpha + self.k_yaw * yaw_error
+        # 倒车时角速度方向修正
+        if direction < 0.0:
+            omega = -omega
+        # 角速度转换为参考路径曲率
+        if abs(speed) < 1e-5:
+            curvature = 0.0
+        else:
+            curvature = omega / speed
+        return speed, curvature, distance, abs(yaw_error)
+\end{lstlisting}
+\noindent\textbf{3. 自动牵引作业状态机主流程}
+\begin{lstlisting}[language=Python]
+    def run_task_state_machine(self, aircraft_pose, current_tug_pose):
+        """
+        自动牵引作业状态机主逻辑。
+        该函数体现从目标识别、自动对接、推出到撤离的完整流程。
+        """
+        pre_dock_pose, dock_pose, pushback_pose, retreat_pose = \
+            self.generate_task_points(aircraft_pose)
+        # 搜索并确认飞机目标
+        if self.state == TaskState.SEARCH_TARGET:
+            target_valid = aircraft_pose is not None
+            if target_valid:
+                self.state = TaskState.APPROACH_PRE_DOCK
+            return 0.0, 0.0, 0.0
+        # 前往预对接点
+        elif self.state == TaskState.APPROACH_PRE_DOCK:
+            speed, front_delta, back_delta, reached = self.go_to_pose_step(
+                current_tug_pose,
+                pre_dock_pose,
+                self.max_approach_speed,
+                "front_only"
+            )
+            if reached:
+                self.state = TaskState.PRECISE_DOCK
+            return speed, front_delta, back_delta
+        # 低速精确对接
+        elif self.state == TaskState.PRECISE_DOCK:
+            speed, front_delta, back_delta, reached = self.go_to_pose_step(
+                current_tug_pose,
+                dock_pose,
+                self.max_dock_speed,
+                "counter_phase"
+            )
+            if reached:
+                self.state = TaskState.ATTACH
+            return speed, front_delta, back_delta
+        # 建立牵引连接
+        elif self.state == TaskState.ATTACH:
+            # 工程实现中，此处可建立虚拟牵引约束或调用连接装置模型
+            self.state = TaskState.PUSHBACK
+            return 0.0, 0.0, 0.0
+        # 飞机推出
+        elif self.state == TaskState.PUSHBACK:
+            speed, front_delta, back_delta, reached = self.go_to_pose_step(
+                current_tug_pose,
+                pushback_pose,
+                self.max_pushback_speed,
+                "counter_phase"
+            )
+            if reached:
+                self.state = TaskState.RELEASE
+            return speed, front_delta, back_delta
+        # 解除牵引连接
+        elif self.state == TaskState.RELEASE:
+            # 工程实现中，此处解除虚拟牵引约束或机械连接
+            self.state = TaskState.RETREAT
+            return 0.0, 0.0, 0.0
+        # 车辆撤离
+        elif self.state == TaskState.RETREAT:
+            speed, front_delta, back_delta, reached = self.go_to_pose_step(
+                current_tug_pose,
+                retreat_pose,
+                self.max_retreat_speed,
+                "front_only"
+            )
+            if reached:
+                self.state = TaskState.DONE
+            return speed, front_delta, back_delta
+        # 任务完成
+        elif self.state == TaskState.DONE:
+            return 0.0, 0.0, 0.0
+        # 异常中止
+        else:
+            self.state = TaskState.ABORT
+            return 0.0, 0.0, 0.0
+\end{lstlisting}
+\section*{致 谢}\label{_Toc228997229}
+\addcontentsline{toc}{section}{致 谢}
+
+这篇课题从开题到落地，离不开相关老师朋友以及家人的支持与帮助。
+
+首先，我想要感谢导师在论文选题、研究思路、系统设计和论文撰写过程中给予的耐心指导。从课题方向的确定，到ROS与Gazebo联合仿真方案的完善，再到论文结构、技术路线和文字表达的修改，老师都提出了许多宝贵意见，使我能够更加清晰地理解课题研究重点，并逐步完成毕业设计任务；同时，在改进的过程中又学到了新的设计理念。
+
+其次，感谢实习单位相关部门前辈给出的经验，是他们及时的经验分享让我在设计方案上少走了很多弯路。
+
+同时，我还要感谢家人在整个课题周期所给予的情绪理解与资金支持，感谢朋友给予的设备支持。没有他们的帮助我无法在短时间完成第一辆实体车辆的硬件测试。
+
+最后，我还想留一份给自己。作为一项早已躺在桌面的``新建文件夹''，这个论文的完成标志着整个项目的突破进展。我也要感谢那个三年来不曾放弃这个想法的自己。
+
+总之，通过本次毕业设计，我对机器人系统建模、ROS仿真平台、车辆运动控制以及工程项目实施流程有了更深入的认识，也进一步提高了独立分析问题和解决问题的能力。今后我将继续保持严谨踏实的学习态度，在相关专业方向上不断积累和提升。
+
+\section*{参考文献}\label{_Toc229105361}
+\addcontentsline{toc}{section}{参考文献}
+
+{[}1{]} 中国民用航空局. 民用机场地面活动引导与控制系统（SMGCS）建设和运行指南{[}R{]}. 北京：中国民用航空局，2024.
+
+{[}2{]} MH/T 4042---2023，高级场面活动引导与控制系统技术规范{[}S{]}. 北京：中国民用航空局，2023.
+
+{[}3{]} ICAO. Advanced Surface Movement Guidance and Control Systems (A-SMGCS) Manual: Doc 9830 AN/452{[}R{]}. Montreal: International Civil Aviation Organization, 2004.
+
+{[}4{]} EUROCONTROL. EUROCONTROL Specification for Advanced-Surface Movement Guidance and Control System (A-SMGCS) Services: SPEC-171{[}R{]}. Brussels: EUROCONTROL, 2020.
+
+{[}5{]} FAA. Towbar and Towbarless Movement of Aircraft: Advisory Circular AC 00-65A{[}R{]}. Washington, DC: Federal Aviation Administration, 2023.
+
+{[}6{]} SUN Y K, ZHANG W, YANG X W, LIU J H, ZHU H J, LIU Y X, QIN J H. Review on aircraft towing taxi technologies{[}J{]}. Journal of Traffic and Transportation Engineering, 2023, 23(3):23-43.
+
+{[}7{]} ZANINOTTO S, GAUCI J, ZAMMIT B. An Autonomous Tow Truck Algorithm for Engineless Aircraft Taxiing{[}J{]}. Aerospace, 2024, 11(4):307.
+
+{[}8{]} ZOUTENDIJK M, MITICI M, HOEKSTRA J M. An investigation of operational management solutions and challenges for electric taxiing of aircraft{[}J{]}. Research in Transportation Business \& Management, 2023, 49:101019.
+
+{[}9{]} ZOUTENDIJK M, MITICI M. Fleet scheduling for electric towing of aircraft under limited airport energy capacity{[}J{]}. Energy, 2024, 294:130924.
+
+{[}10{]} BILIAKOVYCH O, KHARCHENKO O. The concept of an unmanned airport tug as an alternative to traditional aircraft tugs{[}J{]}. Modern Engineering and Innovative Technologies, 2023, 1(28-01):69-73.
+
+{[}11{]} QUIGLEY M, CONLEY K, GERKEY B, FAUST J, FOOTE T, LEIBS J, WHEELER R, NG A. ROS: an open-source Robot Operating System{[}A{]}. ICRA Workshop on Open Source Software{[}C{]}. Kobe: IEEE, 2009：1-6.
+
+{[}12{]} KOENIG N, HOWARD A. Design and use paradigms for Gazebo, an open-source multi-robot simulator{[}A{]}. Proceedings of the 2004 IEEE/RSJ International Conference on Intelligent Robots and Systems{[}C{]}. Sendai: IEEE, 2004：2149-2154.
+
+{[}13{]} Open Source Robotics Foundation. Gazebo ROS control tutorial{[}EB/OL{]}. \href{https://classic.gazebosim.org/tutorials?tut=ros_control&utm_source=chatgpt.com}{https://classic.gazebosim.org/tutorials?tut=ros\_control}, 2026-05-06.
+
+{[}14{]} ROS Wiki. Adding Physical and Collision Properties to a URDF Model{[}EB/OL{]}. \href{https://wiki.ros.org/urdf/Tutorials/Adding\%20Physical\%20and\%20Collision\%20Properties\%20to\%20a\%20URDF\%20Model?utm_source=chatgpt.com}{https://wiki.ros.org/urdf/Tutorials/Adding\%20Physical\%20and\%20Collision\%20Properties\%20to\%20a\%20URDF\%20Model}, 2026-05-06.
+
+{[}15{]} ROS Index. xacro: XML Macros{[}EB/OL{]}. \href{https://index.ros.org/p/xacro/?utm_source=chatgpt.com}{https://index.ros.org/p/xacro/}, 2026-05-06.
+
+{[}16{]} ROS Index. gazebo\_ros\_control: Gazebo ros\_control Interfaces{[}EB/OL{]}. \href{https://index.ros.org/p/gazebo_ros_control/?utm_source=chatgpt.com}{https://index.ros.org/p/gazebo\_ros\_control/}, 2026-05-06.
+
+{[}17{]} SIEGWART R, NOURBAKHSH I R, SCARAMUZZA D. Introduction to Autonomous Mobile Robots{[}M{]}. 2nd ed. Cambridge: MIT Press, 2011：13-120.
+
+{[}18{]} THRUN S, BURGARD W, FOX D. Probabilistic Robotics{[}M{]}. Cambridge: MIT Press, 2005：1-672.
+
+{[}19{]} RAJAMANI R. Vehicle Dynamics and Control{[}M{]}. 2nd ed. New York: Springer, 2012：15-165.
+
+{[}20{]} LAVALLE S M. Planning Algorithms{[}M{]}. Cambridge: Cambridge University Press, 2006：1-826.
+
+{[}21{]} LATOMBE J C. Robot Motion Planning{[}M{]}. Norwell: Kluwer Academic Publishers, 1991：1-672.
+
+{[}22{]} HART P E, NILSSON N J, RAPHAEL B. A formal basis for the heuristic determination of minimum cost paths{[}J{]}. IEEE Transactions on Systems Science and Cybernetics, 1968, 4(2):100-107.
+
+{[}23{]} DIJKSTRA E W. A note on two problems in connexion with graphs{[}J{]}. Numerische Mathematik, 1959, 1(1):269-271.
+
+{[}24{]} LAVALLE S M, KUFFNER J J. Randomized kinodynamic planning{[}J{]}. The International Journal of Robotics Research, 2001, 20(5):378-400.
+
+{[}25{]} FOX D, BURGARD W, THRUN S. The dynamic window approach to collision avoidance{[}J{]}. IEEE Robotics \& Automation Magazine, 1997, 4(1):23-33.
+
+{[}26{]} COULTER R C. Implementation of the Pure Pursuit Path Tracking Algorithm{[}R{]}. Pittsburgh: Carnegie Mellon University Robotics Institute, 1992.
+
+{[}27{]} HOFFMANN G M, TOMLIN C J, MONTEMERLO M, THRUN S. Autonomous automobile trajectory tracking for off-road driving: controller design, experimental validation and racing{[}A{]}. Proceedings of the 2007 American Control Conference{[}C{]}. New York: IEEE, 2007：2296-2301.
+
+{[}28{]} PADEN B, ČÁP M, YONG S Z, YERSHOV D, FRAZZOLI E. A survey of motion planning and control techniques for self-driving urban vehicles{[}J{]}. IEEE Transactions on Intelligent Vehicles, 2016, 1(1):33-55.
+
+{[}29{]} BRADSKI G. The OpenCV Library{[}J{]}. Dr. Dobb's Journal of Software Tools, 2000, 25(11):120-125.
+
+{[}30{]} OLSON E. AprilTag: A robust and flexible visual fiducial system{[}A{]}. Proceedings of the 2011 IEEE International Conference on Robotics and Automation{[}C{]}. Shanghai: IEEE, 2011：3400-3407.
+
+
+\end{document}
