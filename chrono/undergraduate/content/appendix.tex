@@ -1,109 +1,391 @@
-%!TEX root = ../csuthesis_main.tex
-% \begin{appendixs} % 无章节编号
-\chapter{附录代码}
 
-附录部分用于存放这里用来存放不适合放置在正文的大篇幅内容、典型如代码、图纸、完整数学证明过程等内容。
-
-\section{堆溢出检测算法}
-
-\begin{algorithm}[h]
-    \caption{堆溢出检测算法}\label{alg:ovf}
-    \begin{algorithmic}[1]
-        \IF {$\beta \in \mathbb{N^{*}} \land \Delta_\beta = \Delta_{\beta - 1} \land \beta < S$}
-            \STATE 正常写入
-        \ELSIF {$\beta \in \mathbb{N^{*}} \land \Delta_\beta \neq \Delta_{\beta - 1} \land \beta \geq S$}
-            \STATE 发生堆溢出
-        \ENDIF
-    \end{algorithmic}
-\end{algorithm}
-
-\section{KMP算法C++描述}
-
-% \begin{minted}[linenos]{c}
+\section{代码IMU收集.py}
 \begin{lstlisting}
-    const int maxn=2e5+5; 
-    int nt[maxn];
-    int aa[maxn],bb[maxn];
-    int a[maxn],b[maxn];
-    int n;
-    //参数为模板串和next数组
-    //字符串均从下标0开始
-    void kmpGetNext(int *s,int *Next)
-    {
-        Next[0]=0;
-    //    int len=strlen(s);
-        for(int i=1,j=0;i<n;i++)
-        {
-            while(j&&s[i]!=s[j]) j=Next[j];
-            if(s[i]==s[j]) j++;
-            Next[i+1]=j;
-        }
-    //    Next[len]=0;
-    }
-    int kmp(int *ss,int *s,int *Next)
-    {
-        kmpGetNext(s,Next);
-    //  调试输出Next数组
-    //	int len=strlen(s);
-    //	for(int i=0;i<=n;i++)
-    //		cout<<Next[i]<<" ";
-    //	cout<<endl; 
-    
-    //    int ans=0;
-    //    int len1=strlen(ss);
-    //    int len2=strlen(s);
-        for(int i=0,j=0;i<2*n;i++)  //倍长 
-        {
-            while(j&&ss[i%n]!=s[j])j=Next[j];
-            if(ss[i%n]==s[j]) j++;
-            if(j==n){
-                return 1;
-            }
-               
-        }
-        return 0;
-    }
-    int main(void)
-    {
-        while(cin>>n)
-        {
-            memset(a,0,sizeof(a));
-            memset(b,0,sizeof(b));
-            rep(i,0,n) cin>>aa[i];
-            rep(i,0,n) cin>>bb[i];
-            sort(aa,aa+n);
-            sort(bb,bb+n);
-            rep(i,0,n-1){
-                a[i]=aa[i+1]-aa[i];
-                b[i]=bb[i+1]-bb[i];
-            }
-            a[n-1]=360000+aa[0]-aa[n-1];
-    //		rep(i,0,n) cout<<a[i]<<" ";
-    //		cout<<endl;
-            b[n-1]=360000+bb[0]-bb[n-1];
-    //		rep(i,0,n) cout<<b[i]<<" ";
-    //		cout<<endl;
-            if(kmp(a,b,nt))
-                cout<<"possible"<<endl;
-            else cout<<"impossible"<<endl;
-        }
-        return 0;
-    }
+# OpenHUTB manual_control_chrono.py
+# 内置：CHRONO 切换 + IMU采集 + 高清出图(0.5格刻度)
+import pygame
+import carla
+import argparse
+import logging
+import numpy as np
+import matplotlib.pyplot as plt
+import time
+import random
+
+# IMU 数据存储
+imu_data = {
+    "t": [], "acc_x": [], "acc_y": [], "acc_z": [], "gyro_x": []
+}
+start_time = time.time()
+
+def main():
+    argparser = argparse.ArgumentParser()
+    argparser.add_argument('--host', default='127.0.0.1')
+    argparser.add_argument('--port', default=2000)
+    args = argparser.parse_args()
+
+    logging.basicConfig(format='%(levelname)s: %(message)s', level=logging.INFO)
+    client = carla.Client(args.host, args.port)
+    client.set_timeout(5.0)
+    world = client.get_world()
+    blueprint_library = world.get_blueprint_library()
+
+    # 生成车辆
+    vehicle_list = list(blueprint_library.filter('vehicle.*'))
+    vehicle_bp = random.choice(vehicle_list)
+    spawn_point = random.choice(world.get_map().get_spawn_points())
+    vehicle = world.spawn_actor(vehicle_bp, spawn_point)
+    vehicle.set_autopilot(False)
+
+    # IMU 传感器
+    imu_bp = blueprint_library.find('sensor.other.imu')
+    imu_tf = carla.Transform(carla.Location(x=0, z=1.0))
+    imu_sensor = world.spawn_actor(imu_bp, imu_tf, attach_to=vehicle)
+
+    def imu_callback(data):
+        t = time.time() - start_time
+        imu_data["t"].append(t)
+        imu_data["acc_x"].append(data.accelerometer.x / 100.0)
+        imu_data["acc_y"].append(data.accelerometer.y / 100.0)
+        imu_data["acc_z"].append(data.accelerometer.z / 100.0)
+        imu_data["gyro_x"].append(data.gyroscope.x)
+
+    imu_sensor.listen(imu_callback)
+
+    # PYGAME
+    pygame.init()
+    screen = pygame.display.set_mode((640, 480))
+    pygame.display.set_caption("OpenHUTB | CTRL+O 开启 CHRONO")
+    clock = pygame.time.Clock()
+    font = pygame.font.Font(None, 36)
+
+    chrono_enabled = False
+    running = True
+
+    while running:
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                running = False
+
+        # 按键检测
+        keys = pygame.key.get_pressed()
+
+        # ==============================================
+        # 你按 CTRL + O → 开启 CHRONO（官方功能）
+        # ==============================================
+        if keys[pygame.K_LCTRL] and keys[pygame.K_o]:
+            chrono_enabled = True
+            print("\n✅ 已手动开启 CHRONO 物理引擎！")
+
+        # 车辆控制
+        ctrl = carla.VehicleControl()
+        ctrl.throttle = 1.0 if keys[pygame.K_w] else 0.0
+        ctrl.brake    = 1.0 if keys[pygame.K_s] else 0.0
+        ctrl.steer    = -0.5 if keys[pygame.K_a] else 0.5 if keys[pygame.K_d] else 0.0
+        vehicle.apply_control(ctrl)
+
+        # 界面
+        screen.fill((0, 0, 0))
+        status = "CHRONO 已启动" if chrono_enabled else "PHYSX 模式 (按 CTRL+O 切换)"
+        color = (0,255,0) if chrono_enabled else (255,150,0)
+        screen.blit(font.render(status, True, color), (30, 30))
+        screen.blit(font.render(f"IMU 数据点: {len(imu_data['t'])}", True, (255,255,255)), (30, 80))
+        pygame.display.flip()
+        clock.tick(60)
+
+    # 退出清理
+    imu_sensor.destroy()
+    vehicle.destroy()
+    pygame.quit()
+
+    # ========================= 绘图：高清 0.5 格 =========================
+    plt.rcParams['font.sans-serif'] = ['SimHei']
+    plt.rcParams['axes.unicode_minus'] = False
+
+    t = np.array(imu_data["t"])
+    ax = np.array(imu_data["acc_x"])
+    ay = np.array(imu_data["acc_y"])
+    az = np.array(imu_data["acc_z"])
+    gx = np.array(imu_data["gyro_x"])
+
+    mask = t > 1.0
+    t, ax, ay, az, gx = t[mask], ax[mask], ay[mask], az[mask], gx[mask]
+
+    plt.figure(figsize=(12,8))
+    plt.subplot(211)
+    plt.plot(t, ax, label='a_x')
+    plt.plot(t, ay, label='a_y')
+    plt.plot(t, az, label='a_z')
+    plt.title("三轴加速度（CHRONO 真实动力学）")
+    plt.ylabel("m/s²")
+    plt.ylim(-2.0, 2.0)
+    plt.yticks(np.arange(-2.0, 2.1, 0.5))  # 0.5一格
+    plt.legend()
+    plt.grid(True)
+
+    plt.subplot(212)
+    plt.plot(t, gx, label='g_x')
+    plt.title("X 轴角速度")
+    plt.legend()
+    plt.grid(True)
+
+    plt.tight_layout()
+    plt.savefig("imu_chrono_final.png", dpi=300)
+    print("✅ 图片已保存：imu_chrono_final.png")
+    plt.show()
+
+if __name__ == '__main__':
+    main()
 \end{lstlisting}
-% \end{minted}
 
-\chapter{康托尔辩辞录：数学的自由与制约}
+\section{Sedan TMeasy Tire.json}
+\begin{lstlisting}
+{
+  "Name": "Sedan TMeasy Tire",
+  "Type": "Tire",
+  "Template": "TMeasyTire",
 
-（录自康托尔：《一般集合论基础》，1883）
+  // ------------------------------------------------
+  // Tire design (REQUIRED)
 
-数学在其发展中是完全自由的，它只受下述自明的关注所制约，即它的概念既要内在地不存在矛盾，还要参与确定与此前形成的，已经存在着地和已被证明地概念之关系（借助定义贯串起来）。特别地，在引入新数时，数学只遵循：在给出它们地定义时使之具有某种确定性，并且在某些情况下，使之与老数有某种关系，在特定地场合中这种关系一定会使它们（新数和老数）互相区别开来，只要一个数满足这些条件，数学只能而且必须把它看作是存在的和实在的东西，这正是我……关于为什么必须把有理数、无理数和复数看作与有限正整数一样是实在的所建议的理由。
+  "Design": {
+    "Unloaded Radius [m]": 0.336423,
+    "Mass [kg]": 12.0,
+    "Inertia [kg.m2]": [ 0.156, 0.679, 0.156 ],
+    "Width [m]": 0.204978,
+    "Rim Radius [m]": 0.2032,
+    "Roundness of Cross Section": 0.1
+  },
 
-我相信，没有必要害怕，许多人是害怕，这些原则含有对于科学的危险，一方面，实行造出新数的自由必须服从所设计的条件，但这些条件给任意性留下的活动空间是非常小的。而且，每一数学概念在其自身之中也带有必要的矫正物；如果它没有收获也不合适（它的无用很快就会表明这一点），那么它将由于没有成功而被丢弃。另一方面，在我看来，对于数学研究工作的任何多余的限制只会随之而带来更大的危险，由于实际上并没有任何理由可说明它是由科学的本质推断出来的，它的危险就更大了，而数学的本质恰恰在于它的自由。
+  "Coefficient of Friction": 0.65,
 
-如果高斯、柯西、阿贝尔、雅可比、狄利克雷、魏尔斯特拉斯、埃尔米特和黎曼总是被束缚而拿他们的新想法去臣服于形而上学的控制，那么，我们今日就不可能为现代函数论的雄伟建筑而高兴，现代函数论的设计和矗立是完全自由的，毫无短视的瞬间目的……。如果福克斯、庞加莱和其他许多杰出的智者受外来影响所包围和限制，我们就会见不到他们带给微分方程论的巨大的推动，还有，如果枯莫尔不是斗胆地（大有仿效者）把所谓的“理想”数引入数论，我们今天也无从去羡慕钦佩克罗内克和戴德金在代数和算术上十分重要和杰出的工作。
+  "Rolling Resistance Coefficients": [ 0.015, 0.015 ],
 
-因此，如已说明的，数学是要脱离形而上学的桎梏而完全自由地发展 \dots
+  // ------------------------------------------------
+  // Vehicle type.
+  // Required only if tire specified with "load index" or "bearing capacity".
+  // Must be one of "Truck" or "Passenger"
 
+  "Vehicle Type": "Passenger",
 
+  // ------------------------------------------------
+  // Load index specification.
+  // Takes priority over "bearing capacity" (used only if a full parameterization not provided)
 
-% \end{appendixs}
+  "Load Index": 108,
+
+  // ------------------------------------------------
+  // Bearing capacity specification.
+  // Lowest priority (used only if no other specification provided)
+
+  "Maximum Bearing Capacity [N]": 10000,
+
+  // ------------------------------------------------
+  // Full parameter specification.
+  // Takes priority over both "Load Index" and "bearing capacity".
+
+  "Parameters": {
+    "Tire Load": {
+      "Nominal Vertical Force [N]": 8562.8266,
+      "Maximum Vertical Force [N]": 29969.893
+    },
+    "Tire Stiffness": {
+      "Longitudinal [N/m]": 185004.42,
+      "Lateral [N/m]": 164448.37,
+      "Vertical [N/m]": [ 411121.0, 411121.00 ]
+    },
+    "Tire Damping": {
+      "Longitudinal [Ns/m]": 3700,
+      "Lateral [Ns/m]": 3488,
+      "Vertical [Ns/m]": 3900
+    },
+    "Dynamic Radius Weighting Coefficients": [ 0.375, 0.75 ],
+    "Longitudinal": {
+      "Initial Slopes dFx/dsx [N]": [ 151447.29, 236412.79 ],
+      "Maximum Fx Load [N]": [ 7575.3614, 12808.276 ],
+      "Sliding Fx Load [N]": [ 4657.9208, 8625.3352 ],
+      "Slip sx at Maximum Fx": [ 0.12, 0.15 ],
+      "Slip sx where sliding begins": [ 0.9, 0.95 ]
+    },
+    "Lateral": {
+      "Initial Slopes dFy/dsy [N]": [ 50931.693, 94293.847 ],
+      "Maximum Fy Load [N]": [ 6615.0404, 12509.947 ],
+      "Sliding Fy Load [N]": [ 6091.5092, 11443.875 ],
+      "Slip sy at Maximum Fy": [ 0.38786, 0.38786 ],
+      "Slip sy where sliding begins": [ 0.82534, 0.91309 ]
+    },
+    "Aligning": {
+      "Normalized Trail at Zero Slip sy": [ 0.178, 0.19 ],
+      "Slip sy where Trail Changes Sign": [ 0.40726, 0.40726 ],
+      "Slip sy where Trail Tends to Zero": [ 0.82534, 0.91309 ]
+    }
+  },
+
+  // ------------------------------------------------
+  // Visualization mesh (OPTIONAL)
+
+    "Visualization": {
+        "Mesh Filename Left": "sedan/sedan_tire.obj",
+        "Mesh Filename Right": "sedan/sedan_tire.obj"
+    }
+
+}
+\end{lstlisting}
+
+\section{Multi-Link.json}
+\begin{lstlisting}
+    {
+  "Name":                           "Generic Multi-Link",
+  "Type":                           "Suspension",
+  "Template":                       "MultiLink",
+
+  "Spindle" :
+  {
+    "Mass":                         1.103,
+    "COM":                          [0.000, 0.80, 0.000],
+    "Inertia":                      [0.000478, 0.000478, 0.000496],
+    "Radius":                       0.1,
+    "Width":                        0.03
+  },
+
+  "Upright":
+  {
+    "Mass":                         3.201,
+    "COM":                          [0.000, 0.760, 0.000],
+    "Inertia":                      [0.0250, 0.00653, 0.0284],
+    "Radius":                       0.02
+  },
+
+  "Upper Arm":
+  {
+    "Mass":                         4.744,
+    "COM":                          [-0.014, 0.490, 0.098],
+    "Inertia":                      [0.0237, 0.0294, 0.00612],
+    "Radius":                       0.02,
+    "Location Chassis Front":       [0.060, 0.397, 0.082],
+    "Location Chassis Back":        [-0.157, 0.358, 0.062],
+    "Location Upright":             [0.056, 0.714, 0.151]
+  },
+
+  "Lateral":
+  {
+    "Mass":                         1.910,
+    "COM":                          [0.033, 0.440, -0.113],
+    "Inertia":                      [0.0543, 0.0541, 0.000279],
+    "Radius":                       0.02,
+    "Location Chassis":             [0.036, 0.188, -0.133],
+    "Location Upright":             [0.029, 0.692, -0.093],
+    "Universal Joint Axis Link":    [-0.978950, 0.204099, 0.0],
+    "Universal Joint Axis Chassis": [-0.021990, -0.105472, 0.994179]
+  },
+
+  "Trailing Link":
+  {
+    "Mass":                         15.204,
+    "COM":                          [0.279, 0.543, -0.132],
+    "Inertia":                      [0.0762, 0.527, 0.567],
+    "Radius":                       0.03,
+    "Location Chassis":             [0.723, 0.449, -0.072],
+    "Location Upright":             [-0.000, 0.714, -0.156],
+    "Universal Joint Axis Link":    [0.0, 0.0, 1.0],
+    "Universal Joint Axis Chassis": [-0.272, 0.962, 0.0]
+  },
+
+  "Tierod":
+  {
+    "Location Chassis":             [-0.257, 0.170, -0.116],
+    "Location Upright":             [-0.144, 0.712, -0.056]
+  },
+
+  "Spring":
+  {
+    "Location Chassis":             [0.181, 0.491, 0.110],
+    "Location Link":                [0.181, 0.419, -0.164],
+    "Spring Coefficient":           110000.000,
+    "Free Length" :                 0.339
+  },
+
+  "Shock":
+  {
+    "Location Chassis":             [0.171, 0.478, 0.315],
+    "Location Link":                [0.181, 0.519, -0.162],
+    "Damping Coefficient":          5000.0
+  },
+
+  "Axle":
+  {
+    "Inertia":                      0.166
+  }
+}
+\end{lstlisting}
+
+\section{Sedan DoubleWishbone.json}
+\begin{lstlisting}
+    {
+  "Name": "Sedan DoubleWishbone",
+  "Type": "Suspension",
+  "Template": "DoubleWishbone",
+
+  "Spindle": {
+    "Mass": 1.103,
+    "COM": [ 0, 0.7979, -0.1199 ],
+    "Inertia": [ 0.000478, 0.000496, 0.000478 ],
+    "Radius": 0.1,
+    "Width": 0.02
+  },
+
+  "Upright": {
+    "Mass": 1.397,
+    "COM": [ -0.0224, 0.7470, -0.1118 ],
+    "Moments of Inertia": [ 0.0138, 0.0146, 0.00283 ],
+    "Products of Inertia": [ 0, 0, 0 ],
+    "Radius": 0.025
+  },
+
+  "Upper Control Arm": {
+    "Mass": 1.032,
+    "COM": [ -0.1083, 0.5972, 0.1063 ],
+    "Moments of Inertia": [ 0.00591, 0.00190, 0.00769 ],
+    "Products of Inertia": [ 0, 0, 0 ],
+    "Radius": 0.02,
+    "Location Chassis Front": [ -0.100, 0.4700, 0.1050 ],
+    "Location Chassis Back": [ -0.250, 0.5100, 0.1100 ],
+    "Location Upright": [ -0.040, 0.6950, 0.1050 ]
+  },
+
+  "Lower Control Arm": {
+    "Mass": 1.611,
+    "COM": [ 0.0048, 0.6112, -0.2932 ],
+    "Moments of Inertia": [ 0.0151, 0.0207, 0.0355 ],
+    "Products of Inertia": [ 0, 0, 0 ],
+    "Radius": 0.03,
+    "Location Chassis Front": [ 0.2, 0.4200, -0.2700 ],
+    "Location Chassis Back": [ -0.2, 0.4700, -0.2650 ],
+    "Location Upright": [ 0.0, 0.7700, -0.3200 ]
+  },
+
+  "Tierod": {
+    "Location Chassis": [ -0.2, 0.4200, -0.1200 ],
+    "Location Upright": [ -0.15, 0.7700, -0.1200 ]
+  },
+
+  "Spring": {
+    "Location Chassis": [ -0.04, 0.5200, 0.2300 ],
+    "Location Arm": [ 0.0, 0.6200, -0.2700 ],
+    "Free Length": 0.51,
+    "Spring Coefficient": 280000.0,
+    "Damping Coefficient": 6000.0
+  },
+
+  "Shock": {
+    "Location Chassis": [ -0.04, 0.5200, 0.2300 ],
+    "Location Arm": [ 0.0, 0.6200, -0.2700 ],
+    "Spring Coefficient": 280000.0,
+    "Damping Coefficient": 6000.0
+  },
+
+  "Axle": {
+    "Inertia": 0.4
+  }
+}
+\end{lstlisting}
