@@ -1,0 +1,131 @@
+{
+  "name": "hutb-simulator-dev",
+  "displayName": "HUTB 人车模拟器开发助手",
+  "description": "面向人车模拟器的快速开发验证插件系统，提供代码智能补全、语法高亮、错误检查、环境打包、联动调试等一站式开发功能。",
+  "version": "0.1.0",
+  "publisher": "OpenHUTB",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/OpenHUTB/vscode-ext"
+  },
+  "engines": {
+    "vscode": "^1.80.0"
+  },
+  "categories": [
+    "Programming Languages",
+    "Debuggers",
+    "Other"
+  ],
+  "keywords": [
+    "HUTB",
+    "MCP",
+    "模拟器",
+    "智能网联汽车",
+    "人车模拟器"
+  ],
+  "icon": "resources/icon.png",
+  "activationEvents": [
+    "onLanguage:python",
+    "workspaceContains:**/*.py"
+  ],
+  "main": "./out/extension.js",
+  "contributes": {
+    "commands": [
+      {
+        "command": "hutb.packEnvironment",
+        "title": "HUTB: 一键打包开发环境"
+      },
+      {
+        "command": "hutb.startDebug",
+        "title": "HUTB: 启动调试"
+      },
+      {
+        "command": "hutb.selectDebugTemplate",
+        "title": "HUTB: 选择调试模板"
+      },
+      {
+        "command": "hutb.runTests",
+        "title": "HUTB: 运行测试"
+      },
+      {
+        "command": "hutb.packageExtension",
+        "title": "HUTB: 打包插件"
+      },
+      {
+        "command": "hutb.publishExtension",
+        "title": "HUTB: 发布插件"
+      }
+    ],
+    "languages": [
+      {
+        "id": "python",
+        "aliases": ["Python"],
+        "extensions": [".py"]
+      }
+    ],
+    "grammars": [
+      {
+        "language": "python",
+        "scopeName": "source.python.hutb",
+        "path": "./syntaxes/hutb.tmLanguage.json",
+        "injectTo": ["source.python"]
+      }
+    ],
+    "configuration": {
+      "title": "HUTB 模拟器插件配置",
+      "properties": {
+        "hutb.pythonPath": {
+          "type": "string",
+          "default": "",
+          "description": "Python 解释器路径（留空则自动检测）"
+        },
+        "hutb.sdkVersion": {
+          "type": "string",
+          "default": "",
+          "description": "HUTB SDK 版本号"
+        },
+        "hutb.packConfig.vscodePath": {
+          "type": "string",
+          "default": "",
+          "description": "VSCode 便携版路径（用于一键打包）"
+        },
+        "hutb.packConfig.pythonEnvPath": {
+          "type": "string",
+          "default": "",
+          "description": "Python 环境路径（用于一键打包）"
+        },
+        "hutb.packConfig.outputDir": {
+          "type": "string",
+          "default": "",
+          "description": "打包输出目录"
+        }
+      }
+    }
+  },
+  "scripts": {
+    "vscode:prepublish": "npm run compile",
+    "compile": "tsc -p ./",
+    "watch": "tsc -watch -p ./",
+    "pretest": "npm run compile",
+    "test": "node ./out/test/runTest.js",
+    "lint": "eslint src --ext ts",
+    "package": "vsce package",
+    "publish": "vsce publish"
+  },
+  "devDependencies": {
+    "@types/vscode": "^1.80.0",
+    "@types/node": "^18.0.0",
+    "@types/mocha": "^10.0.0",
+    "@vscode/test-electron": "^2.3.0",
+    "typescript": "^5.3.0",
+    "eslint": "^8.50.0",
+    "@typescript-eslint/eslint-plugin": "^6.0.0",
+    "@typescript-eslint/parser": "^6.0.0",
+    "mocha": "^10.2.0",
+    "glob": "^10.3.0",
+    "@vscode/vsce": "^2.22.0"
+  },
+  "dependencies": {
+    "archiver": "^6.0.0"
+  }
+}

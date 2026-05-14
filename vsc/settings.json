@@ -1,0 +1,10 @@
+{
+    "env": {
+        "HUTB_HOME": "${workspaceFolder}"
+    },
+    "python.analysis.autoSearchPaths": true,
+    "python.analysis.extraPaths": [
+        "${workspaceFolder}/typings"
+    ],
+    "python.analysis.stubPath": "${workspaceFolder}/typings"
+}
