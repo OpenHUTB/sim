@@ -61,3 +61,7 @@ python main.py test --suite all
 - CARLA 0.9.16 (hutb 定制版)
 - Python 3.7
 - PyTorch + NumPy + PyYAML + matplotlib
+
+## 百度网盘链接
+- 通过网盘分享的文件：carla
+- 链接: https://pan.baidu.com/s/1PIzndyc4LrLxvKNImyH9CA?pwd=shju 提取码: shju 
