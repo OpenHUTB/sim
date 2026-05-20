@@ -1,3 +1,0 @@
-$pdf_mode = 1;
-$xelatex = 'xelatex -shell-escape -synctex=1 -interaction=nonstopmode';
-$clean_ext = "bbl blg aux dvi log nav out snm synctex.gz toc lof lot";
