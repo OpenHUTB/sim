@@ -1,0 +1,33 @@
+\section*{符号说明}
+\addcontentsline{toc}{section}{符号说明}
+
+\begin{table}[H]
+    \centering
+    \begin{tabular}{|c|c|c|c|}
+        \hline
+        符号 & 含义 & 单位 & 备注 \\
+        \hline
+        FPS & 仿真平均帧率 & 帧/秒 & 实时仿真核心指标，≥30为合格 \\
+        \hline
+        D & 指令端到端时延 & ms & 控制响应实时性指标，≤50为合格 \\
+        \hline
+        K & CPU内核态占比 & \% & 内核开销=内核时间/总CPU时间×100\% \\
+        \hline
+        C & 上下文切换频率 & 次/秒 & 线程调度效率指标，越低越好 \\
+        \hline
+        E & 定时周期误差 & ms & 仿真时序精度指标，≤5为合格 \\
+        \hline
+        S & 系统运行稳定性 & --- & 1小时无崩溃、无泄漏、无失步 \\
+        \hline
+        N & 仿真无人机数量 & 架 & 集群规模测试变量 \\
+        \hline
+        T\_cycle & 仿真主循环周期 & ms & 固定周期控制仿真更新频率 \\
+        \hline
+        t\_wait & 线程等待时长 & ms & 不同等待模型的等待参数 \\
+        \hline
+        $\eta_{cpu}$ & CPU资源利用率 & \% & 用户态有效计算占总占用比例 \\
+        \hline
+        $\eta_{gain}$ & 性能提升倍率 & --- & 优化后指标/优化前指标 \\
+        \hline
+    \end{tabular}
+\end{table}
