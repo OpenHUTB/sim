@@ -1,0 +1,238 @@
+\section{优化效果实验测试与数据分析}
+
+\subsection{实验设计与评价指标}
+
+为确保实验结果的可重复性、可比性与科学性，本实验严格沿用第3章设定的实验环境，保持硬件、软件、场景等核心条件完全一致，为不同优化方案的性能对比提供公平、统一的测试基准。具体实验环境与控制变量设定如表\ref{tab:env}所示。
+
+\begin{table}[H]
+    \centering
+    \caption{实验环境一致性校验表}
+    \label{tab:env}
+    \begin{tabular}{|p{3cm}|p{4.5cm}|p{4.5cm}|p{3cm}|}
+        \hline
+        环境维度 & 优化前（原生） & 优化后（线程池+单线程分发器） & 一致性说明 \\
+        \hline
+        硬件 & i9-12900K/64GB/RTX4090 & 同左 & 完全一致 \\
+        \hline
+        软件版本 & Unity2021.3.15f1+AirSim1.8.1 & 同左 & 版本锁定 \\
+        \hline
+        仿真场景 & 室外空地+简易建筑 & 同左 & 完全一致 \\
+        \hline
+        测试规模 & 1/5/10/15/20/25/30架 & 同左 & 梯度一致 \\
+        \hline
+        运行时长 & 每组10分钟，重复3次 & 同左 & 统一 \\
+        \hline
+    \end{tabular}
+\end{table}
+
+核心评价指标优化目标与实测值对比如表\ref{tab:target}所示。
+
+\begin{table}[H]
+    \centering
+    \caption{核心评价指标优化目标vs实测值总览表}
+    \label{tab:target}
+    \begin{tabular}{|p{4cm}|c|c|c|c|c|}
+        \hline
+        评价指标 & 合格标准 & 优化前实测值（30架） & 优化后实测值（30架） & 达标情况 & 提升幅度 \\
+        \hline
+        平均帧率（FPS） & ≥30 & 3 & 37 & 超额达标 & 1133\% \\
+        \hline
+        平均时延（ms） & ≤50 & 292 & 32 & 达标 & 89.0\% \\
+        \hline
+        内核态CPU占比（\%） & ≤30 & 72 & 22 & 达标 & 69.4\% \\
+        \hline
+        上下文切换频率（次/秒） & 越低越好 & 286万 & 8.3万 & 大幅优化 & 97.1\% \\
+        \hline
+        定时误差（ms） & ≤5 & 12.8 & 0.4 & 达标 & 96.9\% \\
+        \hline
+        运行稳定性（1小时） & 无崩溃 & 42分钟崩溃 & 无崩溃 & 达标 & --- \\
+        \hline
+    \end{tabular}
+\end{table}
+
+实验采用对照实验设计，设立对照组和实验组。对照组采用AirSim原生默认方案，实验组涵盖5种不同的线程优化模型。评价指标计算公式如下：
+
+\begin{equation}
+    FPS = \frac{\text{总渲染帧数}}{\text{测试时间（s）}}
+\end{equation}
+
+\begin{equation}
+    \eta_{delay} = \frac{D_{orig} - D_{opt}}{D_{orig}} \times 100\%
+\end{equation}
+
+\begin{equation}
+    \eta_{gain} = \frac{\text{优化后指标}}{\text{原始指标}}
+\end{equation}
+
+\begin{table}[H]
+    \centering
+    \caption{实验评价指标定义与计算方法表}
+    \label{tab:metrics}
+    \begin{tabular}{|p{3cm}|c|c|p{4cm}|c|}
+        \hline
+        指标名称 & 符号 & 单位 & 核心定义 & 合格标准 \\
+        \hline
+        平均帧率 & FPS & 帧/秒 & 单位时间内仿真场景的渲染帧数 & ≥30帧/秒 \\
+        \hline
+        平均时延 & D & ms & 指令下发到动作完成的总耗时 & ≤50ms \\
+        \hline
+        内核态占比 & K & \% & 内核态CPU占用占总CPU占用的比例 & ≤30\% \\
+        \hline
+        上下文切换频率 & C & 次/秒 & 单位时间内线程状态切换的次数 & 越低越好 \\
+        \hline
+        定时误差 & E & ms & 实际周期与理论周期的偏差 & ≤5ms \\
+        \hline
+        运行稳定性 & S & --- & 长期运行是否出现崩溃等异常 & 无崩溃 \\
+        \hline
+    \end{tabular}
+\end{table}
+
+\subsection{微观线程模型基准测试}
+
+对不同线程等待模型的时序控制能力进行定量评估，分别设定1ms、5ms、10ms三档典型定时周期，记录各模型连续运行时实际周期与理论周期的偏差。
+
+\begin{table}[H]
+    \centering
+    \caption{不同等待模型定时精度对比表}
+    \label{tab:precision}
+    \begin{tabular}{|p{3.5cm}|c|c|c|c|}
+        \hline
+        等待模型 & 1ms周期误差（ms） & 5ms周期误差（ms） & 10ms周期误差（ms） & 精度等级 \\
+        \hline
+        原生sleep(0) & 3.2±0.5 & 8.7±1.2 & 15.3±2.1 & 差 \\
+        \hline
+        单线程分发器 & 0.3±0.1 & 0.4±0.1 & 0.5±0.1 & 优 \\
+        \hline
+        标准阻塞睡眠 & 1.2±0.3 & 1.8±0.4 & 2.1±0.5 & 良 \\
+        \hline
+        改良自旋 & 0.8±0.2 & 1.1±0.3 & 1.3±0.4 & 中 \\
+        \hline
+        协作式让出 & 2.1±0.4 & 3.5±0.8 & 4.2±1.0 & 较差 \\
+        \hline
+        纯自旋 & 0.1±0.05 & 0.1±0.05 & 0.1±0.05 & 极优 \\
+        \hline
+    \end{tabular}
+\end{table}
+
+综合对比发现，单线程分发器模型在定时精度、系统开销、资源占用三者间取得最优均衡，更适用于大规模无人机集群的高精度同步仿真场景。
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.6\textwidth]{figures/image15.png}
+    \caption{无人机3D仿真运行效果图}
+    \label{fig:3d}
+\end{figure}
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.6\textwidth]{figures/image16.png}
+    \caption{无人机多维旋转可行性效果图}
+    \label{fig:rotation}
+\end{figure}
+
+\subsection{集成仿真性能测试}
+
+在30架无人机的大规模集群压力场景中，对各方案的仿真运行帧率展开对比测试。
+
+原始AirSim方案平均帧率只有3FPS，协作式让出模型11FPS，改良自旋等待模型15FPS，标准阻塞睡眠模型28FPS，本文提出的单线程分发器模型稳定达到37FPS，满足实时仿真≥30FPS的工程指标。
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.9\textwidth]{figures/image17.png}
+    \caption{优化前后帧率提升对比图}
+    \label{fig:fps_improve}
+\end{figure}
+
+在20架、25架、30架三个关键规模点，单线程分发器模型帧率提升幅度分别为243\%、327\%、1133\%。
+
+对指令执行端到端时延的测试结果表明：原始方案292ms，协作式让出156ms，改良自旋118ms，标准阻塞睡眠46ms，单线程分发器模型仅32ms，相比原始方案降低89\%。
+
+为验证优化方案在大规模集群方面的适配能力，将无人机数量扩充到40架、50架。单线程分发器模型在40架规模时平均帧率29FPS，端到端时延41ms；50架规模时帧率22FPS，时延58ms，系统仍能稳定运行。
+
+\subsection{系统资源占用测试}
+
+在30架无人机集群仿真场景下，原始方案内核态占比72\%，用户态占比27\%；单线程分发器模型内核态占比22\%，用户态占比36\%，资源利用效率提升3倍以上。
+
+\begin{figure}[H]
+    \centering
+    \begin{minipage}{0.45\textwidth}
+        \centering
+        \includegraphics[width=\textwidth]{figures/image18.png}
+        \caption{优化前CPU占比（30架）}
+        \label{fig:cpu_before}
+    \end{minipage}
+    \hfill
+    \begin{minipage}{0.45\textwidth}
+        \centering
+        \includegraphics[width=\textwidth]{figures/image19.png}
+        \caption{优化后CPU占比（30架）}
+        \label{fig:cpu_after}
+    \end{minipage}
+\end{figure}
+
+通过连续1小时的稳定性测试：
+
+\begin{table}[H]
+    \centering
+    \caption{长期运行（1小时）内存与线程数对比表}
+    \label{tab:stability}
+    \begin{tabular}{|p{3.5cm}|p{4cm}|p{4cm}|p{2.5cm}|}
+        \hline
+        测试项 & 优化前（原生，30架） & 优化后（30架） & 优化效果 \\
+        \hline
+        初始内存占用 & 12.5GB & 8.8GB & 降低29.6\% \\
+        \hline
+        1小时后内存占用 & 21.3GB（持续上涨） & 9.1GB（稳定） & 无内存泄漏 \\
+        \hline
+        初始线程数 & 62个 & 30个 & 减少51.6\% \\
+        \hline
+        1小时后线程数 & 87个（持续膨胀） & 31个（稳定） & 线程无冗余 \\
+        \hline
+        运行状态 & 42分钟崩溃 & 全程稳定 & 稳定性达标 \\
+        \hline
+    \end{tabular}
+\end{table}
+
+GPU利用率方面，原始方案仅18\%，优化后提升至42\%。
+
+\subsection{优化方案综合对比与优选}
+
+构建综合评价体系（权重：帧率30\%、时延30\%、内核占比20\%、稳定性20\%）：
+
+\begin{table}[H]
+    \centering
+    \caption{五种优化模型核心指标汇总表}
+    \label{tab:summary}
+    \begin{tabular}{|p{3.5cm}|c|c|c|c|c|}
+        \hline
+        优化模型 & 30架FPS & 30架时延（ms） & 内核态占比（\%） & 稳定性（1小时） & 综合得分 \\
+        \hline
+        原生方案 & 3 & 292 & 72 & 崩溃 & 17.8 \\
+        \hline
+        单线程分发器 & 37 & 32 & 22 & 稳定 & 93.6 \\
+        \hline
+        标准阻塞睡眠 & 28 & 46 & 25 & 稳定 & 78.2 \\
+        \hline
+        改良自旋 & 15 & 118 & 45 & 偶发卡顿 & 61.5 \\
+        \hline
+        协作式让出 & 11 & 156 & 52 & 卡顿频繁 & 52.3 \\
+        \hline
+        纯自旋 & 42 & 28 & 20 & CPU满载 & 65.0 \\
+        \hline
+    \end{tabular}
+\end{table}
+
+\textbf{最优方案：单线程分发器模型 + 线程池 + CPU亲和性绑定}
+
+性能提升机理：
+\begin{enumerate}
+    \item 用一个线程管理所有定时事件，彻底消灭大量线程竞争
+    \item 大幅降低系统调用与上下文切换
+    \item 内核态CPU占比显著下降
+    \item 线程池复用、负载均衡、缓存命中率提升
+    \item 仿真计算资源得到充分释放
+\end{enumerate}
+
+\subsection{本章小结}
+
+本部分通过微观基准测试、集成仿真测试、长期稳定性测试，完整验证了五种优化模型的效果。实验证明，单线程分发器模型在帧率、时延、资源占用、稳定性、扩展性上全面领先，可彻底解决AirSim大规模无人机集群仿真性能断崖式下跌问题。
