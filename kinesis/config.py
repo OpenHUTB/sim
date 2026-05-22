@@ -3,7 +3,7 @@ import os
 import sys
 import tarfile
 
-BASE_DIR = r"D:\兼职\18\Kinesis"
+BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 
 def check_file(path, name):
     """检查文件是否存在"""
@@ -99,11 +99,11 @@ def main():
             print("You can now run Kinesis tests:")
             print()
             print("Test 1 - Target Reaching:")
-            print("  cd D:\\兼职\\18\\Kinesis")
+            print("  cd " + os.path.dirname(os.path.abspath(__file__)))
             print("  python src\\run.py exp_name=kinesis-target-goal-reach run=eval_run learning=pointgoal epoch=-1 run.headless=True")
             print()
             print("Test 2 - Motion Imitation:")
-            print("  cd D:\\兼职\\18\\Kinesis")
+            print("  cd " + os.path.dirname(os.path.abspath(__file__)))
             print("  python src\\run.py exp_name=kinesis-moe-imitation epoch=-1 run=eval_run run.headless=True")
             print("  run.motion_file=data\\kit_test_motion_dict.pkl")
             print("  run.initial_pose_file=data\\initial_pose\\initial_pose_test.pkl")
@@ -112,7 +112,7 @@ def main():
             print("[INFO] Need to convert KIT data")
             print()
             print("Run conversion:")
-            print("  cd D:\\兼职\\18\\Kinesis")
+            print("  cd " + os.path.dirname(os.path.abspath(__file__)))
             print("  python src\\utils\\convert_kit.py --path data\\KIT_Data\\KIT")
     else:
         print("[ERROR] Missing required files:")
