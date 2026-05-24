@@ -1,0 +1,13 @@
+
+\begin{center}
+{\bfseries\zihao{3} Abstract}
+\end{center}
+
+With the development of intelligent airport ground operations, aircraft towing and docking tasks require higher levels of automation, accuracy, and safety. Traditional manual towing operations rely heavily on operator experience, and may be limited by efficiency and potential safety risks. Therefore, this thesis focuses on the automatic docking process between an airport towing vehicle and an aircraft, and establishes a ROS-Gazebo co-simulation system.
+
+First, the airport towing operation scenario is abstracted, and a kinematic model of a dual-axle steering towing vehicle is established. The relationships among steering angle, vehicle speed, and trajectory curvature are analyzed. On this basis, an aircraft-assisted perception method and a relative pose error-based control strategy are designed. By using target identity confirmation, relative distance estimation, and attitude error calculation, the towing vehicle can realize autonomous approaching, attitude adjustment, and terminal stopping judgment. Then, the towing vehicle model, aircraft target, and airport operation environment are built in Gazebo. Under the ROS framework, vehicle control, sensor data acquisition, task mode switching, and system communication are implemented through ROS nodes.
+
+The simulation results show that the proposed ROS-Gazebo co-simulation system can realize basic processes such as vehicle model loading, steering control, wheel speed control, target approaching, docking, pushback, and retreat. The feasibility of the proposed method in the airport automatic towing and docking scenario is verified. This study provides a reference for future prototype development, control algorithm optimization, and further research on intelligent airport ground operation systems.
+
+\vspace{1em}
+\noindent {\bfseries Keywords:} automatic towing vehicle; aircraft docking; ROS; Gazebo; path planning; multi-sensor fusion; co-simulation.
