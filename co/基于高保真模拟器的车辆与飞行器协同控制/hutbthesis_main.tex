@@ -1,0 +1,31 @@
+%!TEX program = xelatex
+\documentclass[AutoFakeBold]{hutbthesis}
+
+% 补充 pandoc 转换后的表格/列表/代码环境所需宏包
+\usepackage{longtable,booktabs,array,calc,enumitem}
+\usepackage{listings}
+\lstset{basicstyle=\ttfamily\small,breaklines=true,columns=fullflexible}
+
+\include{content/cover}
+
+\begin{document}
+\maketitle
+
+\frontmatter
+\include{content/declarationzh}
+\include{content/abstractzh}
+\include{content/abstracten}
+\tableofcontents
+
+\mainmatter
+\include{content/chapter1}
+\include{content/chapter2}
+\include{content/chapter3}
+\include{content/chapter4}
+\include{content/chapter5}
+
+\include{content/appendix}
+\include{content/acknowledgements}
+\include{content/references}
+
+\end{document}
