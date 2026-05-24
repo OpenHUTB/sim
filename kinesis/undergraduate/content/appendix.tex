@@ -1,0 +1,357 @@
+%!TEX root = ../csuthesis\_main.tex
+% \begin{appendix} % 无章节编号
+	\chapter{附录代码}
+
+
+	\section{更多技术支持}
+	\begin{lstlisting}
+交通场景指的是交通参与者在仿真世界中多样的动态行为，通过这些动态行为对运行在其中的自动驾驶车辆进行充分测试。交通场景的丰富性依赖于交通参与者的种类和其能实现的动态行为，CARLA支持轿车、SUV、客车、卡车、摩托车、自行车、行人等多种动态参与者及锥桶、售货机等多种静态参与者，动态参与者的行为可通过预先定义的场景和在线运行的交通流来控制。
+		
+CARLA中的交通管理器（Traffic Manager）模块可进行场景和交通流的模拟，不过鉴于基于OpenSCENARIO格式的场景仿真更通用，我们选用CARLA提供的场景运行器（ScenarioRunner，以下简称SR）来进行场景的模拟。下面对SR的安装和使用进行说明。
+		
+01. ScenarioRunner的安装
+ScenarioRunner是由CARLA官方提供的、与CARLA配合使用的场景解析和运行工具，支持CARLA自定义的scenario格式、route格式和OpenSCENARIO格式等多种预定义场景文件的运行，本书主要使用其OpenSCENARIO场景运行功能。OpenSCENARIO目前已经发布1.2和2.0版本，其中1.0和2.0版本都在ScenarioRunner中得到了支持。
+		
+OpenSCENARIO是德国自动化及测量系统标准协会ASAM提供的一个描述动态场景的标准格式，关于OpenSCENARIO格式的内容，大家可以看下之前对OpenSCENARIO的格式介绍和实例分析。
+		
+SR的安装步骤如下：
+		
+（1）下载源码
+		
+SR的github上提供了与CARLA版本相配合的Release版本[ https://github.com/carla-simulator/scenario\_runner/releases]，如SR0.9.13与CARLA 0.9.13相配合。这是因为SR需要使用PythonAPI从CARLA获取信息并对CARLA中的交通参与者、天气等进行控制，如果版本不匹配的话会操作失败。为了获取最新的特性，我们这里使用下载源码的方式进行安装。
+		
+大家可以选择将SR下载到任何位置，为了方便起见这里下载到CARLA文件夹下。
+		
+cd /path/to/carla
+git clone https://github.com/carla-simulator/scenario\_runner.git
+（2）依赖库安装
+		
+进入scenario\_runner文件夹，并根据其中的requirements.txt安装依赖库：
+		
+cd scenario\_runner
+sudo apt remove python3-networkx \#若安装过networkx则先将其卸载
+pip3 install -r requirements.txt
+按照以上步骤安装依赖后，若本地numpy版本高于1.20，运行时可能有包含如下字符的报错：......networkx/readwrite/graphml.py......module 'numpy' has no attribute 'int'...... 。这是因为requirements.txt中指定的networkx 2.2版本使用了http://np.int，该用法在nump 1.20版本以上已经不再支持。读者可以根据实际情况安装高版本networkx或者低版本的numpy。
+		
+以下两种方法选一即可
+1.卸载networkx，并重新安装新版本
+	pip3 uninstall networkx
+    pip3 install networkx
+2.卸载numpy，并重新安装低版本
+	pip3 uninstall numpy
+	pip3 install numpy==1.20
+（3）设置环境变量
+		
+为了在运行时能够找到相关的文件，需要设置一些环境变量。打开~/.bashrc文件，并在其结尾加入如下内容：
+		
+export CARLA\_ROOT=/path/to/carla
+		
+export SCENARIO\_RUNNER\_ROOT=\$CARLA\_ROOT/scenario\_runner
+		
+export PYTHONPATH=\$PYTHONPATH:\$CARLA\_ROOT/PythonAPI/carla
+		
+大家请注意将其中路径修改为自己电脑上的实际路径，然后运行source ~/.bashrc使设置生效。
+		
+至此用于运行OpenSCENARIO 1.0文件（以下简称xosc文件）的安装工作都已完成，大家可尝试按照下一节的方法运行相关文件。若想运行OpenSCENARIO 2.0文件（以下简称osc文件），还需要进行如下操作。
+		
+（4）安装OpenSCENARIO 2.0相关依赖
+		
+安装JDK
+		
+sudo apt install openjdk-17-jdk
+		
+安装Antlr
+		
+curl -O https://www.antlr.org/download/antlr-4.10.1-complete.jar
+		
+sudo cp antlr-4.10.1-complete.jar /usr/local/lib/
+		
+pip3 install antlr4-python3-runtime==4.10
+		
+打开~/.bashrc文件，并在其结尾加入如下内容，然后运行source ~/.bashrc使设置生效。
+		
+		
+export CLASSPATH=".:/usr/local/lib/antlr-4.10.1-complete.jar:\$CLASSPATH"
+		
+alias antlr4='java -jar /usr/local/lib/antlr-4.10.1-complete.jar'
+		
+alias grun='java org.antlr.v4.gui.TestRig'xport CARLA\_ROOT=/path/to/carla
+		
+export SCENARIO\_RUNNER\_ROOT=\$CARLA\_ROOT/scenario\_runner
+		
+export PYTHONPATH=\$PYTHONPATH:\$CARLA\_ROOT/PythonAPI/carla
+		
+02.运行OpenSCENARIO文件
+使用SR运行xosc/osc文件的步骤十分简单，首先启动CARLA，然后运行SR并指定xosc/osc文件即可：
+		
+启动CARLA：
+		
+cd /path/to/carla
+		
+./CarlaUE4.sh
+		
+配置ego车
+		
+实际测试时应由被测算法控制ego车，此处为了进行演示，通过SR自带的manual\_control.py为ego车配置自动驾驶：
+		
+cd /path/to/scenario\_runner
+		
+加载xosc文件示例时使用
+		
+python3 manual\_control.py  -a
+		
+加载osc文件示例时使用
+		
+python3 manual\_control.py  -a --rolename ego\_vehicl
+		
+需要注意的是，manual\_control.py根据rolename查找ego车辆并为其配置自动驾驶，默认ego车辆的rolename为“hero”，在下面的xosc文件示例中ego车辆的rolename恰好为“hero”，故无需配置“--rolename”参数，而osc文件示例中ego车辆的rolename为“ego\_vehicle”，从而需要指定“--rolename”。
+		
+运行ScenarioRunner
+		
+cd /path/to/scenario\_runner
+		
+运行xosc文件示例
+		
+python3 scenario\_runner.py --output --openscenario
+		
+srunner/examples/FollowLeadingVehicle.xosc
+		
+运行osc文件示例
+		
+python3 scenario\_runner.py --outpu --openscenario2
+		
+srunner/examples/cut\_in\_and\_slow\_range.osc
+		
+运行上述命令后，可以在CARLA渲染窗口中观察到地图根据xosc文件中定义变更，同时生成了ego车和其前方的障碍车。
+		
+\end{lstlisting}
+	
+	
+\section{ASIL算法相关操作与代码}
+  \begin{lstlisting}
+ 1. 环境准备
+安装 CARLA Simulator
+  	
+从 carla-simulator/carla 克隆并编译（或下载预编译版本）。
+  	
+确认 CARLA 服务器可以在后台正常运行：
+  	
+  	
+./CarlaUE4.sh   \# Linux
+\# 或者双击 Windows 下的 CarlaUE4.exe
+安装 Scenario Runner
+  	
+  	
+git clone https://github.com/carla-simulator/scenario  \_runner.git
+cd scenario\_runner
+pip install -e .
+克隆 ASIL-Gen 仓库，并安装依赖
+  	
+  	
+git clone https://github.com/Fizza129/ASIL-Gen.git GitHub - Fizza129/ASIL-Gen GitHub - Fizza129/ASIL-Gen 
+cd ASIL-Gen
+\# 建议使用虚拟环境
+python3 -m venv venv  source venv/bin/activate
+pip install -r requirements.txt
+requirements.txt 中应包含 numpy、pandas、deap、scipy、matplotlib 等。
+  	
+2. 加载预生成场景
+解压数据集：
+  	
+unzip "Scenario Dataset/Scenario\_Dataset\_1-4.zip" -d Scenario\_Dataset/
+拷贝到 Scenario Runner：
+  	
+cp -r Scenario\_Dataset/* ../scenario\_runner/srunner/scenarios/
+  	
+cp -r xml/ ../scenario\_runner/srunner/examples/
+3. 自定义场景生成
+所有脚本都放在 Scenario Generation Scripts/ 下。以 script\_change\_lane.py 为例：
+  	
+  	
+\# Scenario Generation Scripts/script\_change\_lane.py
+import os
+import random
+import xml.etree.ElementTree as ET
+  	
+INPUT\_TEMPLATE = "templates/change\_lane\_template.xml"
+OUTPUT\_DIR = "../scenario\_runner/srunner/scenarios/generated/change\_lane/"
+  	
+def random\_param():
+return {
+'start\_speed': random.uniform(5, 15),      \# 起始速度 m/s
+'target\_lane': random.choice([1, 2, 3]),  \# 目标车道
+'start\_delay': random.uniform(0.5, 2.0)   \# 延迟秒数
+  	}
+  	
+def gen\_scenario\_xml(idx, params):
+tree = ET.parse(INPUT\_TEMPLATE)
+root = tree.getroot()
+\# 修改对应的 XML 节点
+root.find(".//Vehicle/Speed").set('value', str(params['start\_speed']))
+root.find(".//Action/TargetLane").set('value', str(params['target\_lane']))
+root.find(".//Action/StartDelay").set('value', str(params['start\_delay']))
+os.makedirs(OUTPUT\_DIR, exist\_ok=True)
+tree.write(f"{OUTPUT\_DIR}change\_lane\_{idx:04d}.xml")
+  	
+if \_\_name\_\_ == "\_\_main\_\_":
+for i in range(1000):
+p = random\_param()
+gen\_scenario\_xml(i, p)
+print("已生成 1000 个变道场景。")
+运行：
+  	
+  	
+python "Scenario Generation Scripts/script\_change\_lane.py"
+4. 场景选择（NSGA-II vs. Random Search）
+4.1 NSGA-II
+  	
+python "NSGA/NSGA\_choice.py" \
+--input\_results Scenario\_Results/raw\_results.json \
+--pop\_size 50 --generations 40 \
+--output selected\_nsga.json
+示例脚本结构（NSGA/NSGA\_choice.py）：
+  	
+  	
+from deap import base, creator, tools, algorithms
+import json
+  	
+\# 读取所有场景执行后的性能指标
+with open("Scenario\_Results/raw\_results.json") as f:
+data = json.load(f)
+  	
+\# 定义多目标：安全距离最小化、碰撞风险最大化（示例）
+creator.create("FitnessMulti", base.Fitness, weights=(-1.0, 1.0))
+creator.create("Individual", list, fitness=creator.FitnessMulti)
+  	
+toolbox = base.Toolbox()
+toolbox.register("attr\_scenario", lambda: random.choice(list(data.keys())))
+toolbox.register("individual", tools.initRepeat, creator.Individual, toolbox.attr\_scenario, n=10)
+toolbox.register("population", tools.initRepeat, list, toolbox.individual)
+  	
+def eval\_scenarios(ind):
+\# 返回一个二元组（distance, risk）
+distances = [ data[s]['min\_distance'] for s in ind ]
+risks     = [ data[s]['collision\_risk'] for s in ind ]
+return (sum(distances)/len(distances), sum(risks)/len(risks))
+  	
+toolbox.register("evaluate", eval\_scenarios)
+toolbox.register("mate", tools.cxTwoPoint)
+toolbox.register("mutate", tools.mutShuffleIndexes, indpb=0.1)
+toolbox.register("select", tools.selNSGA2)
+  	
+pop = toolbox.population(n=50)
+algorithms.eaMuPlusLambda(pop, mu=50, lambda\_=100, cxpb=0.7, mutpb=0.2, ngen=40)
+\# 保存 Pareto 前沿
+best = tools.sortNondominated(pop, k=50, first\_front\_only=True)[0]
+with open("selected\_nsga.json", "w") as f:
+json.dump([list(ind) for ind in best], f, indent=2)
+4.2 随机搜索
+  	
+python "Random Search/random\_search\_choice.py" \
+--input\_results Scenario\_Results/raw\_results.json \
+--trials 5000 --select\_k 50 \
+--output selected\_random.json
+示例脚本（Random Search/random\_search\_choice.py）核心逻辑：
+  	
+  	
+import json, random
+  	
+with open("Scenario\_Results/raw\_results.json") as f:
+data = json.load(f)
+  	
+all\_ids = list(data.keys())
+best = []
+for \_ in range(5000):
+sample = random.sample(all\_ids, 10)
+dist = sum(data[s]['min\_distance'] for s in sample)/10
+risk = sum(data[s]['collision\_risk'] for s in sample)/10
+best.append((sample, dist, risk))
+  	
+\# 按某一指标排序取前50
+best.sort(key=lambda x: (x[1], -x[2]))  
+selected = [s for s,\_,\_ in best[:50]]
+with open("selected\_random.json", "w") as f:
+json.dump(selected, f, indent=2)
+5. ASIL 等级分类
+  	
+  	
+python "ASIL/ASIL.py" \
+--input selected\_nsga.json \
+--output nsga\_asil\_levels.json
+  	
+python "ASIL/ASIL\_percentages.py" \
+--input nsga\_asil\_levels.json \
+--output nsga\_asil\_distribution.csv
+ASIL.py：根据 ISO 26262 定义的性能指标阈值，将场景分为 A/B/C/D/QM。
+  	
+ASIL\_percentages.py：统计各等级占比并导出 CSV。
+  	
+示例 ASIL/ASIL.py 中核心片段：
+  	
+  	
+import json
+  	
+THRESHOLDS = {
+'A': {'max\_risk': 0.2, 'min\_distance': 5},
+'B': {'max\_risk': 0.5, 'min\_distance': 3},
+\# ...
+  	}
+  	
+def classify(scenario):
+risk = scenario['collision\_risk']
+dist = scenario['min\_distance']
+for level, th in THRESHOLDS.items():
+if risk <= th['max\_risk'] and dist >= th['min\_distance']:
+return level
+return 'QM'
+  	
+data = json.load(open("selected\_nsga.json"))
+result = {sid: classify(data[sid]) for sid in data}
+with open("nsga\_asil\_levels.json", "w") as f:
+json.dump(result, f, indent=2)
+6. 统计检验（Mann–Whitney U）
+  	
+  	
+python "Mann Whitney Test/Mann Whitney and Effect Size.py" \
+--input1 nsga\_asil\_levels.json \
+--input2 random\_asil\_levels.json \
+--output mannwhitney\_results.txt
+主要步骤：
+  	
+按 ASIL 级别将两个算法的分布抽取为数值（如 A→1, B→2…）。
+  	
+使用 scipy.stats.mannwhitneyu 完成检验。
+  	
+计算效果量（如 Cliff’s delta）。
+  	
+  	
+from scipy.stats import mannwhitneyu
+import json
+  	
+map\_level = {'QM':0, 'A':1, 'B':2, 'C':3, 'D':4}
+d1 = [map\_level[v] for v in json.load(open("nsga\_asil\_levels.json")).values()]
+d2 = [map\_level[v] for v in json.load(open("random\_asil\_levels.json")).values()]
+  	
+stat, p = mannwhitneyu(d1, d2, alternative='two-sided')
+print(f"U={stat:.2f}, p-value={p:.4f}")
+\# 此外可自行计算 Cliff’s delta
+7. 可视化与结果解读
+分布柱状图：展示 NSGA vs. Random 在不同 ASIL 级别上的分布。
+  	
+Pareto 前沿图：展示 NSGA 选出的群体。
+  	
+示例（用 Matplotlib）：
+  	
+  	
+import json, matplotlib.pyplot as plt
+  	
+dist = json.load(open("nsga\_asil\_distribution.csv"))
+levels = list(dist.keys())
+counts = list(dist.values())
+  	
+plt.bar(levels, counts)
+plt.xlabel("ASIL 级别")
+plt.ylabel("场景数")
+plt.title("NSGA-II 场景 ASIL 分布")
+plt.show()
+  \end{lstlisting}

@@ -1,0 +1,39 @@
+# Deformable Object Haptic Simulation System Dependencies
+
+# Core dependencies
+numpy>=1.24.0
+mujoco>=3.2.0
+
+# Haptic devices
+# weart-sdk  # Manual installation required for WEART SDK
+
+# VR support
+openxr
+
+# Data processing
+scipy>=1.11.0
+pandas>=2.0.0
+
+# Visualization
+matplotlib>=3.7.0
+
+# Database
+# sqlite3 is built into Python
+
+# Testing
+pytest>=7.4.0
+pytest-cov>=4.1.0
+unittest-xml-reporting>=3.2.0
+
+# Documentation
+sphinx>=7.0.0
+sphinx-rtd-theme>=1.3.0
+
+# Tools
+pyyaml>=6.0.1
+tqdm>=4.65.0
+
+# Development tools
+black>=23.0.0
+flake8>=6.0.0
+mypy>=1.5.0
