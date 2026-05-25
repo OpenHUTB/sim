@@ -613,7 +613,7 @@
 % 设置页眉和页脚 %
 \pagestyle{fancy}
 % 本科学位论文底部样式
-\newcommand{\hutb@thepage@format@zh}[2]{第~{#1}~页 共~{#2}~页}
+\newcommand{\hutb@thepage@format@zh}[2]{第{#1}页，共{#2}页}
 \newcommand{\hutb@thepage@format@en}[1]{#1}
 % 空白页清空页眉页脚
 \patchcmd{\cleardoublepage}{\newpage}{\thispagestyle{empty}\newpage}{}{}
@@ -636,7 +636,14 @@
 	\pagenumbering{Roman}
 	\def\hutb@thepage{\thepage}
 	\def\hutb@lastpageref{\pageref{LastPage}}
-	\fancyfoot[C]{\zihao{-5}  \hutb@thepage@format@en{\hutb@thepage}}
+	% 目录页单独使用罗马页码；只设置页脚，避免前面 \pagestyle{empty} 影响目录页码。
+	\pagestyle{fancy}
+	\fancyhf{}
+	\fancyfoot[C]{\zihao{-5} \hutb@thepage@format@en{\hutb@thepage}}
+	\fancypagestyle{plain}{%
+		\fancyhf{}%
+		\fancyfoot[C]{\zihao{-5} \hutb@thepage@format@en{\hutb@thepage}}%
+	}
 }
 % mainmatter设置
 \renewcommand{\mainmatter}{
@@ -646,7 +653,14 @@
 	\pagenumbering{arabic}
 	\def\hutb@thepage{\thepage}
 	\def\hutb@lastpageref{\pageref{LastPage}}
+	% 正文、致谢、参考文献和附录统一使用“第 x 页，共 x 页”页脚格式。
+	\pagestyle{fancy}
+	\fancyhf{}
 	\fancyfoot[C]{\zihao{-5} \songti \hutb@thepage@format@zh{\hutb@thepage}{\hutb@lastpageref}}
+	\fancypagestyle{plain}{%
+		\fancyhf{}%
+		\fancyfoot[C]{\zihao{-5} \songti \hutb@thepage@format@zh{\hutb@thepage}{\hutb@lastpageref}}%
+	}
 }
 % 给页眉留足空间（否则会有 \headheight is too small的warning）
 \setlength{\headheight}{14.5pt}

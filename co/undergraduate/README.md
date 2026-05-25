@@ -1,6 +1,7 @@
-编译说明：
-1. 本工程面向 TeXstudio + TeX Live/LaTeX 2023 使用。
-2. 打开 hutbthesis_main.tex，使用 XeLaTeX 编译。建议连续编译 2 次，以生成/刷新目录和交叉引用。
-3. 本版本参考文献已整理为 content/references.tex 中的 thebibliography 手工参考文献环境，不需要运行 biber。
-4. 封面、承诺书、中英文摘要文件保持原样放在 content/ 目录；正文从 chapter1.tex 到 chapter5.tex。
-5. 图片统一放在 figures/ 目录。
+编译说明
+
+1. 使用 TeXstudio 打开 hutbthesis_main.tex。
+2. 编译器选择 XeLaTeX。
+3. 正常情况下连续编译 2~3 次即可生成目录、图表交叉引用和参考文献引用。
+4. 本工程参考文献采用 content/references.tex 中的 thebibliography 环境，正文使用 \cite{} 引用，不需要运行 BibTeX 或 biber。
+5. 若提交源文件，请在最终编译成功并确认 PDF 无误后运行 cmdel.bat，删除 .aux、.log、.toc、.out 等临时文件，再进行打包。

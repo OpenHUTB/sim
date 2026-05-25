@@ -7,7 +7,7 @@
 
 结合本文研究目标，可将自动牵引对接过程抽象为五个连续阶段。第一阶段为任务初始化与目标确认，牵引车接收目标飞机信息并通过辅助识别标识完成身份判断；第二阶段为初始接近，车辆从给定初始位姿向飞机前起落架附近的预对接区域运动；第三阶段为姿态对准，车辆重点减小横向偏差和航向误差，使车体中心线逐步贴近目标对接方向；第四阶段为微动对接，牵引车在低速状态下完成小范围位置修正；第五阶段为停车保持，系统在满足距离、姿态和安全阈值后发布停车与转向回中命令。
 
-由此可见，飞机推出不是一条轨迹从起点跟到终点这么简单，而是目标识别、车辆运动学约束、安全边界和模式切换共同作用的状态演化过程\textsuperscript{[17-21]}。本章只先处理牵引车本体在机坪平面内如何运动的问题，即建立位姿状态、曲率关系和输入约束；飞机辅助识别、局部安全判断和最终对接控制将在第三章统一展开。
+由此可见，飞机推出不是一条轨迹从起点跟到终点这么简单，而是目标识别、车辆运动学约束、安全边界和模式切换共同作用的状态演化过程\cite{ref17,ref18,ref19,ref20,ref21}。本章只先处理牵引车本体在机坪平面内如何运动的问题，即建立位姿状态、曲率关系和输入约束；飞机辅助识别、局部安全判断和最终对接控制将在第三章统一展开。
 
 \section{坐标系与状态变量定义}
 
@@ -42,18 +42,26 @@ v & \delta_{f} & \delta_{r}
 \subsection{非完整约束条件}
 
 牵引车在机坪低速运行过程中，车轮主要满足纯滚动约束，即轮胎可沿轮平面方向滚动，但不能在垂直于轮平面的方向上发生理想横向滑移。因此，车辆系统属于典型非完整约束系统。对于车体参考点
-\(C\)，其速度在车体横向方向上的投影应为零，可写为\(\dot{y}\cos\theta - \dot{x}\sin\theta = 0\)。该式的物理意义在于：车辆不能瞬时``侧向平移''，其平面运动只能由纵向速度与航向变化共同形成。这一约束是移动机器人与地面车辆运动学建模中的基本条件，也是后续推导轨迹方程的前提\textsuperscript{[17,19]}。
+\(C\)，其速度在车体横向方向上的投影应为零，可写为式~\ref{eq:nonholonomic_constraint}。
+\begin{equation}
+\dot{y}\cos\theta - \dot{x}\sin\theta = 0
+\label{eq:nonholonomic_constraint}
+\end{equation}
+该式的物理意义在于：车辆不能瞬时``侧向平移''，其平面运动只能由纵向速度与航向变化共同形成。这一约束是移动机器人与地面车辆运动学建模中的基本条件，也是后续推导轨迹方程的前提\cite{ref17,ref19}。
 
 \subsection{单轨等效模型}
 
-由于前桥左右轮、后桥左右轮在同一转向控制下可近似视为对称运动，因此可采用单轨等效方法，将实际四轮结构抽象为前后两虚拟轮\textsuperscript{[19]}。设前、后桥中心点分别位于车体参考点前后，车辆轴距为
-\(L\)。在低速、小侧偏工况下，车辆瞬时旋转中心满足几何关系，车辆平面运动可表示为（1）
+由于前桥左右轮、后桥左右轮在同一转向控制下可近似视为对称运动，因此可采用单轨等效方法，将实际四轮结构抽象为前后两虚拟轮\cite{ref19}。设前、后桥中心点分别位于车体参考点前后，车辆轴距为
+\(L\)。在低速、小侧偏工况下，车辆瞬时旋转中心满足几何关系，车辆平面运动可表示为式~\ref{eq:planar_motion}。
 
-\(\left\{ \begin{array}{r}
-\dot{x} = vcos\theta \\
-\dot{y} = vsin\theta \\
-\dot{\theta} = \omega\ 
-\end{array} \right.\ \) （1）
+\begin{equation}
+\begin{cases}
+\dot{x}=v\cos\theta,\\
+\dot{y}=v\sin\theta,\\
+\dot{\theta}=\omega.
+\end{cases}
+\label{eq:planar_motion}
+\end{equation}
 
 式中，\(\omega\)
 为车辆偏航角速度。前两式给出了车辆质点速度在全局坐标系中的分解形式，第三式给出了车辆姿态随时间的演化规律。车辆轨迹由两个因素共同决定：一是沿当前朝向的平移速度
@@ -63,21 +71,29 @@ v & \delta_{f} & \delta_{r}
 
 对于普通前轮转向车辆，角速度通常由单一前轮转角决定；而对于双桥转向车辆，前桥和后桥转向均会对瞬时旋转中心位置产生影响。根据单轨几何关系，前桥与后桥分别对应的曲率贡献为
 \(\tan\delta_{f}/L\)与
-\(\tan\delta_{r}/L\)。在统一参考方向下，车辆偏航角速度可表示为：\(\dot{\theta} = \omega = \frac{v}{L}\left( \tan\delta_{f} - \tan\delta_{r} \right)\)。\(\delta_{f}\)
+\(\tan\delta_{r}/L\)。在统一参考方向下，车辆偏航角速度可表示为式~\ref{eq:yaw_rate_fourws}。
+\begin{equation}
+\dot{\theta} = \omega = \frac{v}{L}\left( \tan\delta_{f} - \tan\delta_{r} \right)
+\label{eq:yaw_rate_fourws}
+\end{equation}
+\(\delta_{f}\)
 为前桥转角，\(\delta_{r}\) 为后桥转角，\(L\)
 为前后桥中心距。该式表明，前桥转向与后桥转向对车辆角速度的作用方向相反。当后桥不转向，即
 \(\delta_{r} = 0\)时，模型退化为普通前轮转向模型；当前后桥反向转向时，\(\tan\delta_{f} - \tan\delta_{r}\)
 的绝对值增大，车辆角速度提高，转弯半径减小；当前后桥同向转向时，两者效应相互抵消，车辆偏航角速度下降，车辆运动趋于``蟹行''模式。
 
-将上述关系代入状态方程，可得双桥转向牵引车的运动学模型（2）
+将上述关系代入状态方程，可得双桥转向牵引车的运动学模型式~\ref{eq:fourws_model}。
 
-\(\left\{ \begin{array}{r}
-\dot{x} = vcos\theta \\
-\dot{y} = vsin\theta \\
-\dot{\theta} = \frac{v}{L}\left( tan\delta_{f} - tan\delta_{r} \right)
-\end{array} \right.\ \) （2）
+\begin{equation}
+\begin{cases}
+\dot{x}=v\cos\theta,\\
+\dot{y}=v\sin\theta,\\
+\dot{\theta}=\dfrac{v}{L}\left(\tan\delta_{f}-\tan\delta_{r}\right).
+\end{cases}
+\label{eq:fourws_model}
+\end{equation}
 
-该模型是本课题后续路径规划、轨迹跟踪与对接控制设计的基础模型\textsuperscript{[17,19,28]}。
+该模型是本课题后续路径规划、轨迹跟踪与对接控制设计的基础模型\cite{ref17,ref19,ref28}。
 
 \section{转弯半径与曲率模型}
 
@@ -86,7 +102,6 @@ v & \delta_{f} & \delta_{r}
 
 \begin{equation}
 \omega = \frac{v}{R}
-\tag{3}
 \label{eq:3}
 \end{equation}
 
@@ -94,7 +109,6 @@ v & \delta_{f} & \delta_{r}
 
 \begin{equation}
 R = \frac{L}{\tan\delta_{f} - \tan\delta_{r}}
-\tag{4}
 \label{eq:4}
 \end{equation}
 
@@ -102,18 +116,17 @@ R = \frac{L}{\tan\delta_{f} - \tan\delta_{r}}
 
 \begin{equation}
 \kappa = \frac{1}{R} = \frac{\tan\delta_{f} - \tan\delta_{r}}{L}
-\tag{5}
 \label{eq:5}
 \end{equation}
 
 上述两式给出了车辆转向输入与轨迹几何属性之间的直接联系。式中，\(R\)
 用于衡量车辆完成转弯所需空间尺度，\(R\)
 越小，表明车辆机动性越强；\(\kappa\) 用于衡量轨迹弯曲程度，\(\kappa\)
-越大，表明车辆航向变化越快。对机场牵引作业而言，车辆能否在狭窄区域内完成姿态调整，本质上取决于其可实现的最小转弯半径或最大曲率\textsuperscript{[19,28]}。
+越大，表明车辆航向变化越快。对机场牵引作业而言，车辆能否在狭窄区域内完成姿态调整，本质上取决于其可实现的最小转弯半径或最大曲率\cite{ref19,ref28}。
 
 需要指出的是，理论上当
 \(\tan\delta_{f} - \tan\delta_{r} = 0\)时，\(R \rightarrow \infty\)，车辆轨迹退化为直线或近似平移；而当
-\(\mid tan\delta_{f} - \tan\delta_{r} \mid\)增大时，车辆可实现更强的转向能力。但在工程应用中，前后桥转角均受机械结构、执行器能力和稳定性要求限制，因此曲率不可能无限增大，而必须满足可实现性约束。
+\(|\tan\delta_{f} - \tan\delta_{r}|\)增大时，车辆可实现更强的转向能力。但在工程应用中，前后桥转角均受机械结构、执行器能力和稳定性要求限制，因此曲率不可能无限增大，而必须满足可实现性约束。
 
 \section{典型转向模式分析}
 
@@ -125,11 +138,10 @@ R = \frac{L}{\tan\delta_{f} - \tan\delta_{r}}
 
 \begin{equation}
 \dot{\theta} = \frac{v}{L}\tan\delta_{f}
-\tag{6}
 \label{eq:6}
 \end{equation}
 
-此时车辆行为与传统前轮转向车辆基本一致（图2-1）。该模式实现简单、控制逻辑清晰，但在对接空间受限的场景下，其最小转弯半径较大，不利于快速完成姿态调整。
+此时车辆行为与传统前轮转向车辆基本一致，如图~\ref{fig:2-1} 所示。该模式实现简单、控制逻辑清晰，但在对接空间受限的场景下，其最小转弯半径较大，不利于快速完成姿态调整。
 
 \begin{figure}[htbp]
     \centering
@@ -140,12 +152,14 @@ R = \frac{L}{\tan\delta_{f} - \tan\delta_{r}}
 
 \subsection{前后桥反向转向模式}
 
-当后桥转角与前桥转角方向相反，且幅值近似相等，即\(\delta_{r} = - \delta_{f}\)代入角速表达式可得
+当后桥转角与前桥转角方向相反，且幅值近似相等，即\(\delta_{r} = - \delta_{f}\)。代入角速度表达式可得
 
-\(\dot{\theta} = \frac{v}{L}\left( tan\delta_{f} - tan( - \delta_{f}) \right) = \frac{2v}{L}tan\delta_{f}\)
-（7）
+\begin{equation}
+\dot{\theta}=\frac{v}{L}\left[\tan\delta_{f}-\tan(-\delta_{f})\right]=\frac{2v}{L}\tan\delta_{f}.
+\label{eq:opposite_steering}
+\end{equation}
 
-此时车辆偏航角速度约为单桥转向工况的两倍，转弯半径显著减小（图2-2），适用于牵引车在狭小机坪空间内快速调整姿态、靠近飞机前轮或完成局部避障。该模式是本课题中实现高机动性接近控制的重要运动模式。
+此时车辆偏航角速度约为单桥转向工况的两倍，转弯半径显著减小，如图~\ref{fig:2-2} 所示，适用于牵引车在狭小机坪空间内快速调整姿态、靠近飞机前轮或完成局部避障。该模式是本课题中实现高机动性接近控制的重要运动模式。
 
 \begin{figure}[htbp]
     \centering
@@ -159,7 +173,7 @@ R = \frac{L}{\tan\delta_{f} - \tan\delta_{r}}
 当\(\delta_{r} = \delta_{f}\)时，有\(\dot{\theta} = \frac{v}{L}\left( \tan\delta_{f} - \tan\delta_{f} \right) = 0\)
 
 当车辆偏航角速度为零，此时车辆整体保持原有航向并沿车轮切线方向斜向平移，表现为
-``蟹行''运动（图2-3）。该模式并不适合大幅姿态修正，但对于微小横向误差修正、精细对位和低速贴近控制具有较高实用价值。
+``蟹行''运动，如图~\ref{fig:2-3} 所示。该模式并不适合大幅姿态修正，但对于微小横向误差修正、精细对位和低速贴近控制具有较高实用价值。
 
 通过上述分析可知，双桥转向结构使牵引车不再局限于单一的``直行---转弯''运动，而具备在姿态快速修正与横向精细调节之间切换的能力，这也是其适用于飞机自动对接场景的重要原因。
 
@@ -176,8 +190,11 @@ R = \frac{L}{\tan\delta_{f} - \tan\delta_{r}}
 
 \subsection{速度约束}
 
-牵引车在机场作业环境中通常处于低速运行状态，故其线速度应满足\(0 \leq v \leq v_{\max}\)
-。
+牵引车在机场作业环境中通常处于低速运行状态，故其线速度应满足式~\ref{eq:velocity_limit}。
+\begin{equation}
+0 \leq v \leq v_{\max}
+\label{eq:velocity_limit}
+\end{equation}
 
 其中，\(v_{\max}\)
 为车辆允许的最大作业速度。该约束保证车辆在接近、对接和牵引过程中具有足够的可控性，同时减小碰撞风险。
@@ -186,33 +203,37 @@ R = \frac{L}{\tan\delta_{f} - \tan\delta_{r}}
 
 由于前后桥转向机构存在机械极限，故应满足
 
-\(\left\{ \begin{array}{r}
- \mid \delta_{f} \mid \leq \delta_{f,max} \\
- \mid \delta_{r} \mid \leq \delta_{r,max}
-\end{array} \right.\ \) （8）
+\begin{equation}
+\begin{cases}
+|\delta_f|\leq \delta_{f,\max},\\
+|\delta_r|\leq \delta_{r,\max}.
+\end{cases}
+\label{eq:steering_limits}
+\end{equation}
 
 其中，\(\delta_{f,\max}\) 与
 \(\delta_{r,\max}\)分别为前桥与后桥最大允许转角。该约束直接限制车辆最大可实现曲率，也是最小转弯半径存在下界的原因。
 
 \subsection{曲率约束}
 
-由转向角约束可进一步得到曲率约束\(\mid \kappa \mid \leq \kappa_{\max}\)。其中，
+由转向角约束可进一步得到曲率约束\(|\kappa| \leq \kappa_{\max}\)。其中，
 
-\(\kappa_{\max} = \frac{tan\delta_{f,max} - tan( - \delta_{r,max})}{L}\)
-（9）
+\begin{equation}
+\kappa_{\max}=\frac{\tan\delta_{f,\max}-\tan(-\delta_{r,\max})}{L}.
+\label{eq:kappa_max}
+\end{equation}
 
-当车辆采用对称反向转向策略时，上式取到较大值。曲率约束在路径规划中具有重要作用，因为若规划轨迹的局部曲率超过车辆可实现上限，则该轨迹在物理上不可执行\textsuperscript{[20-21,28]}。
+当车辆采用对称反向转向策略时，上式取到较大值。曲率约束在路径规划中具有重要作用，因为若规划轨迹的局部曲率超过车辆可实现上限，则该轨迹在物理上不可执行\cite{ref20,ref21,ref28}。
 
 \section{车辆动力学简化与驱动关系}
 
-本课题以低速自主牵引控制为研究重点，后续控制层主要关注位姿演化与轨迹误差收敛，因此在第二章中不引入完整轮胎力学模型，而仅保留纵向驱动的简化动力学关系\textsuperscript{[19]}。设车辆等效质量为
+本课题以低速自主牵引控制为研究重点，后续控制层主要关注位姿演化与轨迹误差收敛，因此在第二章中不引入完整轮胎力学模型，而仅保留纵向驱动的简化动力学关系\cite{ref19}。设车辆等效质量为
 \(m\)，驱动力为 \(F\)，纵向加速度为 \(a\)，则有\(F = ma\)
 ；若用速度导数表示，则有\(a = \dot{v}\)。\(
 \) 从而可得
 
 \begin{equation}
-F = m\dot{v}\ \
-\tag{10}
+F = m\dot{v}
 \label{eq:10}
 \end{equation}
 
@@ -229,26 +250,32 @@ v & \delta_{f} & \delta_{r}
 a & \delta_{f} & \delta_{r}
 \end{bmatrix}^{T}\)。若采用速度直接控制形式，则状态方程可写为
 
-\(\left\{ \begin{array}{r}
-\dot{x} = vcos\theta \\
-\dot{y} = vsin\theta \\
-\dot{\theta} = \frac{v}{L}\left( tan\delta_{f} - tan\delta_{r} \right)
-\end{array} \right.\ \) （11）
+\begin{equation}
+\begin{cases}
+\dot{x}=v\cos\theta,\\
+\dot{y}=v\sin\theta,\\
+\dot{\theta}=\dfrac{v}{L}\left(\tan\delta_f-\tan\delta_r\right).
+\end{cases}
+\label{eq:state_velocity}
+\end{equation}
 
 若进一步考虑纵向加速度，则可扩展为
 
-\(\left\{ \begin{array}{r}
-\dot{x} = vcos\theta \\
-\dot{y} = vsin\theta \\
-\dot{\theta} = \frac{v}{L}\left( tan\delta_{f} - tan\delta_{r} \right) \\
-\dot{v} = a
-\end{array} \right.\ \) （12）
+\begin{equation}
+\begin{cases}
+\dot{x}=v\cos\theta,\\
+\dot{y}=v\sin\theta,\\
+\dot{\theta}=\dfrac{v}{L}\left(\tan\delta_f-\tan\delta_r\right),\\
+\dot{v}=a.
+\end{cases}
+\label{eq:state_acceleration}
+\end{equation}
 
 后一形式更适合用于模型预测控制、轨迹平滑优化及速度规划问题，而前三维形式更适合用于基本路径跟踪与状态传播计算。考虑到本课题当前阶段主要完成仿真验证与控制策略设计，后续章节可根据算法需求在两种表达之间进行选取。
 
 \section{仿真实现中的参数映射关系}
 
-在ROS-Gazebo联合仿真中，理论模型并非直接以连续方程形式运行，而是通过URDF关节、控制器与话题通信进行离散实现\textsuperscript{[11-16]}。为保证理论模型与仿真实体一致，需要建立控制量到仿真执行量之间的映射关系。
+在ROS-Gazebo联合仿真中，理论模型并非直接以连续方程形式运行，而是通过URDF关节、控制器与话题通信进行离散实现\cite{ref11,ref12,ref13,ref14,ref15,ref16}。为保证理论模型与仿真实体一致，需要建立控制量到仿真执行量之间的映射关系。
 
 首先，前桥转角 \(\delta_{f}\)与后桥转角
 \(\delta_{r}\)分别对应转向关节的位置控制输入，其本质为关节目标角度；其次，车辆线速度
@@ -257,19 +284,20 @@ a & \delta_{f} & \delta_{r}
 
 \begin{equation}
 \omega_{w} = \frac{v}{r_{w}}
-\tag{13}
 \label{eq:13}
 \end{equation}
 
 若四个驱动轮采用相同滚动半径并同步驱动，则其控制目标可统一写为
 
-\(\omega_{fl} = \omega_{fr} = \omega_{rl} = \omega_{rr} = \frac{v}{r_{w}}\)
-（14）
+\begin{equation}
+\omega_{fl}=\omega_{fr}=\omega_{rl}=\omega_{rr}=\frac{v}{r_w}.
+\label{eq:wheel_speed_all}
+\end{equation}
 
 其中，\(\omega_{fl},\omega_{fr},\omega_{rl},\omega_{rr}\)
 分别表示四个车轮的角速度。该关系建立了车辆运动学速度与Gazebo关节控制量之间的直接映射，是仿真中实现``给定线速度---车辆前进''行为的基础。
 
-此外，为减小仿真过程中车辆初始松垮、溜车和转向漂移等现象，通常需要在关节层引入阻尼与摩擦参数\textsuperscript{[13-14,16]}。若转向关节阻尼系数记为
+此外，为减小仿真过程中车辆初始松垮、溜车和转向漂移等现象，通常需要在关节层引入阻尼与摩擦参数\cite{ref13,ref14,ref16}。若转向关节阻尼系数记为
 \(c_{d}\)，摩擦系数记为
 \(c_{f}\)，则其作用在于抑制关节自由振荡和无控制输入下的残余摆动。虽然这些参数不显式写入上述运动学方程，但它们决定了仿真模型是否能够稳定呈现理论轨迹。因此，第二章中的理论建模与仿真实现并不是相互割裂的，而是通过参数映射与控制接口紧密关联。
 
