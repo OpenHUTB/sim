@@ -1,0 +1,153 @@
+%!TEX program = xelatex
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% 载入模版
+%
+% 载入 hutbthesis.cls文件定义的模板
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\documentclass[AutoFakeBold]{hutbthesis}
+\usepackage{calc}
+\usepackage{enumitem}
+\usepackage{listings}
+\lstset{
+    basicstyle=\ttfamily\small,
+    breaklines=true,
+    columns=fullflexible,
+    frame=single,
+    xleftmargin=2em,
+    xrightmargin=2em
+}
+
+% 少数字体不包含个别生僻字时使用的兼容宏；Windows 下若有宋体则不影响显示。
+
+\newcommand{\CJKfallbackchar}[1]{\IfFontExistsTF{Noto Serif CJK SC}{{\CJKfontspec{Noto Serif CJK SC}#1}}{#1}}
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% 基本信息
+%
+% 用户自行输入标题、作者等基本信息
+% 都存储在\content\info.tex文件中
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\include{content/cover}
+
+
+
+\begin{document}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% 封面绘制
+%
+% 1.5版本重新编写了封面绘制宏，并用latex使用者更习惯的
+% \maketitle代替之前的\makecoverpage
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\maketitle
+
+%\declarationzh
+
+% 前置部分：封面、承诺书、中英文摘要不显示页码；
+% 只从“目录”开始使用罗马数字页码。
+\cleardoublepage
+\pagestyle{empty}
+\pagenumbering{gobble}
+
+%\include{content/info}
+
+\include{content/declarationzh}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% 中文摘要
+%
+% 存储在\content\abstractzh.tex文件中
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\include{content/abstractzh}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% 英文摘要
+%
+% 存储在\content\abstracten.tex文件中
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\include{content/abstracten}
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% 目录
+%
+% 使用重定义的tableofcontents宏绘制目录
+% 满足学校的样式要求
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% 目录部分：单独使用罗马数字页码，从 I 开始。
+\cleardoublepage
+\frontmatter
+\setcounter{page}{1}
+% 只在目录中显示到二级标题，避免目录过长
+\setcounter{tocdepth}{1}
+\tableofcontents
+
+
+% 启用数字编号，改为第 x 页  共 x 页格式
+% 正文从第 1 页开始使用阿拉伯数字页码。
+\cleardoublepage
+\mainmatter
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% 正文
+%
+% 存储在\content\content.tex文件中
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% 正文
+%\include{content/content}
+
+
+\include{content/chapter1}
+\include{content/chapter2}
+\include{content/chapter3}
+\include{content/chapter4}
+\include{content/chapter5}
+
+% % 主文件有代码去掉页眉章节编号的“.”，但这会因为bug导致无编号章节显示一个错误编号，所以这里在无编号章节之前再次重定义sectionmark。
+% \renewcommand{\sectionmark}[1]{\markright{#1}}
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% 致谢
+%
+% 存储在\content\acknowledgements.tex文件中
+% 根据本科生院的要求，致谢应该在参考文献的前面，不编章号，而附录应该位于参考文献后。
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\include{content/acknowledgements}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% 参考文献
+%
+% 存储在\content\acknowledgements.tex文件中
+% 根据本科生院的要求，致谢应该在参考文献的前面，不编章号，而附录应该位于参考文献后。
+% 有待修复
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% \section{参考文献} % bibliography会自动显示参考文献四个字
+\addcontentsline{toc}{chapter}{参考文献}
+\include{content/references}
+%\bibliography{hutbtheisi_main}
+\newpage
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% 附录部分
+%
+% 根据学校要求，正文中不应出现长篇幅的代码段或公式推证
+% 应单独放置在正文后的附录部分
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+% https://www.zhihu.com/question/29413517/answer/44358389 %
+% 说明如下：
+% secnumdepth 这个计数器是 LaTeX 标准文档类用来控制章节编号深度的。
+% 在 article 中，这个计数器的值默认是 3，对应的章节命令是 \subsubsection。
+% 也就是说，默认情况下，article 将会对 \subsubsection 及其之上的所有章节标题进行编号，也就是 \part, \section, \subsection, \subsubsection。LaTeX 标准文档类中，最大的标题是 \part。它在 book 和 report 类中的层级是「-1」，在 article 类中的层级是「0」。这里，我们在调用 \appendix 的时候将计数器设置为 -2，因此所有的章节命令都不会编号了。不过，一般还是会保留 \part 的编号的。所以在实际使用中，将它设置为 0 就可以了。
+
+% 在修改过程中请注意不要破环命令的完整性
+
+% \renewcommand\appendix{\setcounter{secnumdepth}{-2}}
+\appendix
+\include{content/appendix}
+
+
+\end{document}
