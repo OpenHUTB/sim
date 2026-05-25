@@ -1,1 +1,81 @@
+\chapter{附录}
 
+\section{实验硬件配置表}
+
+\begin{table}[H]
+\centering
+\caption{实验硬件配置表}
+\begin{tabular}{|l|l|}
+\hline
+\textbf{配置项} & \textbf{型号/参数} \\
+\hline
+处理器（CPU） & Intel Core i9-14900K \\
+\hline
+独立显卡（GPU） & NVIDIA RTX 4090 24G \\
+\hline
+内存 & 64GB DDR5 6000MHz \\
+\hline
+固态硬盘 & 1TB NVMe M.2 \\
+\hline
+显示器 & 27英寸 2K 165Hz \\
+\hline
+\end{tabular}
+\end{table}
+
+\section{实验环境配置表}
+
+\begin{table}[H]
+\centering
+\caption{实验环境配置表}
+\begin{tabular}{|l|l|}
+\hline
+\textbf{配置项} & \textbf{版本/工具} \\
+\hline
+操作系统 & Windows 11 \\
+\hline
+开发环境 & Python 3.11 \\
+\hline
+IDE工具 & PyCharm \\
+\hline
+仿真平台 & AirSim \\
+\hline
+\end{tabular}
+\end{table}
+
+\section{核心代码}
+
+\begin{verbatim}
+class LandingController:
+    def __init__(self):
+        self.config = ControllerConfig()
+        self.mode = "normal"
+        self.abort_requested = False
+        self.abort_latch = False
+        self.flare_latch = False
+        self.landing_commit_latch = False
+        self.last_phase = "approach"
+        self.violation_time_s = 0.0
+
+    def trigger_abort(self):
+        self.abort_requested = self.abort_latch = True
+        self.flare_latch = self.landing_commit_latch = False
+
+    def reset(self):
+        self.mode = "normal"
+        self.abort_latch = self.flare_latch = False
+        self.landing_commit_latch = False
+
+    def compute(self, s):
+        cfg = self.config
+        h_agl = s["h_agl_ft"]
+        v_kts = s["vc_kts"]
+        vs_fpm = s["vs_fpm"]
+        roll_deg = s["roll_deg"]
+        yaw_deg = s["yaw_deg"]
+        wow = s["wow"]
+        dist_rwy = s["distance_to_runway_ft"]
+        cross_track = s["cross_track_ft"]
+        rwy_hdg = s["runway_heading_deg"]
+        hdg_err = self.wrap_deg(rwy_hdg - yaw_deg)
+        dist_td = dist_rwy - cfg.target_touchdown_past_threshold_ft
+\end{verbatim}
