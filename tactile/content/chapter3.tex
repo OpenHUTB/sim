@@ -1,0 +1,290 @@
+% chapter3.tex
+\section{系统架构与仿真环境搭建}
+
+\subsection{系统总体架构}
+本课题把可变形物体的即时触觉交互作为主要目标，利用MuJoCo 3.x物理引擎、Python 3.10+开发语言，创建出包含交互层、主循环、引擎层、触觉反馈算法层的分层模块化结构，包含物理仿真、视觉渲染、触觉反馈、手部运动追踪、数据评定等功能模块，可以稳定地支持肝脏、肾脏、皮肤等腹腔器官和虚拟手之间的触摸、按压等交互操作，整体设计遵循分层解耦、模块化、高时效性、可扩展的准则。
+
+创建起一个包含物理仿真、视觉渲染、触觉反馈、手部运动追踪和数据评定的完整实验平台，该系统可以使用MuJoCo作为物理仿真引擎、WEART TouchDIVER作为触觉反馈终端、VR设备作为沉浸式视觉通道来构建起感知、计算、反馈、评价的闭环交互体系，其整体设计遵循分层解耦、模块化、高时效性、可扩展的原则，可以稳定地支持软体挤压、抓取、滑动、纹理识别等各种交互操作。
+
+\subsubsection{硬件架构}
+理想系统硬件采用核心计算、交互输入、视觉输出、触觉反馈（可选）的架构设计，各个设备通过USB和TCP/IP网络通信，以高性能计算主机为中央控制节点，统一接收传感器数据并下发控制指令，保证硬件协同工作时序一致，具体组成及功能如图3.1所示。
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.85\textwidth]{figures/hardware_topology.png}
+    \caption{理想系统硬件连接拓扑结构图}
+    \label{fig:hardware_topology}
+\end{figure}
+
+\begin{enumerate}
+    \item 高性能计算主机完成MuJoCo物理引擎运行、触觉渲染算法计算、逆运动学求解、多线程调度、实验数据存储等工作，需要有较强CPU实时运算能力、图形处理能力，保证高帧率仿真、低延迟反馈，支持系统各个模块的高效运行。
+    
+    \item 可选触觉设备为WEART TouchDIVER触觉手套，使用WEART SDK驱动，采用指环式设计，可以戴在左右手的拇指、食指、中指上，可以实时获取手指弯曲程度和外展角度，并且输出压力反馈以及纹理震动，从而达到力觉、纹理、滑动触感等多种感觉输出的目的，是用户与虚拟物体之间的重要硬件接口（目前演示没有开启，后期可以扩展）。
+    
+    \item 可选VR设备为Oculus Rift S头戴设备，采用pyopenxr标准接口接入，可以完成头部追踪、双手位置追踪和立体渲染的功能，给运动重定向提供准确的位姿数据，创建出沉浸式的立体视觉环境。
+    
+    \item 交互控制设备有键盘（主要的交互方式），用pynput库在不同的平台上实现对键盘的监听，驱动虚拟手的运动来完成触摸、按压等交互操作，适合于没有VR、没有触觉手套的演示环境；VR控制器（可选），可以辅助完成手部定位、视角切换和场景重置，提高交互的便利性。
+\end{enumerate}
+
+目前演示场景使用的是键盘、虚拟双手、腹腔器官的降级交互方式，主要是为了适应没有专业硬件的演示环境，之后接入WEART触觉手套、Oculus Rift S设备后，可以完成完整的视触融合闭环交互。
+
+\subsubsection{软件架构}
+系统软件采用五层分层架构设计，设备推动层、物理引擎层、触觉渲染层、交互控制层、数据考虑层通过标准接口进行通讯，方便以后的维护、替换模块、扩展，系统软件五层架构如图3.2所示。
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.6\textwidth]{figures/software_architecture.png}
+    \caption{系统软件五层架构图}
+    \label{fig:software_architecture}
+\end{figure}
+
+\begin{enumerate}
+    \item 设备驱动层要和VR、触觉手套建立通信联系，完成设备的初始化、校准、数据读取和指令下达等工作，隐藏硬件差异，给高层提供统一的调用接口。
+    
+    \item 物理引擎层使用了MuJoCo作为主要部分，完成场景加载、可变形物体动力学计算、碰撞检测、接触力计算和虚拟手推动等工作，为系统的物理真实性提供基础支撑。
+    
+    \item 触觉渲染层获取到接触力、形变深度、物体类型等信息，执行力信号的计算、滤波、归一化和纹理映射的过程，最终得到可以直接驱动触觉设备的控制信号。
+    
+    \item 交互控制层把VR手部姿态转化为虚拟手的运动重定向，解决手指逆运动学问题，处理关节约束和动作平滑的问题，使虚拟手操作自然、稳定、不会出现穿模现象。
+    
+    \item 数据考量层会即时记载实验过程中有关接触力、手部位置、任务耗时、达成率、系统延时等各类数据，可以保存、检索、导出并加以统计分析，从而为量化考量提供支持。
+\end{enumerate}
+
+\subsection{硬件设备接入与配置}
+
+\subsubsection{WEART TouchDIVER触觉设备接入（可选）}
+WEART TouchDIVER为系统中的关键触觉交互装置，为指环形结构，分别戴在左右手的拇指、食指、中指上，该装置通过触觉渲染算法来运行，可对指尖施加压力反馈，产生纹理震动效果，还可以实时获取手指弯曲和外展角度的信息，完成双向数据交换。
+
+WEART TouchDIVER通过TCP/IP通信协议与主机连接，其默认的IP和端口号是由设备出厂时预设好的，需要安装相应的驱动程序、启动中间件、执行设备配对、进行自动校准，同时对通信进行检测。当系统开机后，触觉设备就会以每秒100-150次的速度向主机发送手指闭合程度、外展角度等有关数据，并且会接收力感、纹理反馈等指令信息，为了保证即时性，系统把触觉数据的传输任务安排成高优先级的线程，避免出现堵塞或者丢弃数据的情况，保证力感反馈不出现大的迟缓现象。本项目已经把原项目中与该设备耦合的力反馈逻辑抽象成独立的算法模块，后续接入时只需要通过标准化接口调用haptic\_feedback.py中的算法就可以实现力反馈和纹理反馈的正常输出，不需要修改核心逻辑。
+
+WEART TouchDIVER触觉设备接入核心代码如下：
+
+\begin{lstlisting}[language=Python, caption=WEART设备接入核心代码, label=lst:weart]
+class WeartConnector:
+    def __init__(self, enabled_hands: list[int], ip_address=WeArtCommon.DEFAULT_IP_ADDRESS, port=WeArtCommon.DEFAULT_TCP_PORT):
+        self.client = WeArtClient(ip_address, port, log_level=logging.INFO)
+        self.fingers = {}
+        for hand in enabled_hands:
+            hand_side = HandSide.Left if hand == 0 else HandSide.Right
+            for finger in HAPTIC_FINGERS:
+                haptic_object = WeArtHapticObject(self.client)
+                haptic_object.handSideFlag = hand_side.value
+                haptic_object.actuationPointFlag = self.get_actuation_point(finger)
+                touch_effect = TouchEffect(WeArtTemperature(), WeArtForce(), WeArtTexture())
+                haptic_object.AddEffect(touch_effect)
+                self.fingers[f"{hand}_{finger}"] = Finger(haptic_object, touch_effect)
+    
+    def get_finger_data(self, hand_id: int, finger: str) -> tuple[float, float]:
+        finger_obj = self.fingers[f"{hand_id}_{finger}"]
+        return finger_obj.thimble_tracking.GetClosure(), finger_obj.thimble_tracking.GetAbduction()
+    
+    def apply_finger(self, hand_id: int, finger: str, force_value: float, texture: TextureType | None):
+        finger_obj = self.fingers[f"{hand_id}_{finger}"]
+        texture_obj = finger_obj.touch_effect.getTexture()
+        texture_obj.active = texture is not None
+        if texture:
+            texture_obj.textureType = texture
+            texture_obj.volume = 0.8
+        finger_obj.touch_effect.Set(
+            finger_obj.touch_effect.getTemperature(),
+            WeArtForce(True, force_value),
+            texture_obj
+        )
+        finger_obj.haptic_object.UpdateEffects()
+\end{lstlisting}
+
+\subsubsection{VR设备接入（可选）}
+系统使用Oculus Rift S作为沉浸式视觉显示设备，采用OpenXR标准接口进行跨平台的VR渲染和手部追踪，目前演示中使用键盘交互代替，如下所示：
+
+\begin{enumerate}
+    \item 接口实现采用OpenXR标准接口与系统进行通信，OpenXR实例在应用程序运行期间一直存在，从创建OpenXR实例开始，到系统获得OpenXR资源为止，都是依靠xrWaitFrame、xrBeginFrame等关键API对渲染帧的时间进行精确的控制。
+    
+    \item 功能实现就是完成头部追踪、双手位置追踪、立体渲染的功能，系统启动后先初始化OpenXR会话得到追踪数据和渲染纹理，再将MuJoCo的仿真画面发送到VR帧缓冲区，为了保证视触同步，VR渲染和触觉输出使用同一个时间戳，用插值和缓冲补偿的方式改善视觉和触觉的不同步问题。
+    
+    \item 会话管理，OpenXR会话在运行时需要经历IDLE到READY再到SYNCHRONIZED再到VISIBLE再到FOCUSED的状态转换，保证视觉渲染、物理仿真、触觉反馈等各方面的时序一致，给用户提供无感知延迟的沉浸式交互体验。
+\end{enumerate}
+
+VR设备渲染与追踪核心代码如下：
+
+\begin{lstlisting}[language=Python, caption=VR设备渲染与追踪核心代码, label=lst:vr]
+class MujocoXRVisualizer(Visualizer, HandPoseProvider):
+    def __init__(self, mj: MujocoConnector, mirror_window=False, samples=None, fps_counter=False):
+        self.mj_connector = mj
+        self.mirror_window = mirror_window
+        self._should_quit = False
+
+    def __enter__(self):
+        self.init_xr()
+        self.init_window()
+        self.prepare_renderer()
+        return self
+
+    def init_xr(self):
+        instance_info = xr.InstanceCreateInfo(
+            application_info=xr.ApplicationInfo(application_name="Deformable Simulation"),
+            enabled_extensions_names=[xr.KHR_OPENGL_ENABLE_EXTENSION_NAME]
+        )
+        self.xr_instance = xr.create_instance(instance_info)
+        self.xr_system = xr.get_system(self.xr_instance, xr.SystemGetInfo(xr.FormFactor.HEAD_MOUNTED_DISPLAY))
+        views_config = xr.enumerate_view_configuration_views(
+            self.xr_instance, self.xr_system, xr.ViewConfigurationType.PRIMARY_STEREO
+        )
+        self.width = views_config[0].recommended_image_rect_width
+        self.height = views_config[0].recommended_image_rect_height
+
+    def init_window(self):
+        glfw.init()
+        glfw.window_hint(glfw.DOUBLEBUFFER, False)
+        glfw.window_hint(glfw.VISIBLE, self.mirror_window)
+        self.window = glfw.create_window(self.width // 2, self.height // 2, "Loading...", None, None)
+        glfw.make_context_current(self.window)
+        glfw.swap_interval(0)
+\end{lstlisting}
+
+\subsubsection{键盘交互配置（当前演示核心）}
+为了适应没有VR、没有触觉手套的演示环境，在原项目的基础上增加了键盘交互模式，使用pynput库实现跨平台键盘监听，具体配置如下表所示。
+
+\begin{table}[H]
+    \centering
+    \caption{键盘交互功能映射表}
+    \label{tab:keyboard}
+    \begin{tabular}{|c|c|}
+        \hline
+        \textbf{按键} & \textbf{功能} \\
+        \hline
+        W/A/S/D & 虚拟手前后左右移动 \\
+        \hline
+        Q/E & 虚拟手上下移动 \\
+        \hline
+        ​空格键 & 手指弯曲（抓握） \\
+        \hline
+        Shift & 增加按压深度 \\
+        \hline
+        Ctrl & 减少按压深度 \\
+        \hline
+        L/R & 切换左手/右手控制 \\
+        \hline
+        R & 重置场景 \\
+        \hline
+    \end{tabular}
+\end{table}
+
+\begin{enumerate}
+    \item 功能映射就是把键盘按键和虚拟手运动指令联系起来，使虚拟手可以进行上下、前后、左右移动，手指可以弯曲、伸直，虚拟手可以与腹腔器官接触、按压等操作，从而克服了原项目对专业硬件的依赖。
+    
+    \item 时序优化把键盘输入线程设为中高优先级，保证输入指令的及时响应，减少指令延迟；加入输入平滑处理，减小键盘离散输入造成的虚拟手“瞬移”现象，削减非物理穿透危险。
+\end{enumerate}
+
+\subsection{仿真环境搭建}
+
+\subsubsection{软件开发环境}
+系统使用Python 3.10+作为基础，搭建模块化的软件开发环境，主要使用的依赖库和工具有以下几项，全部使用稳定的版本来保证系统的兼容性和运行稳定性。
+
+\begin{table}[H]
+    \centering
+    \caption{软件开发环境配置表}
+    \label{tab:software_env}
+    \begin{tabular}{|l|l|}
+        \hline
+        \textbf{项目} & \textbf{参数配置} \\
+        \hline
+        开发语言 & Python 3.10+ \\
+        \hline
+        核心引擎 & MuJoCo 3.x \\
+        \hline
+        可视化工具 & mujoco.viewer (passive) \\
+        \hline
+        交互库 & pynput 1.7.6、pyopenxr（可选） \\
+        \hline
+        数值计算 & numpy 1.26.0 \\
+        \hline
+        数据存储 & SQLite 3.41.2 \\
+        \hline
+        开发工具 & PyCharm 2023.2.3 \\
+        \hline
+    \end{tabular}
+\end{table}
+
+\begin{enumerate}
+    \item 核心引擎为MuJoCo 3.x，可以进行稳定的柔性体求解、接触检测以及刚体动力学计算，主要针对接触动力学和软体FEM仿真，数值稳定性好、精度高，比Bullet、PhysX等其他物理引擎更优，是学术界软体仿真的主流选择。
+    
+    \item 可视化使用的是mujoco viewer（passive），可以完成3D场景的渲染以及相机的交互功能，可以实时显示虚拟手、腹腔器官的形态和形变的过程，支持视角的改变、场景的放大缩小等操作。
+    
+    \item 交互控制使用的是pynput，可以实现跨平台的键盘监听，支持目前演示的主要交互功能；pyopenxr（可选）给VR设备接入提供接口。
+    
+    \item 数值计算用到的是numpy，可以进行力信号滤波、向量运算等操作，为触觉反馈算法提供支持，提高计算效率。
+    
+    \item 数据管理使用SQLite轻量级实验数据存储，可以实现实时数据的记录、查询以及导出。
+    
+    \item 辅助工具是多线程库来保证仿真、触觉、渲染、数据记录线程之间互相不影响，fix\_xml.py系列脚本用来修复原项目XML文件的兼容性问题，使它可以与MuJoCo 3.x版本兼容。
+\end{enumerate}
+
+环境部署流程简单，能够迅速复现，系统启动后会弹出命令行控制面板界面，提供系统初始化过程以及设备状态提示以及键盘交互控制说明，使用户能够很快的开始使用。系统启动时的命令行控制面板界面如图3.3所示。
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.8\textwidth]{figures/control_panel.png}
+    \caption{系统控制面板效果图}
+    \label{fig:control_panel}
+\end{figure}
+
+\subsubsection{仿真场景配置}
+系统设计出各种典型的可变形物体的交互场景，对应不同的材质、刚度、形变特性，以满足对照实验的要求。系统创建出包含人体躯干、肝脏、肾脏等器官模型的虚拟手术仿真场景，用户可以借助触觉手套对虚拟器官进行即时交互，如图3.4所示。
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.8\textwidth]{figures/simulation_scene.png}
+    \caption{系统仿真场景效果图}
+    \label{fig:simulation_scene}
+\end{figure}
+
+图中给出了用MuJoCo创建的虚拟手术仿真场景：(1)双手骨骼模型（MuJoCo hands.xml），(2)肝脏、肾脏等可以变形的器官模型，(3)人体躯干环境模型。该系统使用户可以利用触觉手套同虚拟器官进行即时交互，实现挤压、抓取、滑动等操作。
+
+设计出三个典型的可变形物体交互场景，分别对应不同的材质、刚度、形变特性，可以满足对照实验的要求。
+
+\begin{enumerate}
+    \item 果冻立方体场景：高弹性、中等阻尼，模拟软体弹性材料；
+    \item 布料薄片场景：低刚度、低阻尼、易形变，模拟织物；
+    \item 海绵体场景：低刚度、高阻尼、可压缩的多孔弹性材料。
+\end{enumerate}
+
+场景文件用MuJoCo XML格式写成，里面有重力、时间步长、柔性体参数、碰撞属性、虚拟手模型等设置信息，加载速度快，稳定性高。
+
+\subsection{可变形物体模型构建}
+
+\subsubsection{模型构建方法}
+可变形物体模型构建的关键是准确建模腹腔器官（肝脏、肾脏、皮肤等），系统使用MuJoCo 3.x的flexcomp柔性组件创建可变形物体，其建模方式分为grid规则网格、ellipsoid椭球和gmsh高精度网格三种，分别适合规则软体、类球器官和复杂生物组织。确定物体的拓扑结构，确定质点和弹性结合，调节刚度、阻尼，设定边界条件，启动碰撞检测。flexcomp内部使用改良过的数值求解器，在高频仿真步长的情况下也能保持稳定，不会出现发散、穿模或者飞散的情况。
+
+可变形物体模型构建核心代码如下：
+
+\begin{lstlisting}[language=Python, caption=可变形物体模型构建核心代码, label=lst:deformable]
+class DeformableProperties:
+    def __init__(self, name: str, deformable_type, stiffness: float, damping: float, mass: float, color: tuple):
+        self.name = name
+        self.deformable_type = deformable_type
+        self.stiffness = stiffness
+        self.damping = damping
+        self.mass = mass
+        self.color = color
+
+TEMPLATES = {
+    'jelly_cube': DeformableProperties('jelly_cube', DeformableType.SOFT_BODY, 100.0, 5.0, 0.5, (1.0, 0.5, 0.8, 1.0)),
+    'cloth_sheet': DeformableProperties('cloth_sheet', DeformableType.CLOTH, 50.0, 2.0, 0.2, (0.5, 0.5, 1.0, 1.0)),
+    'sponge': DeformableProperties('sponge', DeformableType.SPONGE, 20.0, 8.0, 0.1, (1.0, 0.8, 0.6, 1.0)),
+}
+\end{lstlisting}
+
+\subsubsection{物理参数设计}
+系统要实现可区分的触觉感知，就需要给三种物体设置差别很大的物理参数，刚度、阻尼、质量、摩擦系数、网格密度等都是。刚度表示物体的柔软程度，阻尼表示回弹的速度和振动的衰减快慢，摩擦系数影响滑动触感，网格密度要兼顾计算效率和形变的细腻程度，通过这些参数的相互结合，果冻、布料、海绵就表现出完全不同的力学响应和触觉特性，进而可以很好地考察触觉反馈的区分能力。
+
+\subsection{交互任务设计}
+为了系统地设计出四种标准的交互任务，包括操作、感知、识别等典型场景，来对实验进行评价。
+
+\begin{enumerate}
+    \item 移放任务：在触觉引导下对柔性物体进行稳定的操控；
+    \item 挤压形变任务：测试力反馈和形变程度的关系，检验力觉的真实性；
+    \item 表面滑动任务：测试纹理反馈清晰度与材质区分度；
+    \item 多器官切换任务：检验四线程并行结构的调度情况，保证系统不会出现卡顿或者崩溃的情况。
+\end{enumerate}
+
+任务设计既具有演示性又具有验证性，可以直观地展示系统的主要功能，也可以给后续的实验设计提供标准的任务模板，同时符合原项目腹腔手术触觉训练的要求，为后续接入VR、触觉手套等实现完整的手术训练功能做好铺垫。

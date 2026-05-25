@@ -1,0 +1,117 @@
+% main.tex
+\documentclass[12pt,a4paper]{ctexart}
+
+% 页面设置
+\usepackage{geometry}
+\geometry{left=2.5cm,right=2.5cm,top=2.5cm,bottom=2.5cm}
+
+% 图形和表格
+\usepackage{graphicx}
+\usepackage{float}
+\usepackage{caption}
+\usepackage{subcaption}
+\usepackage{multirow}
+\usepackage{array}
+
+% 数学公式
+\usepackage{amsmath,amssymb}
+\usepackage{bm}
+
+% 代码高亮
+\usepackage{listings}
+\usepackage{xcolor}
+\lstset{
+    basicstyle=\small\ttfamily,
+    keywordstyle=\color{blue},
+    commentstyle=\color{gray},
+    stringstyle=\color{red},
+    numbers=left,
+    numberstyle=\tiny\color{gray},
+    stepnumber=1,
+    breaklines=true,
+    frame=single,
+    tabsize=4
+}
+
+% 引用和超链接
+\usepackage{cite}
+\usepackage{hyperref}
+\hypersetup{
+    colorlinks=true,
+    linkcolor=black,
+    citecolor=black,
+    urlcolor=blue
+}
+
+% 页眉页脚
+\usepackage{fancyhdr}
+\pagestyle{fancy}
+\fancyhf{}
+\fancyhead[C]{湖南工商大学本科毕业设计}
+\fancyfoot[C]{\thepage}
+
+% 行距
+\usepackage{setspace}
+\renewcommand{\baselinestretch}{1.5}
+
+% 标题格式（可选）
+\usepackage{titlesec}
+\titleformat{\section}{\Large\bfseries}{\thesection}{1em}{}
+\titleformat{\subsection}{\large\bfseries}{\thesubsection}{1em}{}
+
+% 图形路径
+\graphicspath{{figures/}}
+
+% 开始文档
+\begin{document}
+
+% 封面
+\input{cover}
+\newpage
+
+% 诚信声明和版权授权书
+\input{declarationzh}
+\newpage
+
+% 中文摘要
+\input{abstractzh}
+\newpage
+
+% 英文摘要
+\input{abstracten}
+\newpage
+
+% 目录
+\tableofcontents
+\newpage
+
+% 正文
+\input{chapter1}
+\newpage
+\input{chapter2}
+\newpage
+\input{chapter3}
+\newpage
+\input{chapter4}
+\newpage
+\input{chapter5}
+\newpage
+\input{chapter6}
+\newpage
+\input{chapter7}
+\newpage
+
+% 参考文献
+\bibliographystyle{plain}
+\bibliography{reference}
+\newpage
+
+% 致谢
+\input{acknowledgements}
+\newpage
+
+% 附录（如果需要）
+\appendix
+\input{appendix}
+
+\end{document}
