@@ -1,0 +1,43 @@
+\contentsline {chapter}{\numberline {第1章\hspace {.3em}}. 绪论}{1}{chapter.1}%
+\contentsline {section}{\numberline {1.1}研究背景及意义}{1}{section.1.1}%
+\contentsline {section}{\numberline {1.2}国内外研究现状}{1}{section.1.2}%
+\contentsline {subsection}{\numberline {1.2.1}国内研究现状}{1}{subsection.1.2.1}%
+\contentsline {subsection}{\numberline {1.2.2}国外研究现状}{2}{subsection.1.2.2}%
+\contentsline {section}{\numberline {1.3}本文结构框架}{3}{section.1.3}%
+\contentsline {chapter}{\numberline {第2章\hspace {.3em}}研究理论基础}{5}{chapter.2}%
+\contentsline {section}{\numberline {2.1}肌肉骨骼系统建模}{5}{section.2.1}%
+\contentsline {subsection}{\numberline {2.1.1}人体肌肉骨骼结构与动力学特性}{5}{subsection.2.1.1}%
+\contentsline {subsection}{\numberline {2.1.2}神经网络算法}{5}{subsection.2.1.2}%
+\contentsline {subsection}{\numberline {2.1.3}SMPL 参数化人体模型}{6}{subsection.2.1.3}%
+\contentsline {section}{\numberline {2.2}运动模仿学习理论}{6}{section.2.2}%
+\contentsline {section}{\numberline {2.3}强化学习与深度强化学习理论}{7}{section.2.3}%
+\contentsline {section}{\numberline {2.4}运动模仿量化评估体系}{8}{section.2.4}%
+\contentsline {section}{\numberline {2.5}Kinesis 仿真平台与 MuJoCo 物理引擎}{9}{section.2.5}%
+\contentsline {chapter}{\numberline {第3章\hspace {.3em}}基于运动模仿的生物合理肌肉骨骼运动控制}{12}{chapter.3}%
+\contentsline {section}{\numberline {3.1}系统架构}{12}{section.3.1}%
+\contentsline {subsection}{\numberline {3.1.1}整体架构}{12}{subsection.3.1.1}%
+\contentsline {subsection}{\numberline {3.1.2}模块间交互}{13}{subsection.3.1.2}%
+\contentsline {section}{\numberline {3.2}运动数据处理}{14}{section.3.2}%
+\contentsline {section}{\numberline {3.3}运动模仿算法设计}{16}{section.3.3}%
+\contentsline {section}{\numberline {3.4}生物合理性约束}{20}{section.3.4}%
+\contentsline {section}{\numberline {3.5}算法训练流程}{22}{section.3.5}%
+\contentsline {chapter}{\numberline {第4章\hspace {.3em}}. 系统设计与实现}{26}{chapter.4}%
+\contentsline {section}{\numberline {4.1}实验环境与整体框架}{26}{section.4.1}%
+\contentsline {subsection}{\numberline {4.1.1}物理引擎做高精度动力学仿真，深度学习模块用PyTorch}{26}{subsection.4.1.1}%
+\contentsline {subsection}{\numberline {4.1.2}框架开发，整体环境稳定，可以支持复杂的运动控制算法的开发和验证。开发环境如表2所示。}{26}{subsection.4.1.2}%
+\contentsline {section}{\numberline {4.2}核心功能模块实现}{27}{section.4.2}%
+\contentsline {subsection}{\numberline {4.2.1}运动数据处理模块实现}{27}{subsection.4.2.1}%
+\contentsline {subsection}{\numberline {4.2.2}前向运动学与运动控制模块实现}{28}{subsection.4.2.2}%
+\contentsline {subsection}{\numberline {4.2.3}仿真与评估模块实现}{28}{subsection.4.2.3}%
+\contentsline {section}{\numberline {4.3}生物合理性约束实现}{29}{section.4.3}%
+\contentsline {section}{\numberline {4.4}系统运行效果测试与分析}{29}{section.4.4}%
+\contentsline {subsection}{\numberline {4.4.1}肢体运动分析}{29}{subsection.4.4.1}%
+\contentsline {subsection}{\numberline {4.4.2}奖励函数优化效果分析}{31}{subsection.4.4.2}%
+\contentsline {subsection}{\numberline {4.4.3}算法量化对比实验}{32}{subsection.4.4.3}%
+\contentsline {chapter}{\numberline {第5章\hspace {.3em}}. 总结与展望}{37}{chapter.5}%
+\contentsline {section}{\numberline {5.1}总结}{37}{section.5.1}%
+\contentsline {section}{\numberline {5.2}研究创新点}{37}{section.5.2}%
+\contentsline {section}{\numberline {5.3}未来展望}{38}{section.5.3}%
+\contentsline {chapter}{致谢}{39}{section.5.3}%
+\contentsline {chapter}{参考文献}{40}{chapter*.19}%
+\contentsfinish 
