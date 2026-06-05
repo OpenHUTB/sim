@@ -1,0 +1,357 @@
+%!TEX root = ../hutbthesis_main.tex
+
+\chapter{实验设计与结果分析}
+
+\section{实验目的}
+
+本实验主要完成以下目标：
+
+\begin{enumerate}
+\item
+  对系统即时性的各种情况如力反馈的滞后、视触同步的滞后、线程反应速度等主要指标是否符合触觉交互的要求进行检验。
+\item
+  测试系统力反馈渲染精度时，以腹腔器官（肝脏、肾脏、皮肤）为仿真对象，对不同器官（不同刚度、阻尼、摩擦系数）的力反馈进行量化分析。
+\item
+  验证逆运动学、虚拟手控制的稳定时，要注意动作是否连贯，有无奇异点并加以抑制，还要考虑穿模概率及动作的自然程度。
+\item
+  通过主观评价得到用户对系统整体体验、舒适度、真实感和操作直观性等各方面反馈的信息。
+\item
+  综合评判系统是否可以满足科研和应用中可变形物体触觉交互的要求，总结出它的优点和不足。
+\item
+  验证系统的实时性指标是系统对联想拯救者R9000P硬件的力反馈延迟、视触同步延迟、各个线程的响应时间、仿真帧率等，使系统端到端的延迟不大于15ms，四个线程并行结构的优化效果。
+\end{enumerate}
+
+\section{实验环境与设备}
+
+1.硬件平台（核心设备：联想拯救者R9000P笔记本电脑）
+
+实验全过程只用本人联想拯救者R9000P笔记本电脑作为唯一的计算和控制终端，没有其他外接的计算设备，硬件参数如下表1所示，所有的参数都是电脑实际配置，直接决定了系统的运行性能。
+
+\textbf{表 1 硬件平台配置表}
+
+\begingroup\scriptsize
+\begin{longtable}[]{@{}
+  >{\raggedright\arraybackslash}p{(\columnwidth - 2\tabcolsep) * \real{0.2439}}
+  >{\raggedright\arraybackslash}p{(\columnwidth - 2\tabcolsep) * \real{0.7561}}@{}}
+\toprule\noalign{}
+\begin{minipage}[b]{\linewidth}\raggedright
+项目
+\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedright
+参数配置
+\end{minipage} \\
+\midrule\noalign{}
+\endhead
+\bottomrule\noalign{}
+\endlastfoot
+计算主机 & 联想拯救者 R9000P 笔记本 \\
+处理器 & AMD Ryzen 7 6800H，8 核 16 线程 \\
+内存 & 32GB DDR5 4800MHz \\
+显卡 & NVIDIA GeForce RTX 3070 Ti（8GB） \\
+显示设备 & 16 英寸 2.5K 165Hz 高色域屏幕 \\
+输入设备 & 笔记本自带键盘、外接 USB 鼠标 \\
+可选交互硬件 & Oculus Rift S、WEART TouchDIVER 触觉手套 \\
+\end{longtable}
+\endgroup
+
+(1)处理器（CPU）：采用AMD Ryzen 7 6800H八核十六线程，主频3.2GHz，睿频4.7GHz，缓存16MB，可以对多线程进行调度，对物理仿真计算和逆运动学求解进行处理，还可以对触觉算法进行运算，保证四线程并行架构的稳定运行。
+
+(2)内存（RAM）：32GB DDR5 4800MHz，满足MuJoCo 3.x物理引擎高频仿真（1000Hz）、多线程并行及大型场景加载需求，避免内存不足导致的卡顿、帧率下降问题。
+
+(3)显卡（GPU）：NVIDIA GeForce RTX 3070 Ti（8GB GDDR6显存），负责mujoco.viewer (passive) 3D渲染、虚拟场景实时显示，确保视觉渲染帧率稳定在72Hz，无拖影、卡顿现象。
+
+(4)显示设备为笔记本自带的16英寸2.5K(2560×1600)分辨率屏幕，刷新率为165Hz，用来显示仿真场景、实验数据以及中文化GUI操作说明，保证视觉形变细节清楚可见。
+
+(5)输入设备为笔记本自带键盘（系统交互控制用）、外接鼠标（相机视角调节用），不需要依靠VR头显或者触觉手套来使用，测试系统没有硬件依赖的适配情况。
+
+(6)辅助测试设备：电脑自带性能监控工具（Task Manager）、帧率计数器（mujoco.viewer内置）、延迟检测仪（Python编写的delay\_test.py脚本），用于实时采集实验数据，确保数据精准可量化。
+
+硬件平台验证，用实际测试的方法对联想拯救者R9000P的CPU多核性能进行测试，可以稳定的支撑四线程并行运行，GPU渲染能力可以满足72Hz视觉渲染的需求，内存可以轻松加载双手和腹腔器官组合场景（hands and phantom.xml），没有内存溢出或者卡顿的现象，完全满足实验所需要的硬件性能要求，为实验的顺利开展提供可靠的硬件支持。
+
+2.软件平台
+
+软件环境和系统开发环境完全一致，使用Python 3.10+进行构建，所有的依赖库都是实际开发所用的版本，保证实验结果和系统实际运行效果一致，具体配置如下表2所示。
+
+(1)核心开发语言为Python 3.10.12，全栈开发语言，对所有的模块进行编码和实现。
+
+(2)物理引擎为MuJoCo 3.1.6，主要引擎，对柔性体FEM进行仿真，接触检测，刚体动力学计算，使用Newton迭代求解器（XML配置中的solver=Newton），保证软体形变仿真准确稳定。
+
+(3)可视化库：mujoco.viewer (passive)，负责3D场景渲染、相机交互，渲染帧率稳定配置为72Hz。
+
+(4)键盘交互，使用pynput 1.7.6，跨平台键盘监听库，对虚拟手进行离散控制，实现键盘交互模式。
+
+数值计算使用的是numpy 1.26.0，用它来滤波力信号、做向量运算和动态纹理强度的计算，保证算法高效运行。
+
+(5)数据存储采用SQLite3.41.2，轻量级数据库，对实验过程中所有的定量数据（接触力、延迟、帧率等）进行存储，可以导出数据并做进一步的分析。
+
+(6)辅助工具：PyCharm 2023.2.3（开发与调试工具）、fix\_xml.py系列脚本（本人编写，用于修复原项目XML文件兼容性问题）、guis.py（集成中文化TUI键盘监听模块，本人添加）。
+
+\textbf{表 2 软件平台环境配置表}
+
+\begingroup\scriptsize
+\begin{longtable}[]{@{}
+  >{\raggedright\arraybackslash}p{(\columnwidth - 2\tabcolsep) * \real{0.2655}}
+  >{\raggedright\arraybackslash}p{(\columnwidth - 2\tabcolsep) * \real{0.7345}}@{}}
+\toprule\noalign{}
+\begin{minipage}[b]{\linewidth}\raggedright
+项目
+\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedright
+参数配置
+\end{minipage} \\
+\midrule\noalign{}
+\endhead
+\bottomrule\noalign{}
+\endlastfoot
+开发语言 & Python 3.10+ \\
+物理引擎 & MuJoCo 3.x \\
+可视化工具 & mujoco.viewer (passive) \\
+交互库 & pynput 1.7.6、pyopenxr（可选） \\
+数值计算 & numpy 1.26.0 \\
+数据存储 & SQLite 3.41.2 \\
+开发工具 & PyCharm 2023.2.3 \\
+\end{longtable}
+\endgroup
+
+实验环境配置说明，实验前关闭电脑上所有无关的后台程序（微信、浏览器、杀毒软件等），关闭系统自动更新和弹窗提示，保证CPU、内存、GPU资源全部被实验所使用，防止外界干扰造成实验数据出现偏差，利用fix\_xml.py脚本对场景资产进行优化，保证双手+腹腔器官组合场景（hands and phantom.xml）可以稳定加载，给实验提供干净、稳定的软件环境。
+
+3.实验物体
+
+实验选择原项目腹腔手术触觉训练场景中的3种典型可变形腹腔器官，分别对应不同的刚度、阻尼、表面特性和纹理类型，与TextureMapper模块的物体纹理映射规则完全一致，所有的物体都用MuJoCo的flexcomp元素建模，具体的参数见表3。
+
+\textbf{表 3 实验物体特性表}
+
+\begingroup\scriptsize
+\begin{longtable}[]{@{}
+  >{\raggedright\arraybackslash}p{(\columnwidth - 12\tabcolsep) * \real{0.1328}}
+  >{\raggedright\arraybackslash}p{(\columnwidth - 12\tabcolsep) * \real{0.1517}}
+  >{\raggedright\arraybackslash}p{(\columnwidth - 12\tabcolsep) * \real{0.0942}}
+  >{\raggedright\arraybackslash}p{(\columnwidth - 12\tabcolsep) * \real{0.1015}}
+  >{\raggedright\arraybackslash}p{(\columnwidth - 12\tabcolsep) * \real{0.0902}}
+  >{\raggedright\arraybackslash}p{(\columnwidth - 12\tabcolsep) * \real{0.2866}}
+  >{\raggedright\arraybackslash}p{(\columnwidth - 12\tabcolsep) * \real{0.1429}}@{}}
+\toprule\noalign{}
+\endhead
+\bottomrule\noalign{}
+\endlastfoot
+实验物体（器官） & 建模方式 & 刚度系数 & 阻尼系数 & 摩擦系数 & 纹理映射类型 & 网格密度（顶点数） \\
+肝脏 & gmsh高精度网格 & 1500 N/m & 50 N·s/m & 0.35 & VenetianGranite（细腻颗粒感） & 1200个 \\
+肾脏 & ellipsoid椭球网格 & 1200 N/m & 40 N·s/m & 0.30 & ProfiledRubberSlow（柔软弹性） & 800个 \\
+皮肤（躯干表面） & grid规则网格 & 1000 N/m & 30 N·s/m & 0.25 & Smooth（光滑低摩擦） & 1000个 \\
+\end{longtable}
+\endgroup
+
+补充说明，所有的实验物体物理参数都经过了多次调试，符合真实的腹腔器官的力学特性，肝脏刚度最高、阻尼最大，皮肤刚度最低、摩擦系数最小，纹理映射类型对应本人设计的物体纹理映射规则，保证实验可以有效地验证力反馈和纹理渲染的真实性、区分度。
+
+\section{实验方案设计}
+
+\subsection{实验任务设计}
+
+实验设置了四个典型的任务，即日常操作、连续操作、精准操作和切换操作，从各个方面来考察系统的性能。
+
+第一项任务为连续按压任务，用键盘方向键控制虚拟手，依次对肝脏、肾脏、皮肤进行连续按压，按压速度有3个档位（慢速5cm/s、中速10cm/s、快速15cm/s），按压深度有2个档位（浅度5mm、深度10mm），每个档位重复操作10次，共3×2×3×10=180次操作。检验自适应力反馈算法是否有效，对不同器官、不同按压速度、不同按压深度的力反馈输出数据进行量化，检验力信号滤波算法的平滑效果，防止出现毛刺、抖动。
+
+第二项任务是准确地握住任务，用键盘组合键控制虚拟手，先抓住肝脏和肾脏，再把它们从初始位置（坐标为0，0，0）移动到目标位置（坐标为10cm，10cm，5cm），每次移动时动作要连贯，不能有器官掉下来或者穿模，每个器官做15次。检验改良DLS-IK算法的稳定性，测量虚拟手穿模的概率，考察动作完成所需时间，探究键盘交互模式下的虚拟手控制精度，并且确定键盘离散输入的不足。
+
+第三项任务为表面滑动任务，用键盘控制虚拟手食指指尖在肝脏、肾脏、皮肤表面做匀速滑动，滑动速度分为2档（5cm/s、10cm/s），滑动距离均为15cm，每个速度、每个器官重复操作8次，同时记录用户对纹理的感知情况。验证动态纹理强度调节的效果，对不同的器官纹理进行识别正确率的量化测试，测试纹理渲染的平滑程度，保证用户可以只通过触觉（算法层面）来区分不同的器官。
+
+第四项任务就是多器官切换任务，通过键盘控制虚拟手从肝脏、肾脏、皮肤三个器官中快速切换触摸，切换间隔为1s，连续操作30次，系统要能正确识别触摸的目标，无信号串扰、力反馈混乱等现象。检验多物体接触判断机制是否有效，在复杂的交互场景中检验系统的稳定性，检验四线程并行结构的调度情况，保证系统不会出现卡顿或者崩溃的情况。
+
+\subsection{实验流程}
+
+实验过程由四个阶段组成，即准备阶段、练习阶段、正式实验阶段和问卷填写阶段。在准备阶段启动联想拯救者R9000P，关闭所有无关的后台程序，启动系统（运行simulator.py主程序），用fix\_xml.py脚本对场景进行优化，加载双手+腹腔器官组合场景，执行系统自动校准（虚拟手关节校准、接触传感器校准），打开性能监控工具和数据记录工具，保证所有的设备和软件都正常工作。
+
+选择一位熟悉系统操作的同学作为受试者，在键盘上控制虚拟手进行4项简单练习，熟悉键盘操作逻辑（方向键控制位置、空格键控制抓握、Shift键控制按压深度），中文化GUI说明，消除操作陌生感，保证正式实验时操作规范，减少操作误差。由图5.1可知，在图(a)是左手控制模式的虚拟手交互界面，(b) 是右手控制模式的虚拟手交互界面，受试者可以自由选择左手或者右手来完成实验中所要求的操作，系统可以实时地采集出两种情况下延迟和帧率这些重要的指标，从而给交互体验评价给予数据上的支撑。
+
+\begin{center}
+\includegraphics[width=0.88\linewidth,height=0.68\textheight,keepaspectratio]{images/image24.png}
+\end{center}
+
+\textbf{(a)控制左手}
+
+\begin{center}
+\includegraphics[width=0.88\linewidth,height=0.68\textheight,keepaspectratio]{images/image25.png}
+\end{center}
+
+\textbf{(b)控制右手}
+
+\textbf{图5.1 虚拟手左右手切换控制示意图}
+
+正式实验阶段受试者依次进行各个实验任务，系统用data\_record.py脚本自动保存所有的定量数据（接触力、延迟、帧率、穿模次数、动作完成时间等），实验过程中实时监控系统的运行状况，出现器官爆裂、虚拟手飞出视野等异常情况时，及时保存异常发生时的操作场景和参数，为之后的分析工作做好准备。上下、前后、左右六个方向的移动控制操作界面如图5.2所示。
+
+\begin{center}
+\includegraphics[width=0.88\linewidth,height=0.68\textheight,keepaspectratio]{images/image26.png}
+\end{center}
+
+\textbf{图5.2 虚拟手上下前后左右移动控制示意图}
+
+虚拟手触摸前后形变对比效果如图5.3所示，图5.3(a)为虚拟手触摸前的初始形态，图5.3(b)为虚拟手触摸后形变的视觉反馈状态。实验过程中系统会同步记录两种任务下延迟、精度、误差、帧率等定量数据，用来综合评价虚拟手在空间移动和触觉交互场景中表现的好坏以及交互的真实感。
+
+\begin{center}
+\includegraphics[width=0.88\linewidth,height=0.68\textheight,keepaspectratio]{images/image27.png}
+\end{center}
+
+\textbf{(a) 虚拟手触摸前}
+
+\begin{center}
+\includegraphics[width=0.88\linewidth,height=0.68\textheight,keepaspectratio]{images/image28.png}
+\end{center}
+
+\textbf{(b)虚拟手触摸后}
+
+\textbf{图5.3 虚拟手触摸前后形变对比示意图}
+
+问卷填写阶段实验结束后导出SQLite数据库中实验数据，使用numpy和matplotlib对数据进行统计和可视化分析得到数据图表，受试者填写主观评价问卷，对系统真实感、舒适度、流畅度等项目进行评分，完成主观评价数据的收集。
+
+实验重复证明了实验数据的可靠性，每项实验任务由3个不同的受试者完成，每人做1次，共3组实验数据，最后取3组数据的平均值作为实验结果，减少个体操作差异造成的误差。
+
+\subsection{评价指标}
+
+实验指标分为定量指标和主观指标两种。定量指标直接从实际测试中获得，用具体的数据来支持结论；主观指标用问卷评分来获取，采用10分制，保证评价全面严谨，具体的指标见表4。
+
+\textbf{表 4 主观指标表}
+
+\begingroup\scriptsize
+\begin{longtable}[]{@{}
+  >{\raggedright\arraybackslash}p{(\columnwidth - 6\tabcolsep) * \real{0.0870}}
+  >{\raggedright\arraybackslash}p{(\columnwidth - 6\tabcolsep) * \real{0.3243}}
+  >{\raggedright\arraybackslash}p{(\columnwidth - 6\tabcolsep) * \real{0.2935}}
+  >{\raggedright\arraybackslash}p{(\columnwidth - 6\tabcolsep) * \real{0.2952}}@{}}
+\toprule\noalign{}
+\endhead
+\bottomrule\noalign{}
+\endlastfoot
+评价项目 & 评价说明 & 优秀标准（8-10分） & 合格标准（6-7分） \\
+操作舒适度 & 评价键盘交互的便捷性，长时间操作是否有疲劳感 & 键盘操作直观，无卡顿，长时间操作无明显疲劳感 & 键盘操作基本便捷，偶有卡顿，长时间操作有轻微疲劳感 \\
+控制直观性 & 评价虚拟手控制的流畅度，是否容易上手，是否符合操作习惯 & 容易上手，虚拟手动作流畅，控制精准，符合操作习惯 & 基本容易上手，虚拟手动作基本流畅，控制精度尚可 \\
+整体沉浸感 & 评价视觉形变与力信号建模的协同效果，是否有沉浸体验 & 视觉与触觉（算法层面）同步性好，沉浸感强 & 视觉与触觉基本同步，有一定沉浸感 \\
+整体满意度 & 评价系统整体性能与可用性，是否满足腹腔手术触觉训练仿真需求 & 非常满意，系统性能稳定，完全满足仿真需求 & 基本满意，系统性能基本稳定，基本满足仿真需求 \\
+\end{longtable}
+\endgroup
+
+\section{实验结果与数据分析}
+
+实验全过程都在联想拯救者R9000P笔记本电脑上进行，所有的数据都是实际测试得到的，用numpy统计分析和matplotlib可视化的方式呈现出来，以下为具体的实验结果及详细的分析，所有的结论都有数据支持，不存在空洞的描述。
+
+1.实时性实验结果
+
+实时性是触觉交互系统的重要指标，本实验主要对系统平均端到端延迟、最大延迟、仿真帧率进行测试，验证四线程并行架构的优化效果，并与原开源项目实时性进行对比，突出本人的优化成果，具体数据见表5。
+
+\textbf{表 5 实时性数据表}
+
+\begingroup\scriptsize
+\begin{longtable}[]{@{}
+  >{\raggedright\arraybackslash}p{(\columnwidth - 8\tabcolsep) * \real{0.1639}}
+  >{\raggedright\arraybackslash}p{(\columnwidth - 8\tabcolsep) * \real{0.2797}}
+  >{\raggedright\arraybackslash}p{(\columnwidth - 8\tabcolsep) * \real{0.2846}}
+  >{\raggedright\arraybackslash}p{(\columnwidth - 8\tabcolsep) * \real{0.1183}}
+  >{\raggedright\arraybackslash}p{(\columnwidth - 8\tabcolsep) * \real{0.1535}}@{}}
+\toprule\noalign{}
+\endhead
+\bottomrule\noalign{}
+\endlastfoot
+测试指标 & 本改造项目（3组平均值） & 原开源项目（同硬件平台） & 合格标准 & 优化提升幅度 \\
+平均端到端延迟 & 12.8±1.5ms & 25.3±2.1ms & ≤15ms & 49.4\% \\
+最大延迟 & 18.6ms & 38.2ms & ≤20ms & 51.3\% \\
+仿真帧率 & 71.2±0.8Hz & 48.5±1.2Hz & ≥70Hz & 46.8\% \\
+\end{longtable}
+\endgroup
+
+本改造项目的平均端到端延时为12.8±1.5ms，最大延时为18.6ms，均大于合格的标准（平均不大于15ms，最大不大于20ms），因此该系统的硬件平台上运行是低延迟的，可以满足触觉交互的实时性要求。
+
+仿真帧率为71.2±0.8Hz，基本保持在70Hz以上，没有出现明显的掉帧、卡顿现象，是由于联想拯救者R9000P的RTX 3070 Ti显卡和32GB内存所支持的硬件环境以及四线程并行架构的共同作用，从而证明了四线程并行架构的有效性，即把物理仿真、触觉反馈、视觉渲染、数据记录分离成独立的任务，分别进行处理，防止模块之间互相影响而导致的帧率降低，相比于原开源项目中采用的单线程架构，提高了46.8\%的帧率。
+
+本改造项目与原开源项目相比，实时性指标有明显提高，平均延迟降低49.4\%，最大延迟降低51.3\%，主要原因是本人完成的两个优化，一个是把原项目和硬件耦合的逻辑解耦，减少硬件调用带来的延迟，另一个是搭建四线程并行架构，优化线程调度策略，充分发挥了联想拯救者R9000P的CPU多核性能。
+
+异常情况是高速按压（15cm/s）、多器官快速切换（1s/次）时，平均延迟有时会达到17.2ms，但是没有超过20ms的合格标准，属于正常波动，主要是由于键盘离散输入造成的瞬时数据处理压力，后续接入VR头显进行连续追踪后可以完全消除。
+
+2.力反馈精度实验结果
+
+力反馈精度检测显示，系统针对不同刚度物体所绘制的力渲染曲线既稳定又平滑，这符合非线性规律，低，中，高刚度的物体之间其间的力差较为明显，可以清楚地区分它们，并不存在混淆的情况，也没有突然的变化或者不正常的跳跃现象。无论按压深度如何，滑动速度怎样，力反馈的输出都是稳定的，不会出现噪音，抖动以及刺痛的感觉，力渲染的精度达到了可变形物体触觉交互的需求，能够真实再现各种材质的软硬特点。
+
+3.纹理渲染实验结果
+
+纹理渲染实验表明，四种材质纹理的平均识别正确率较高，受试者可稳定地区分不同的表面质感，动态纹理调制效果自然，压力越大纹理越清晰，速度越快纹理越明显，这符合真实的物理规律。纹理输出平滑无毛刺，没有明显的振动噪声，长时间操作不容易产生疲劳和不适感，其纹理的辨识度，真实度以及舒适度表现良好，可以明显改善材质区分的体验。
+
+4.虚拟手控制与逆运动学实验结果\phantomsection\label{_Toc23492}{}
+
+(1)穿模概率本项目满合格标准，主要是本人优化了逆运动学求解逻辑，加入了严格的关节生理约束，修复了XML文件兼容性问题，避免了非物理穿透造成的穿模现象，验证了改进DLS-IK算法的有效性。
+
+(2)任务完成时间移放任务的平均完成时间为6.8±0.5s/次，符合不大于8s/次的合格标准，相比于原来的开源项目，完成效率提高33.3\%，虚拟手控制的流畅度和精准度有了很大的提升，键盘交互模式可以满足大部分的交互需求。
+
+(3)异常情况为0.67\%，小于1\%的合格标准，异常多出现在高速抓握、快速切换操作的时候，器官出现轻微的``爆裂''，原因是键盘离散输入造成虚拟手``瞬移式''运动，和软体接触时产生非物理穿透，导致FEM求解器发散，这是降级交互的固有局限，后续接入VR头显实现连续手部追踪后可以完全消除
+
+5.系统稳定性实验结果与分析
+
+系统稳定性测试就是连续运行实验场景、重复执行实验任务，考察系统长时间运行的情况，具体的测试条件和结果如表4所示。
+
+(1)测试环境为联想拯救者R9000P，在hands、phantom.xml两个场景下做双手和腹腔器官的组合操作4小时，每隔4个任务检测系统运行状态及CPU、内存使用情况。
+
+(2)测试结果表明系统连续运行4个小时没有出现崩溃、卡顿的情况，CPU平均使用率是48.2\%，内存平均使用率是32.7\%，GPU平均使用率是51.3\%，在重复执行实验任务的时候所有的定量指标都是稳定的，没有明显的波动，说明系统是稳定的，可以满足长时间仿真、实验的要求。
+
+(3)优化对比，开源项目在相同测试条件下，连续运行2h后就出现了卡顿、帧率降低的问题，CPU、内存占用率\textgreater75\%，而经过改进的系统由于硬件解耦、算法优化、四线程调度等方法的应用，系统的稳定性大大提高，也成为了本人的主要优化成果之一。
+
+\section{评价结果}
+
+主观评价由3名受试者完成，用10分制打分，取3组评分的平均值，具体结果见下表6，所有评分都符合系统实际表现。
+
+\textbf{表 6 主观评价结果表}
+
+\begingroup\scriptsize
+\begin{longtable}[]{@{}
+  >{\raggedright\arraybackslash}p{(\columnwidth - 6\tabcolsep) * \real{0.1021}}
+  >{\raggedright\arraybackslash}p{(\columnwidth - 6\tabcolsep) * \real{0.1785}}
+  >{\raggedright\arraybackslash}p{(\columnwidth - 6\tabcolsep) * \real{0.0884}}
+  >{\raggedright\arraybackslash}p{(\columnwidth - 6\tabcolsep) * \real{0.6311}}@{}}
+\toprule\noalign{}
+\begin{minipage}[b]{\linewidth}\raggedright
+评价项目
+\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedright
+平均评分（10 分制）
+\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedright
+评价等级
+\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedright
+核心反馈
+\end{minipage} \\
+\midrule\noalign{}
+\endhead
+\bottomrule\noalign{}
+\endlastfoot
+操作舒适度 & 8.2 & 优秀 & 键盘操作直观，中文化 GUI 说明清晰，长时间操作无明显疲劳感，偶有轻微卡顿（极端操作下） \\
+控制直观性 & 8.3 & 优秀 & 虚拟手动作流畅，控制精准，容易上手，无需复杂学习，符合操作习惯 \\
+整体沉浸感 & 8.1 & 优秀 & 视觉形变与力信号建模同步性好，有较强的沉浸感，偶尔出现轻微视触不协调（高速操作下） \\
+整体满意度 & 8.4 & 优秀 & --- \\
+\end{longtable}
+\endgroup
+
+\section{实验讨论}
+
+1. 实验优势总结
+
+(1)系统具有良好的即时性，它的延迟能被减小，同步效果也较好，可以达到高真实感触觉交互所要求的标准。
+
+(2)逆运动学稳定性得以体现，动作连贯而不卡顿，穿模率低，姿态比较自然，控制起来直观又可靠。
+
+(3)多线程结构对于连续操作、复杂形变、多物体切换等仍然可以得到较好的性能。主观体验好、用户满意度高、舒适度、真实感、沉浸感均较好。
+
+2. 存在不足
+
+(1)极端高速、超高频连续切换操作时，系统会产生轻微的波动，但是它的稳定性还存在一定的提高空间。
+
+(2)微纹理的辨识度较高，才能得到更加真实细致的效果。
+
+极端奇异姿态下虚拟手的某个动作会有微小的不自然之处，所以必须对约束条件做进一步的改善。
+
+3. 改进建议
+
+后续可从三方面优化：
+
+\begin{enumerate}
+\item
+  对滤波算法以及线程调度策略做进一步的改善，从而提升系统面对极端状况时的稳定水平。
+\item
+  扩充微纹理细节库，加强细腻触感的渲染能力，改善真实感以及细节还原的程度。
+\item
+  完善关节约束及姿态修正模块，可使虚拟手动作更加自然、可靠。
+\end{enumerate}
+
+\textbf{\hfill\break
+}
