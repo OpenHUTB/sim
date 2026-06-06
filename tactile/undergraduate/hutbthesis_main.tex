@@ -1,0 +1,58 @@
+%!TEX program = xelatex
+% !BIB program = biber
+
+\documentclass[AutoFakeBold]{hutbthesis}
+
+\usepackage{calc}
+\usepackage{float}
+\usepackage{xeCJKfntef}
+\providecommand{\tightlist}{%
+  \setlength{\itemsep}{0pt}\setlength{\parskip}{0pt}}
+\IfFontExistsTF{Noto Serif CJK SC}{%
+  \setCJKmainfont{Noto Serif CJK SC}[BoldFont=Noto Serif CJK SC Bold]
+  \setCJKsansfont{Noto Sans CJK SC}[BoldFont=Noto Sans CJK SC Bold]
+}{}
+\graphicspath{{images/}}
+% 本文参考文献采用手工编号文件 content/references.tex，不调用 biber。
+
+\include{content/cover}
+
+\begin{document}
+
+\maketitle
+
+% 封面后的声明、授权书、摘要页不显示页码；仅目录页使用罗马数字页码。
+% 前置页改用 input + 手动 clearpage，避免 include/cleardoublepage 叠加产生空白页。
+\clearpage
+\pagestyle{empty}
+\pagenumbering{gobble}
+\input{content/declarationzh}
+\clearpage
+\input{content/authorization}
+\clearpage
+\input{content/abstractzh}
+\clearpage
+\input{content/abstracten}
+
+% 目录单独使用罗马数字页码。
+\frontmatter
+\setcounter{page}{1}
+\tableofcontents
+
+\mainmatter
+\include{content/chapter1}
+\include{content/chapter2}
+\include{content/chapter3}
+\include{content/chapter4}
+\include{content/chapter5}
+\include{content/chapter6}
+\include{content/chapter7}
+
+\include{content/references}
+\include{content/acknowledgements}
+
+% 如无附录，可以注释以下两行；保留入口便于后续扩展。
+% \appendix
+% \include{content/appendix}
+
+\end{document}
