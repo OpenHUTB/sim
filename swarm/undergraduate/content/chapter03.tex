@@ -1,0 +1,199 @@
+\section{仿真性能表现与问题分析}
+
+\subsection{仿真测试环境搭建}
+
+为保证实验公平性、可重复性、可对比性，搭建统一高性能测试环境，如表\ref{tab:hardware}所示。
+
+\begin{table}[H]
+    \centering
+    \caption{仿真测试硬件配置参数表}
+    \label{tab:hardware}
+    \begin{tabular}{|p{3cm}|p{8cm}|}
+        \hline
+        硬件类型 & 型号与参数 \\
+        \hline
+        处理器 & Intel Core i9-12900K（16核 24线程） \\
+        \hline
+        内存 & 64GB DDR5 4800MHz \\
+        \hline
+        显卡 & NVIDIA RTX 4090 24GB \\
+        \hline
+        硬盘 & 2TB NVMe SSD \\
+        \hline
+        操作系统 & Windows 10 专业版 64位 \\
+        \hline
+        网络 & 千兆以太网 \\
+        \hline
+    \end{tabular}
+\end{table}
+
+软件环境采用固定版本，避免版本差异影响实验结果，如表\ref{tab:software}所示。
+
+\begin{table}[H]
+    \centering
+    \caption{软件环境版本信息表}
+    \label{tab:software}
+    \begin{tabular}{|p{3cm}|p{3cm}|p{6cm}|}
+        \hline
+        软件名称 & 版本号 & 用途 \\
+        \hline
+        Unity & 2021.3.15f1 & 仿真场景构建与环境渲染 \\
+        \hline
+        AirSim & 1.8.1-dev & 无人机集群核心仿真平台 \\
+        \hline
+        Visual Studio & 2022 & C++源码编译、工程构建与调试 \\
+        \hline
+        Python & 3.9 & 自动化测试、集群控制与数据采集 \\
+        \hline
+        ROS & Noetic & 协同算法部署与多机通信接口 \\
+        \hline
+        WPA & 10.0.19041 & Windows平台性能追踪与瓶颈分析 \\
+        \hline
+    \end{tabular}
+\end{table}
+
+部署流程：
+\begin{enumerate}
+    \item 安装Unity引擎与AirSim插件
+    \item 编译AirSim C++源码生成Unity插件
+    \item 搭建多无人机仿真场景
+    \item 配置Python环境与AirSim API
+    \item 安装性能分析工具
+\end{enumerate}
+
+基于Unity引擎构建标准化仿真场景：
+\begin{itemize}
+    \item 场景类型：室外空地+简易建筑，无复杂渲染干扰
+    \item 无人机型号：多旋翼Iris无人机
+    \item 初始状态：均匀分布，悬停等待指令
+    \item 控制方式：Python API批量生成、批量控制、批量采集数据
+\end{itemize}
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.85\textwidth]{figures/image8.png}
+    \caption{多无人机集群仿真场景示意图}
+    \label{fig:scene}
+\end{figure}
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.7\textwidth]{figures/image9.jpeg}
+    \caption{无人机3D场景全景图}
+    \label{fig:panorama}
+\end{figure}
+
+\subsection{不同规模集群下的仿真性能观测}
+
+以无人机数量为变量，测试1~30架仿真帧率，结果如表\ref{tab:performance}与图\ref{fig:fps}所示。
+
+\begin{table}[H]
+    \centering
+    \caption{不同规模集群仿真基础性能表}
+    \label{tab:performance}
+    \begin{tabular}{|c|c|c|c|c|}
+        \hline
+        无人机数量 & 平均FPS & 平均时延（ms） & CPU总占用（\%） & 内核态占比（\%） \\
+        \hline
+        1 & 62 & 8 & 12 & 18 \\
+        \hline
+        5 & 58 & 12 & 28 & 22 \\
+        \hline
+        10 & 45 & 24 & 47 & 31 \\
+        \hline
+        15 & 28 & 46 & 68 & 42 \\
+        \hline
+        20 & 12 & 98 & 89 & 58 \\
+        \hline
+        25 & 6 & 186 & 97 & 67 \\
+        \hline
+        30 & 3 & 292 & 99 & 72 \\
+        \hline
+    \end{tabular}
+\end{table}
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.7\textwidth]{figures/image10.png}
+    \caption{不同无人机数量帧率变化曲线图}
+    \label{fig:fps}
+\end{figure}
+
+观测结论：
+\begin{itemize}
+    \item 1~10架时：FPS稳定，时延低，性能良好
+    \item 10~20架时：性能快速下降
+    \item 20架以上：FPS断崖式下跌，时延激增，CPU满负载，内核态占比超过70\%，仿真基本不可用
+\end{itemize}
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.9\textwidth]{figures/image11.png}
+    \caption{仿真时延随集群规模变化趋势图}
+    \label{fig:delay}
+\end{figure}
+
+时延增长呈现指数级特征，20架以上远超实时仿真要求（≤50ms），导致控制指令堆积、无人机动作滞后、编队失序、仿真失步。
+
+长期观测（30分钟）结果：
+\begin{itemize}
+    \item 1~10架：内存稳定、GPU占用低、无卡顿、无崩溃
+    \item 15~20架：内存缓慢上升、GPU占用增加、偶发卡顿
+    \item 25~30架：内存暴涨、GPU满负载、频繁卡顿、仿真失步、概率性崩溃
+\end{itemize}
+
+资源占用异常并非源于渲染负载，而是CPU线程调度与内核态开销，证明性能瓶颈在软件层而非硬件层。
+
+\subsection{仿真性能下降的成因分析}
+
+使用WPA捕获CPU占用数据，分析结果：
+\begin{itemize}
+    \item 用户态CPU占用：随无人机数量增加平稳上升
+    \item 内核态CPU占用：呈指数级上升，20架以上占比超过70\%
+    \item 线程状态：大量线程处于就绪/等待状态，频繁切换
+\end{itemize}
+
+典型数据：30架无人机仿真时，总CPU占用99\%，其中内核态72\%，用户态仅27\%。说明CPU资源几乎全部浪费在内核态切换与调度上，而非仿真计算。
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.5\textwidth]{figures/image12.png}
+    \caption{CPU内核态/用户态占比分布图}
+    \label{fig:cpu}
+\end{figure}
+
+AirSim大规模仿真性能下降，最直接的体现就是内核态占比过高。其根源在于大量线程频繁地执行系统调用，像sleep(0)、yield这些操作，进而触发了高频的用户态/内核态切换。
+
+随着无人机数量的增多，高频系统调用、大量冗余线程一同引发了调度风暴、内核态开销剧增、上下文切换频繁等系统性问题。在基于Intel超线程架构CPU（16核24线程）的实验环境里，AirSim原生线程模型的性能缺陷被进一步放大。当集群中无人机数量超过CPU物理核心数（16核）以后，系统线程调度压力急剧上升，线程间资源竞争呈现出指数级加剧的趋势。
+
+上下文切换次数与线程数量、线程主动让出频率成正比：
+\begin{equation}
+    C = N_{thread} \times f_{yield}
+\end{equation}
+
+高频切换进一步破坏CPU缓存局部性，造成缓存命中率持续下降、缓存频繁刷新失效，进而引发内存访问延迟显著增加、有效计算比重持续降低，使整个集群仿真系统陷入严重的性能恶化。
+
+\subsection{关键影响因素的归纳与实验验证}
+
+经定位，AirSim大规模集群仿真存在四大核心瓶颈：
+\begin{enumerate}
+    \item 线程模型不合理：每机一线程，数量无限制，无池化管理
+    \item 等待机制低效：使用sleep(0)与yield，高并发下触发高频切换
+    \item 内核态开销过高：系统调用频繁，占比超过70\%
+    \item 无调度优化：无负载均衡、无亲和性绑定、无超线程适配
+\end{enumerate}
+
+为了精准确定、验证大规模集群仿真性能出现退化现象的核心原因，本节设计了多组对照式控制变量实验。具体做法是逐一改变关键影响因素，同时观察性能变化状况。
+
+实验结果显示：
+\begin{itemize}
+    \item 关闭CPU超线程后，集群仿真性能有一定程度的回升，但超线程并非导致瓶颈的决定性因素
+    \item 将sleep(0)忙等方式替换成阻塞式sleep\_for等待策略后，系统上下文切换、内核态开销明显变小
+    \item 人为限制最大并发线程数量后，仿真的稳定性和吞吐量有显著提高
+\end{itemize}
+
+经过对多组对照实验结果进行综合分析后可以明确得出，AirSim原有的线程架构、同步等待机制，是导致其在大规模无人机集群仿真中性能大幅下降的根本所在。
+
+\subsection{本章小结}
+
+通过搭建标准化测试环境，基本复现AirSim大规模集群仿真性能问题，并通过专业工具深度定位瓶颈根源，即线程模型不合理、等待机制低效、内核态开销过高、调度风暴。明确优化靶点与方向，为后续优化方案设计提供坚实依据。
