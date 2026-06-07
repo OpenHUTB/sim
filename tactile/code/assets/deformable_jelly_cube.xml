@@ -1,0 +1,71 @@
+<mujoco model="deformable_jelly_cube">
+  <!-- 
+    可变形果冻立方体场景
+    用于测试软体弹性材质的触觉反馈
+    
+    作者: [你的名字]
+    日期: 2025
+  -->
+  
+  <compiler angle="radian" meshdir="." autolimits="true"/>
+  
+  <option timestep="0.001" iterations="50" solver="Newton" gravity="0 0 -9.81">
+    <flag warmstart="enable"/>
+  </option>
+  
+  <size memory="100M"/>
+  
+  <visual>
+    <global offwidth="1920" offheight="1080"/>
+    <quality shadowsize="4096" offsamples="8"/>
+  </visual>
+  
+  <asset>
+    <!-- 果冻材质 - 软体弹性 -->
+    <texture name="jelly_texture" type="cube" builtin="flat" rgb1="1 0.5 0.8" rgb2="1 0.7 0.9" width="512" height="512"/>
+    <material name="jelly_material" texture="jelly_texture" rgba="1 0.5 0.8 0.9" specular="0.5" shininess="0.8"/>
+    
+    <!-- 地面材质 -->
+    <texture name="grid" type="2d" builtin="checker" width="512" height="512" rgb1="0.9 0.9 0.9" rgb2="0.7 0.7 0.7"/>
+    <material name="grid_material" texture="grid" texrepeat="8 8" reflectance="0.1"/>
+  </asset>
+  
+  <worldbody>
+    <!-- 地面 -->
+    <geom name="floor" type="plane" size="2 2 0.1" material="grid_material"/>
+    
+    <!-- 灯光 -->
+    <light directional="true" diffuse="0.8 0.8 0.8" specular="0.3 0.3 0.3" pos="0 0 3" dir="0 0 -1"/>
+    <light directional="true" diffuse="0.4 0.4 0.4" specular="0.1 0.1 0.1" pos="2 2 2" dir="-1 -1 -1"/>
+    
+    <!-- 可变形果冻立方体 - 使用flex (软体) -->
+    <flexcomp name="jelly_cube" type="grid" count="8 8 8" spacing="0.03 0.03 0.03"
+              pos="0 0 0.5" radius="0.01" rgba="1 0.5 0.8 1"
+              mass="0.5" dim="3">
+      <contact friction="0.5" solimp="0.9 0.95 0.001" solref="0.01 1"/>
+      <edge equality="true" damping="10"/>
+    </flexcomp>
+    
+    <!-- 简单的探针/手指代替物 -->
+    <body name="probe" pos="0 0 1.5">
+      <freejoint name="probe_joint"/>
+      <geom name="probe_geom" type="sphere" size="0.02" rgba="0.2 0.6 1 1" mass="0.1"/>
+      <site name="probe_tip" pos="0 0 -0.02" size="0.01"/>
+    </body>
+    
+  </worldbody>
+  
+  <actuator>
+    <!-- 探针的控制器 -->
+    <motor name="probe_x" joint="probe_joint" gear="1 0 0 0 0 0" ctrlrange="-1 1"/>
+    <motor name="probe_y" joint="probe_joint" gear="0 1 0 0 0 0" ctrlrange="-1 1"/>
+    <motor name="probe_z" joint="probe_joint" gear="0 0 1 0 0 0" ctrlrange="-1 1"/>
+  </actuator>
+  
+  <sensor>
+    <!-- 接触力传感器 -->
+    <force name="probe_contact_force" site="probe_tip"/>
+    <accelerometer name="probe_accel" site="probe_tip"/>
+  </sensor>
+  
+</mujoco>

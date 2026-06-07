@@ -1,0 +1,26 @@
+<launch>
+  <param name="robot_description"
+         textfile="$(find zongzhuang)/urdf/zongzhuang.urdf" />
+
+  <rosparam file="$(find zongzhuang)/config/controllers.yaml" command="load"/>
+
+  <include file="$(find gazebo_ros)/launch/empty_world.launch" />
+
+  <node name="robot_state_publisher"
+        pkg="robot_state_publisher"
+        type="robot_state_publisher" />
+
+  <node name="spawn_urdf"
+        pkg="gazebo_ros"
+        type="spawn_model"
+        args="-urdf -param robot_description -model zongzhuang -x 0 -y 0 -z 0.3" />
+
+         <node name="controller_spawner"
+        pkg="controller_manager"
+        type="spawner"
+        respawn="false"
+        output="screen"
+        args="/zongzhuang/joint_state_controller
+              /zongzhuang/front_steer_position_controller
+              /zongzhuang/back_steer_position_controller" />
+</launch>

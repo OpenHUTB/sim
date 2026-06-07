@@ -1,0 +1,41 @@
+\documentclass[12pt,a4paper]{ctexart}
+
+% 页面设置
+\usepackage[top=2.5cm,bottom=2.5cm,left=3cm,right=2.5cm]{geometry}
+\usepackage{graphicx}
+\usepackage{float}
+\usepackage{multirow}
+\usepackage{booktabs}
+\usepackage{amsmath}
+\usepackage{hyperref}
+\usepackage{fancyhdr}
+\usepackage{titlesec}
+
+% 设置行距
+\renewcommand{\baselinestretch}{1.5}
+
+% 设置页眉页脚
+\pagestyle{fancy}
+\fancyhf{}
+\fancyhead[C]{湖南工商大学本科毕业设计}
+\fancyfoot[C]{\thepage}
+
+% 图片路径
+\graphicspath{{figures/}}
+
+\begin{document}
+
+% 封面
+\include{cover}
+
+% 摘要（中英文）
+\include{abstract}
+
+% 目录
+\tableofcontents
+\newpage
+
+% 正文章节
+\include{chapter01}
+
+\end{document}

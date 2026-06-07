@@ -1,0 +1,17 @@
+\section*{内容摘要}
+
+针对微软AirSim平台在大规模无人机集群仿真中帧率骤降、时延激增的瓶颈，本文围绕无人机集群仿真、性能优化及线程调度展开软件层优化研究。低效线程调度、内核态与用户态频繁切换、不合理自旋等待是导致性能退化的主要原因。单线程分发器、标准阻塞睡眠、协作式让出等五种线程等待模型被设计并集成于AirSim框架。微观基准测试与集成仿真实验从定时精度、帧率、CPU占用等维度验证了优化效果。经微观基准测试与集成仿真实验，从定时精度、帧率、CPU占用等维度完成量化评估。结果表明，优化方案显著提升AirSim支持20架以上无人机仿真的效率与稳定性，为高并发实时仿真提供可复用调优范式，降低集群算法真机测试成本，推动无人机集群在侦察、配送、测绘等领域落地应用。
+
+\vspace{1cm}
+
+\noindent\textbf{关键词：} AirSim；无人机集群；仿真平台；性能优化；线程调度
+
+\newpage
+
+\section*{ABSTRACT}
+
+Aiming at the bottlenecks of sharp frame rate drop and surge delay in large-scale UAV swarm simulation on Microsoft AirSim, this paper conducts software-level optimization on UAV swarm simulation, performance optimization and thread scheduling. Inefficient thread scheduling, frequent kernel-user mode switching, and unreasonable spin-wait are identified as the main causes of performance degradation. Five thread waiting models, including single-thread dispatcher, standard blocking sleep, and cooperative yield, are designed and integrated into the AirSim framework. The optimization effects are verified through micro-benchmark and integrated simulation experiments from the dimensions of timing accuracy, frame rate, and CPU usage. Results show that the optimized scheme significantly improves the efficiency and stability of AirSim for simulations with more than 20 UAVs, provides a reusable tuning paradigm for high-concurrency real-time simulation, reduces the cost of real-world testing for swarm algorithms, and promotes the application of UAV swarms in reconnaissance, delivery, and mapping.
+
+\vspace{1cm}
+
+\noindent\textbf{KEY WORDS：} AirSim; UAV swarm; simulation platform; performance optimization; thread scheduling

@@ -1,0 +1,514 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- This URDF was automatically created by SolidWorks to URDF Exporter! Originally created by Stephen Brawner (brawner@gmail.com) 
+     Commit Version: 1.6.0-1-g15f4949  Build Version: 1.6.7594.29634
+     For more information, please see http://wiki.ros.org/sw_urdf_exporter -->
+<robot
+  name="zongzhuang">
+  <link
+    name="base_link">
+    <inertial>
+      <origin
+        xyz="0.052294 1.5562E-06 0.061913"
+        rpy="0 0 0" />
+      <mass
+        value="34.871" />
+      <inertia
+        ixx="0.51812"
+        ixy="-2.2269E-05"
+        ixz="0.18429"
+        iyy="2.6761"
+        iyz="-2.8808E-06"
+        izz="3.0257" />
+    </inertial>
+    <visual>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="package://zongzhuang/meshes/base_link.STL" />
+      </geometry>
+      <material
+        name="">
+        <color
+          rgba="0.79216 0.81961 0.93333 1" />
+      </material>
+    </visual>
+    <collision>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="package://zongzhuang/meshes/base_link.STL" />
+      </geometry>
+    </collision>
+  </link>
+  <link
+    name="front_steer_link">
+    <inertial>
+      <origin
+        xyz="3.2861E-09 3.0234E-06 1.801E-09"
+        rpy="0 0 0" />
+      <mass
+        value="0.22307" />
+      <inertia
+        ixx="0.0040773"
+        ixy="-4.8841E-06"
+        ixz="-2.5879E-09"
+        iyy="1.7496E-05"
+        iyz="3.0775E-12"
+        izz="0.0040774" />
+    </inertial>
+    <visual>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="package://zongzhuang/meshes/front_steer_link.STL" />
+      </geometry>
+      <material
+        name="">
+        <color
+          rgba="0.79216 0.81961 0.93333 1" />
+      </material>
+    </visual>
+    <collision>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="package://zongzhuang/meshes/front_steer_link.STL" />
+      </geometry>
+    </collision>
+  </link>
+  <joint
+    name="front_steer"
+    type="revolute">
+    <origin
+      xyz="0.30136 0 0.023897"
+      rpy="0 0 0" />
+    <parent
+      link="base_link" />
+    <child
+      link="front_steer_link" />
+    <axis
+      xyz="0 0 1" />
+    <limit
+      lower="-0.20943951023931953"
+      upper="0.20943951023931953"
+      effort="100"
+      velocity="5" />
+  </joint>
+  <link
+    name="front_left_wheel_link">
+    <inertial>
+      <origin
+        xyz="-8.32667268468867E-17 8.32667268468867E-16 0"
+        rpy="0 0 0" />
+      <mass
+        value="1.60439880181769" />
+      <inertia
+        ixx="0.00349127355393319"
+        ixy="1.23541645745611E-06"
+        ixz="-7.60552588083477E-19"
+        iyy="0.00451818608951606"
+        iyz="-3.74120056036889E-18"
+        izz="0.00349127206768041" />
+    </inertial>
+    <visual>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="package://zongzhuang/meshes/front_left_wheel_link.STL" />
+      </geometry>
+      <material
+        name="">
+        <color
+          rgba="0.792156862745098 0.819607843137255 0.933333333333333 1" />
+      </material>
+    </visual>
+    <collision>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="package://zongzhuang/meshes/front_left_wheel_link.STL" />
+      </geometry>
+    </collision>
+  </link>
+  <joint
+    name="front_left_wheel"
+    type="continuous">
+    <origin
+      xyz="0.00022096 0.18367 0"
+      rpy="0 0 0" />
+    <parent
+      link="front_steer_link" />
+    <child
+      link="front_left_wheel_link" />
+    <axis
+      xyz="0.001203 1 0" />
+    <limit 
+      effort="50" velocity="10"/>
+  </joint>
+  <link
+    name="front_right_wheel_link">
+    <inertial>
+      <origin
+        xyz="-5.5511E-17 5.5511E-16 2.2204E-16"
+        rpy="0 0 0" />
+      <mass
+        value="1.6044" />
+      <inertia
+        ixx="0.01"
+        ixy="0.01"
+        ixz="-0.01"
+        iyy="0.0"
+        iyz="0.0"
+        izz="0.0" />
+    </inertial>
+    <visual>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="package://zongzhuang/meshes/front_right_wheel_link.STL" />
+      </geometry>
+      <material
+        name="">
+        <color
+          rgba="0.79216 0.81961 0.93333 1" />
+      </material>
+    </visual>
+    <collision>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="package://zongzhuang/meshes/front_right_wheel_link.STL" />
+      </geometry>
+    </collision>
+  </link>
+  <joint
+    name="front_right_wheel"
+    type="continuous">
+    <origin
+      xyz="-0.00022095 -0.18366 0"
+      rpy="0 0 0" />
+    <parent
+      link="front_steer_link" />
+    <child
+      link="front_right_wheel_link" />
+    <axis
+      xyz="0.001203 1 0" />
+    <limit 
+      effort="50" velocity="10"/>
+
+  </joint>
+  <link
+    name="back_steer_link">
+    <inertial>
+      <origin
+        xyz="-2.23462596760093E-08 3.0233396262104E-06 1.80102555091821E-09"
+        rpy="0 0 0" />
+      <mass
+        value="0.223070053106009" />
+      <inertia
+        ixx="0.00407704723590971"
+        ixy="2.95336572258115E-05"
+        ixz="-2.58784276789596E-09"
+        iyy="1.77046041943845E-05"
+        iyz="-1.88626606449667E-11"
+        izz="0.00407741406853652" />
+    </inertial>
+    <visual>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="package://zongzhuang/meshes/back_steer_link.STL" />
+      </geometry>
+      <material
+        name="">
+        <color
+          rgba="0.792156862745098 0.819607843137255 0.933333333333333 1" />
+      </material>
+    </visual>
+    <collision>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="package://zongzhuang/meshes/back_steer_link.STL" />
+      </geometry>
+    </collision>
+  </link>
+  <joint
+    name="back_steer"
+    type="revolute">
+    <origin
+      xyz="-0.25864 0 0.023897"
+      rpy="0 0 0" />
+    <parent
+      link="base_link" />
+    <child
+      link="back_steer_link" />
+    <axis
+      xyz="0 0 1" />
+    <limit
+      lower="-0.20943951023931953"
+      upper="0.20943951023931953"
+      effort="100"
+      velocity="5" />
+  </joint>
+  <link
+    name="back_left_wheel_link">
+    <inertial>
+      <origin
+        xyz="-5.5511E-17 -1.8319E-15 4.4409E-16"
+        rpy="0 0 0" />
+      <mass
+        value="1.6044" />
+      <inertia
+        ixx="0.0034913"
+        ixy="-7.4705E-06"
+        ixz="-1.0425E-18"
+        iyy="0.0045181"
+        iyz="-3.6283E-18"
+        izz="0.0034913" />
+    </inertial>
+    <visual>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="package://zongzhuang/meshes/back_left_wheel_link.STL" />
+      </geometry>
+      <material
+        name="">
+        <color
+          rgba="0.79216 0.81961 0.93333 1" />
+      </material>
+    </visual>
+    <collision>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="package://zongzhuang/meshes/back_left_wheel_link.STL" />
+      </geometry>
+    </collision>
+  </link>
+  <joint
+    name="back_left_wheel"
+    type="continuous">
+    <origin
+      xyz="-0.0013362 0.18367 0"
+      rpy="0 0 0" />
+    <parent
+      link="back_steer_link" />
+    <child
+      link="back_left_wheel_link" />
+    <axis
+      xyz="-0.0072749 0.99997 0" />
+    <limit 
+      effort="50" velocity="10"/>
+
+  </joint>
+  <link
+    name="back_right_wheel_link">
+    <inertial>
+      <origin
+        xyz="-5.5511E-17 -1.7764E-15 4.4409E-16"
+        rpy="0 0 0" />
+      <mass
+        value="1.6044" />
+      <inertia
+        ixx="0.0034913"
+        ixy="-7.4705E-06"
+        ixz="-1.0579E-18"
+        iyy="0.0045181"
+        iyz="-3.6553E-18"
+        izz="0.0034913" />
+    </inertial>
+    <visual>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="package://zongzhuang/meshes/back_right_wheel_link.STL" />
+      </geometry>
+      <material
+        name="">
+        <color
+          rgba="0.79216 0.81961 0.93333 1" />
+      </material>
+    </visual>
+    <collision>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="package://zongzhuang/meshes/back_right_wheel_link.STL" />
+      </geometry>
+    </collision>
+  </link>
+  <joint
+    name="back_right_wheel"
+    type="continuous">
+    <origin
+      xyz="0.0013361 -0.18365 0"
+      rpy="0 0 0" />
+    <parent
+      link="back_steer_link" />
+    <child
+      link="back_right_wheel_link" />
+    <axis
+      xyz="-0.0072749 0.99997 0" />
+    <limit 
+      effort="50" velocity="10"/>
+
+  </joint>
+  <link
+    name="cockpit_link">
+    <inertial>
+      <origin
+        xyz="-5.5511E-17 5.3776E-17 0.005"
+        rpy="0 0 0" />
+      <mass
+        value="0.77713" />
+      <inertia
+        ixx="0.013744"
+        ixy="6.1365E-08"
+        ixz="-1.536E-20"
+        iyy="0.0018586"
+        iyz="-3.8222E-20"
+        izz="0.01559" />
+    </inertial>
+    <visual>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="package://zongzhuang/meshes/cockpit_link.STL" />
+      </geometry>
+      <material
+        name="">
+        <color
+          rgba="0.79216 0.81961 0.93333 1" />
+      </material>
+    </visual>
+    <collision>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="package://zongzhuang/meshes/cockpit_link.STL" />
+      </geometry>
+    </collision>
+  </link>
+  <joint
+    name="cockpit"
+    type="prismatic">
+    <origin
+      xyz="0.53329 0.0015656 0.029177"
+      rpy="0 0 0" />
+    <parent
+      link="base_link" />
+    <child
+      link="cockpit_link" />
+    <axis
+      xyz="0 0 1" />
+    <limit
+      lower="0"
+      upper="1"
+      effort="0"
+      velocity="0" />
+  </joint>
+
+   <transmission name="front_steer_trans">
+    <type>transmission_interface/SimpleTransmission</type>
+    <joint name="front_steer">
+      <hardwareInterface>EffortJointInterface</hardwareInterface>
+    </joint>
+    <actuator name="front_steer_motor">
+      <hardwareInterface>EffortJointInterface</hardwareInterface>
+      <mechanicalReduction>1</mechanicalReduction>
+    </actuator>
+  </transmission>
+
+  <transmission name="back_steer_trans">
+    <type>transmission_interface/SimpleTransmission</type>
+    <joint name="back_steer">
+      <hardwareInterface>EffortJointInterface</hardwareInterface>
+    </joint>
+    <actuator name="back_steer_motor">
+      <hardwareInterface>EffortJointInterface</hardwareInterface>
+      <mechanicalReduction>1</mechanicalReduction>
+    </actuator>
+  </transmission>
+
+  <transmission name="front_left_wheel_trans">
+    <type>transmission_interface/SimpleTransmission</type>
+    <joint name="front_left_wheel">
+      <hardwareInterface>EffortJointInterface</hardwareInterface>
+    </joint>
+    <actuator name="front_left_wheel_motor">
+      <hardwareInterface>EffortJointInterface</hardwareInterface>
+      <mechanicalReduction>1</mechanicalReduction>
+    </actuator>
+  </transmission>
+
+  <transmission name="front_right_wheel_trans">
+    <type>transmission_interface/SimpleTransmission</type>
+    <joint name="front_right_wheel">
+      <hardwareInterface>EffortJointInterface</hardwareInterface>
+    </joint>
+    <actuator name="front_right_wheel_motor">
+      <hardwareInterface>EffortJointInterface</hardwareInterface>
+      <mechanicalReduction>1</mechanicalReduction>
+    </actuator>
+  </transmission>
+
+  <transmission name="back_left_wheel_trans">
+    <type>transmission_interface/SimpleTransmission</type>
+    <joint name="back_left_wheel">
+      <hardwareInterface>EffortJointInterface</hardwareInterface>
+    </joint>
+    <actuator name="back_left_wheel_motor">
+      <hardwareInterface>EffortJointInterface</hardwareInterface>
+      <mechanicalReduction>1</mechanicalReduction>
+    </actuator>
+  </transmission>
+
+  <transmission name="back_right_wheel_trans">
+    <type>transmission_interface/SimpleTransmission</type>
+    <joint name="back_right_wheel">
+      <hardwareInterface>EffortJointInterface</hardwareInterface>
+    </joint>
+    <actuator name="back_right_wheel_motor">
+      <hardwareInterface>EffortJointInterface</hardwareInterface>
+      <mechanicalReduction>1</mechanicalReduction>
+    </actuator>
+  </transmission>
+
+  <gazebo>
+    <plugin name="gazebo_ros_control" filename="libgazebo_ros_control.so"/>
+  </gazebo>
+</robot>
