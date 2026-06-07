@@ -1,24 +1,7 @@
----
-license: mit
----
-# Kinesis Assets
-
-## Description
-This dataset contains essential assets required for setting up and running the KINESIS framework. For more details, please refer to the [paper](doi.org/10.48550/arXiv.2503.14637) and the [code repository](https://github.com/amathislab/Kinesis).
-
-## Contents
-- **Initial pose data**: Starting poses used to initialize the musculoskeletal model during motion imitation.
-- **Text-to-motion**: Synthetic reference motions for natural language-driven control.
-
-## Included files
-```
-kinesis-assets/
-  ├── initial_pose/
-  │    ├── initial_pose_test.pkl
-  │    └── initial_pose_train.pkl
-  └── t2m/
-       ├── mdm_backward_0.pkl
-       ...
-```
-
-HuggingFace paper link: arxiv.org/abs/2503.14637
+编译说明：
+1. 主文件：hutbthesis_main.tex
+2. 推荐环境：TeXstudio + XeLaTeX（LaTeX 2023/TeX Live 2023 及以上均可）。
+3. 编译方式：使用 XeLaTeX 连续编译 2 次，使目录、页码和总页数更新完整。
+4. 本版本参考文献采用 content/references.tex 手工编号，不需要运行 biber。
+5. 若需要清理临时文件，可双击 cmdel.bat；它只删除 aux/log/out/toc/bcf 等临时文件，不删除正文源文件和图片。
+6. images 文件夹为 Word 原文提取的图片，请勿删除；hutb_logo.png 与 hutb_logo_maoti.png 为模板封面和页眉所需图片。
