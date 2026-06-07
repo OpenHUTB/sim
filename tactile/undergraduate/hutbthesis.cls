@@ -170,7 +170,7 @@
  numberstyle=\tiny\color{gray},                       % 设定行号格式
  frame=single,                                        % 不显示背景边框
  rulecolor=\color{black},                             % if not set, the frame-color may be changed on line-breaks within not-black text (e.g. commens (green here))
-%  backgroundcolor=\color[RGB]{245,245,244},            % 设定背景颜色
+ backgroundcolor=\color[RGB]{245,245,244},            % 设定背景颜色
  keywordstyle=\color[RGB]{40,40,255},                 % 设定关键字颜色
  numberstyle=\footnotesize\color{darkgray},           
  commentstyle=\it\color[RGB]{0,96,96},                % 设置代码注释的格式
@@ -200,7 +200,8 @@
 
 % 参考文献格式 GB/T7714-2015
 % 来自https://github.com/hushidong/biblatex-gb7714-2015
-\RequirePackage[backend=biber,gbpub=false, style=gb7714-2015]{biblatex}
+% 参考文献本版采用手工编号 content/references.tex，不调用 biber。
+% \RequirePackage[backend=biber,gbpub=false, style=gb7714-2015]{biblatex}
 
 \AtEndOfClass{
 % 根据模板类型加载不同配置
@@ -611,7 +612,7 @@
 % 设置页眉和页脚 %
 \pagestyle{fancy}
 % 本科学位论文底部样式
-\newcommand{\hutb@thepage@format@zh}[2]{第~{#1}~页，共~{#2}~页}
+\newcommand{\hutb@thepage@format@zh}[2]{第{#1}页，共{#2}页}
 \newcommand{\hutb@thepage@format@en}[1]{#1}
 % 空白页清空页眉页脚
 \patchcmd{\cleardoublepage}{\newpage}{\thispagestyle{empty}\newpage}{}{}
@@ -628,9 +629,9 @@
 \fancyhf[RH]{\heiti \zihao{-5} {\@titlecn}}
 % frontmatter设置
 \renewcommand{\frontmatter}{
-	\cleardoublepage
+	\clearpage
 	\@mainmatterfalse
-	% 目录单独使用大罗马编号
+	% 根据学校要求使用大罗马编号
 	\pagenumbering{Roman}
 	\pagestyle{fancy}
 	\def\hutb@thepage{\thepage}
@@ -645,13 +646,12 @@
 }
 % mainmatter设置
 \renewcommand{\mainmatter}{
-	\cleardoublepage
+	\clearpage
 	\@mainmattertrue
 	% 正文部分启用阿拉伯数字编号
 	\pagenumbering{arabic}
 	\pagestyle{fancy}
 	\def\hutb@thepage{\thepage}
-	% 正文总页数仅统计正文及后置部分，不包含封面、声明、摘要和目录。
 	\def\hutb@lastpageref{\pageref{LastPage}}
 	\fancyfoot[C]{\zihao{-5} \songti \hutb@thepage@format@zh{\hutb@thepage}{\hutb@lastpageref}}
 	\fancypagestyle{plain}{%

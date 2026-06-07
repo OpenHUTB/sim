@@ -1,6 +1,5 @@
 编译说明：
-1. 使用 TeXstudio 打开 hutbthesis_main.tex。
-2. 编译器选择 XeLaTeX。
-3. 连续编译两次，目录和页码即可更新。
-4. 本工程参考文献采用 content/references.tex 手工编号，不需要运行 biber。
-5. 若需要清理临时文件，可运行 cmdel.bat。
+1. 主文件：hutbthesis_main.tex。
+2. 使用 TeXstudio 选择 XeLaTeX 编译，连续编译 2 次。
+3. 公式已统一使用 equation 环境；图片与图注已合并到 figure 环境；表格为 LaTeX 表格；代码段使用 listings 环境。
+4. 参考文献采用 content/references.tex 手工编号，不需要运行 biber。
