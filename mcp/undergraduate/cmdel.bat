@@ -1,2 +1,1 @@
-del /a /f *.xml *.bcf *.out *.log *.sav *.gz *.aux *.bbl *.bak *.dvi *.blg
-
+del /s *.aux *.log *.toc *.out *.bcf *.run.xml *.synctex.gz *.xdv *.fdb_latexmk *.fls
