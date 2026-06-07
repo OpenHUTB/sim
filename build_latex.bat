@@ -7,6 +7,6 @@ pushd "%cd%\critical\undergraduate\"
 popd
 
 rem 编译触觉论文
-pushd "%cd%\sim\tactile\undergraduate\"
+pushd "%cd%\tactile\undergraduate\"
 "C:/software/texlive/texstudio\2023/bin/windows/xelatex.exe" -synctex=1 -interaction=nonstopmode "hutbthesis_main".tex
 popd
