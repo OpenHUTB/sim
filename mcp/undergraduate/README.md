@@ -1,38 +1,7 @@
-# 本科毕业设计模板
-
-湖南工商大学本科毕业设计模板。
-
-# 使用
-推荐使用 [texstudio](https://pan.baidu.com/s/1Is2-VR1z-tMYvmdinsVY_g?pwd=hutb) 或 [overleaf](https://cn.overleaf.com/) 进行论文撰写。
-
-注：在 latex 2023 中编译成功，latex 2016 编译失败（需要更高的版本，其他版本的 latex 没试过）。
-
-# 贡献
-有任何对模板格式进行调整的可以提交 [Issues](https://github.com/OpenHUTB/undergraduate/issues) 或 [Pull Request](https://github.com/OpenHUTB/undergraduate/pulls) 。
-
-# 选题
-[选题列表](https://github.com/OpenHUTB/undergraduate/wiki/%E6%AF%95%E8%AE%BE%E9%80%89%E9%A2%98) 
-
-
-## 要求
-1. 格式化、注释、文档翻译
-2. 运行
-3. 测试（例子通过）
-
-
-## 初始化
-
-1. 新建github工程
-
-2. 运行`init_proj('PROJECT_NAME');`
-
-3. 分配开发者
-
-
-## 使用
-克隆仓库
-```shell
-git clone --recursive https://github.com/OpenHUTB/undergraduate.git
-```
-
-# 贡献者
+编译说明：
+1. 使用 TeXstudio 打开 hutbthesis_main.tex。
+2. 编译器选择 XeLaTeX。
+3. 连续编译两次，即可生成 PDF。
+4. 本工程参考文献采用 content/references.tex 手工编号方式，不需要运行 biber。
+5. 本版已将公式统一整理为 equation 环境，图注统一绑定到 figure 环境，表格使用 LaTeX table/tabularx 环境，代码段使用 listings 模板样式。
+6. 若重新编译前需要清理临时文件，可双击 cmdel.bat。
