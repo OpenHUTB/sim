@@ -24,3 +24,9 @@ jobs:
         run: |
           call build_latex.bat
         shell: cmd
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: paper
+          path: |
+            tactile/undergraduate/hutbthesis_main.pdf
