@@ -1,147 +1,177 @@
-\chapter{相关理论基础}
+%!TEX root = ../hutbthesis_main.tex
+\chapter{研究理论基础与关键技术}
+\section{人体上肢生物力学理论}
+人体上肢运动，是肌肉、骨骼和关节一起配合的复杂动力学过程，也是肌肉驱动交互系统最核心的生理基础；上肢以肩、肘、腕这几个关节为运动枢纽，以骨骼肌作为动力来源，通过肌肉收缩产生拉力，带动骨骼绕着关节轴线，完成转动、屈伸、旋转等动作，最后实现手部的精准操控；在生物力学模型里，一般会把上肢简化成多刚体的连杆结构，用 Hill 肌肉模型来描述肌肉收缩的特点；如图~\ref{img-1}的肌肉模型示意图所示，肌肉力可以表示为激活度、肌肉长度、收缩速度和肌腱弹性的综合函数；肌肉激活度是主要的控制输入，它决定了肌肉输出力的大小；不同肌群的协同激活和拮抗配合，能够实现稳定、柔顺又精准的末端运动；对于方向盘操控这类旋转类任务来说，上肢肌肉的对称发力、力矩平衡和连续力输出，是特别关键的；所以，建立符合生理特性的肌肉 — 关节动力学模型，是实现精准、自然人机交互的前提\cite{wang2026simulating}
+\begin{figure}[htbp]
+  \centering
+  \includegraphics[width=0.8\textwidth]{image_2.png}
+  \caption{Hill肌肉模型示意图}
+  \label{img-1}
+\end{figure}  
 
-\section{系统架构与设计初步}
+为定量描述上肢肌肉的力学输出特性，本研究采用 Hill 三元素模型描述单条肌肉–肌腱单元的力–长–速度关系。设第 i 块肌肉的最大等长收缩力为 F₀,ᵢ，标准化纤维长度 l̃ᵢ = lᵢ / l₀,ᵢ，标准化收缩速度 ṽᵢ = vᵢ / vmax,i，则其产生的肌腱拉力可表示为：
+\begin{equation}
+F_i^{M\pi} = F_{0j} \left[ a_i f_L(l_i) f_v(\tilde{v}_i) + f_P(l_i) + \beta \tilde{v}_i \right]
+\end{equation}
 
-\begin{figure}[H]
-    \centering
-    \includegraphics[width=0.8\textwidth]{images/system_architecture.png}
-    \caption{行人控制系统架构示意图}
-    \label{fig:system_architecture}
+式中 aᵢ ∈ [0,1] 为肌肉激活水平；fL(·)、fV(·)、fP(·) 分别为主动力–长度曲线、力–速度曲线与被动力–长度曲线；β 为肌纤维阻尼系数。该模型同时刻画了主动收缩力、被动弹性力与速度阻尼三种力学贡献，能够较真实地反映人体上肢肌肉在驱动方向盘转动过程中的非线性力学特性。
+
+神经控制信号 uᵢ(t) 经过激活与去激活两段一阶动力学过程，方能形成实际的肌肉激活水平 aᵢ(t)，二者满足如下一阶非线性微分方程：
+\begin{equation}
+\dot{a}_i = \frac{u_i - a_i}{\tau(u_i, a_i)}
+\end{equation}
+
+其中时间常数 ${\tau(u_i, a_i)}$ 在激活相和去激活相分别取不同形式，以体现肌肉收缩–舒张的非对称特性：
+\begin{equation}
+\tau(u_i, a_i) =
+\begin{cases}
+\tau_{\text{act}} \left( 0.5 + 1.5 a_i \right) & , u_i \ge a_i \\[1em]
+\dfrac{\tau_{\text{deact}}}{0.5 + 1.5 a_i} & , u_i \le a_i
+\end{cases}
+\end{equation}
+
+本研究取激活时间常数 $\tau_{\text{act}}$ = 10 ms、去激活时间常数 $\tau_{\text{deact}}$ = 40 ms，与 MuJoCo 内置肌肉作动器默认值一致，可以较好地复现真实肌肉的响应延迟。激活动力学的存在意味着肌肉发力相对于神经指令存在固有的低通滤波效应，这是后续控制算法中需要考虑死区与饱和约束的生理依据之一。
+
+在多刚体连杆模型下，全部肌肉对关节产生的合成力矩可由各自的肌腱拉力与瞬时力臂叠加得到：
+\begin{equation}
+\tau_{\text{mus}} = \sum_{i=1}^{m} r_i(q) \cdot F_i^{MT}
+\end{equation}
+
+式中 m 为参与该关节运动的肌肉数量，$r_i(q)$ 为第 i 块肌肉关于广义坐标 q 的瞬时力臂向量。该关系刻画了肌肉收缩力到关节驱动力矩的几何映射，是实现肌肉–方向盘耦合驱动的核心环节。
+\section{MuJoCo 仿真引擎技术}
+MuJoCo（ Multi-Joint Dynamics with Contact）是一款专门针对多关节接触系统设计的高性能物理仿真工具，由 Emo Todorov 研发而成，其核心应用领域集中在机器人与生物力学仿真，凭借高效的计算速度、精准的仿真效果以及强大的建模能力，成为该领域广泛应用的核心引擎之一。
+
+该引擎的核心架构，采用广义坐标结合约束优化接触动力学的设计思路，有效弥补了传统物理仿真引擎的很多不足；在多体动力学求解方面，它以广义坐标为基础搭建系统模型，通过递归牛顿 - 欧拉算法高效求解运动方程，从根本上解决了笛卡尔坐标在数值计算时容易出现的不稳定问题；在接触求解环节，它不用传统的弹簧 - 阻尼仿真模型，而是通过凸优化方法精准处理接触约束，再结合层次包围盒与 GJK 算法实现快速碰撞检测，能够准确计算接触过程里的法向力和切向摩擦力，最大程度保证了仿真过程的真实与合理\cite{tu2026jiyu}。
+
+在模型构建方面，MuJoCo 用 MJCF（XML）格式来描述模型，可以灵活支持骨骼、关节、肌肉、软组织等复杂生物力学结构的建模工作，同时也兼容 URDF 模型的直接导入，很适合人体上肢这类肌肉骨骼系统的仿真需求；引擎里自带专业的肌肉作动器模型，能实现肌肉激活信号到关节力矩的精准映射，为肌肉驱动和机械结构的耦合仿真提供了可靠的支撑\cite{liu2026noncontact}。
+
+MuJoCo仿真引擎在数值计算层面具备明显的优化效果，该软件融入了稀疏矩阵优化、隐式积分等相关技术，能够兼容欧拉、龙格-库塔等多种常见的积分计算形式，这一特性可以有效保障整体的计算效率，也能大幅提高数值计算过程的稳定性；与此同时，该仿真引擎内置了正向动力学与逆向动力学两类计算功能模块，系统的运动状态可以依靠正向动力学完成求解计算，关节力矩数值则可以通过逆向动力学结合运动轨迹反向推导得出，这些基础功能都为本研究中肌肉驱动控制算法的设计与验证工作，提供了关键的技术支撑\cite{keaveny2026effects}。
+
+MuJoCo的可视化效果依托OpenGL技术得以实现，该功能可以完成实时三维画面渲染和交互式调试工作，仿真过程中的肌肉激活状态、关节运动路径以及接触力的动态变化，都能够被直观展示出来，十分契合视觉引导操控的仿真试验需求；在本次整体研究工作中，高精度的仿真试验平台由MuJoCo仿真引擎搭建完成，平台实现了人体上肢肌肉骨骼模型与方向盘物理模型的组合建模，也能够为视觉引导操控试验、控制精度检测的全流程仿真验证工作，提供可靠的技术支撑。
+
+在 MuJoCo 仿真引擎中，人体上肢被建模为多刚体系统，并以广义坐标 $q ∈ ℝⁿ $描述其位形。系统的前向动力学方程由经典拉格朗日形式给出：
+\begin{equation}
+M(q)\ddot{q} + C(q, \dot{q})\dot{q} + g(q) = \tau_{\text{mus}} + \tau_{\text{ext}}
+\end{equation}
+
+式中 M(q) 为关节空间惯性矩阵，C(q, q̇) q̇ 为科里奥利力与离心力项，g(q) 为重力项；$\tau_{\text{mus}}$ 由公式（2-4）给出，为肌肉合成的关节驱动力矩，$\tau_{\text{ext}}$ 为方向盘约束、外部接触等产生的外部力矩。MuJoCo 利用递归牛顿–欧拉算法高效求解 $M(q)、C(q, q̇)、g(q)$，避免了笛卡尔坐标下显式求解约束方程的数值不稳定问题。
+
+为兼顾求解精度与计算效率，本系统采用 MuJoCo 默认的半隐式 Euler 数值积分方案推进仿真状态，其更新形式为：
+\begin{equation}
+q_{k+1} = q_k + \Delta t \cdot \dot{q}_{k+1}
+\end{equation}
+
+式中 $\Delta t$ 为仿真步长，本研究取 $\Delta t = 2 ms$（即 500 Hz 物理仿真频率）。半隐式 Euler 在保证较好稳定性的同时具有较低的计算开销，能够满足肌肉驱动方向盘操控仿真的实时性需求。
+\section{User-in-the-Box 框架原理}
+User-in-the-Box 是一种可以用来做人机交互任务仿真的开源框架，它采用模块化的设计方式，主要以生物力学用户模型作为核心内容，能够把人体肌肉骨骼模型、交互任务和感知模块快速组合到一起，形成可以单独运行的仿真环境，如图\ref{img-2}展示了这个框架里 Simulator 的组件关系，该框架把 MuJoCo 当作底层的仿真引擎，按照 OpenAI Gym 的接口标准进行设计，可以直接接入强化学习的训练过程，同时也支持把 OpenSim 模型转换成 MuJoCo 能够使用的肌肉骨骼模型，明显降低了生物力学建模的难度，从结构上来看，User-in-the-Box 包含三个关键的组成部分，分别是生物力学模型、交互任务和感知模块，生物力学模型主要用来完成人体运动的仿真，交互任务会对方向盘、操纵杆等操作对象进行定义，感知模块可以提供视觉、本体感觉等多种反馈信息，本研究直接按照这个框架的目录结构、配置文件要求和模型加载的逻辑，实现上肢肌肉模型和方向盘操控任务的快速整合，提高了系统开发的效率和规范程度。
+\begin{figure}[htbp]
+  \centering
+  \includegraphics[width=0.8\textwidth]{image_3.png}
+  \caption{Simulator的组件关系图}
+  \label{img-2}
 \end{figure}
 
-本行人控制系统基于 Carla 仿真平台用 Python 编程语言及其 Carla API 实现核心功能，目标是在虚拟环境模拟行人运动控制，通过调节移动、检测周围障碍物及避障等完成复杂导航任务，初步设计 “单向行走”“过马路”“来回行走” 三类基础行为后期可扩展为 “随机漫步”“群体避障” 等高级策略。系统架构由环境设置与初始化、行人控制、碰撞检测与避障、用户输入与交互模块构成，环境设置与初始化模块基于 Carla 的 Town1 地图加载城市道路等元素并随机分布静态和动态障碍物增强场景多样性与鲁棒性，为行人挂载 RGB 摄像头和碰撞传感器设置不同采样频率与视野范围提供视觉感知和避障算法数据，行人控制模块用 Carla 的 WalkerControl 类精确调节行人速度、方向和避障行为实现精确运动控制，碰撞检测与避障模块依赖 Carla 传感器系统让行人实时感知障碍物并避让，通过实时检测动态调整路径避碰，用户输入与交互模块为实验操作提供便利，实现键盘控制行人移动使用户与系统交互更直观便捷。由此设计出了如图 \ref{fig:system_architecture}所示的行人控制系统架构。
+User-in-the-Box 框架将一次完整的仿真单元抽象为生物力学模型 B、交互任务 T 与感知模块 P 三者的有序组合：
+\begin{equation}
+S = (B, T, P)
+\end{equation}
 
-\section{行人骨骼控制}
+其中 $B$ 由 MuJoCo XML 文件描述上肢骨骼–肌肉系统，$T$ 描述方向盘等交互对象的几何与物理属性，$P$ 定义可获取的状态量及其编码方式。三者通过统一的 Simulator 类组装，对外暴露 OpenAI Gym 风格接口：
+\begin{equation}
+(o_{t+1}, r_t, d_t) = \text{step}(s_t, a_t)
+\end{equation}
 
-在行人行为研究中准确获取骨骼姿态信息是实现行为理解与决策的关键，结合 Carla 平台 AI 行人生成功能与自定义脚本设计可实现模拟环境中行人骨骼数据的完整采集处理及后续深度学习模型训练验证，为训练行人识别建筑物道路汽车人行道及过马路行人以保障安全，Carla 模拟器通过人工智能控制的行人填充模拟和训练数据，人体姿态估计在自动驾驶安全人群控制及机器人等多个计算机视觉应用中是重要因素。
+式中 $sₜ$ 为内部完整状态，$aₜ$ 为下达至各肌肉作动器的控制输入，$o_{t+1}$ 为感知模块返回的观测，$r_t$ 为任务回报，$d_t$ 为终止标志。对于本课题的方向盘操控任务，仅启用本体感觉与任务相关观测，因此观测向量定义为：
+\begin{equation}
+o_t = \left[ q_t, \dot{q}_t, a_t, x_t^{\text{obj}} \right]
+\end{equation}
 
-Carla 的 API 支持从模拟行人获取真实骨架，该骨架由含根节点或顶点及定义骨骼姿势向量的一组骨骼组成\cite{openhutb2025}，如下图 \ref{fig:pedestrian_skeleton}所示，这些骨骼控制模拟行人四肢和身体运动，通过收集各骨骼集合可构建虚拟人姿势模型，该模型能与神经网络估计的姿势模型比较甚至用于训练神经网络进行姿势估计，通过 AI 控制器生成行人并恢复其骨骼真实三维坐标，将这些骨骼投影到相机传感器捕获的二维图像上，可在 Carla 模拟器中为人体姿势估计框架设置训练和验证，保证骨骼数据采集的完整性和精度能为后续基于 Carla 环境的行人姿态估计与行为预测模型提供坚实数据基础。
-
-\begin{figure}[H]
-    \centering
-    \includegraphics[width=1\textwidth]{images/pedestrian_skeleton.pdf}
-    \caption{行人骨骼控制示意图}
-    \label{fig:pedestrian_skeleton}
+式中 $qₜ、q̇ₜ$ 为关节角与角速度，$aₜ$ 为各肌肉当前激活水平，$xₜᵒᵇʲ$ 表示当前方向盘转角与目标转角。
+\section{视觉引导与控制算法基础}
+视觉引导可以提高人机交互的操控精准度和使用方便程度，是一项比较重要的技术，它能实时展示目标状态、当前状态和误差相关信息，帮助使用人员及时调整操作动作，从而实现稳定的跟踪效果，在方向盘操控系统当中，视觉引导一般包含动态目标角度生成、实时角度显示和误差可视化这几个部分，经常用到的目标轨迹有阶跃信号和正弦信号两种，这两种信号分别用来测试定点保持能力和连续跟踪能力，图~\ref{img-3}为视觉引导条件下肌肉驱动方向盘操控的闭环反馈结构，控制算法可以将肌肉激活信号转换成平稳、精准的设备运动状态，它的核心部分有信号滤波、非线性映射、增益调节和饱和约束，为了让操控的手感和稳定程度更好，系统一般会加入死区来过滤噪声，用低通滤波减少抖动，通过比例增益调整操作灵敏度，利用角度限幅避免出现超调的情况\cite{xie2026filament}。
+\begin{figure}[htbp]
+  \centering
+  \includegraphics[width=0.8\textwidth]{image_4.png}
+  \caption{视觉引导条件下肌肉驱动方向盘操控的闭环反馈结构图}
+  \label{img-3}
 \end{figure}
 
-\section{行人行为控制}
-本系统行为控制模型基于 Carla 平台 WalkerControl 模块构建，通过设定行人方向和速度参数精确操控移动行为，采用 town5 作为模拟地图，除基本移动功能外支持单向行走与过马路、来回走动两种主要行为模式，这些模式可在不同场景模拟行人多样化行为并满足后续复杂导航任务需求，模块化设计与参数化配置使系统能够灵活适应不同实验需求，为后续深度学习模型在行人避障与导航任务中的集成提供稳定高效的基础环境，初步研究未加入动态障碍物，仅实现行人单独行进，存在一定局限性。\cite{csdn2023carla}
+视觉引导以目标轨迹的形式向操作者实时呈现期望方向盘角度 $θ*(t)$。本研究采用阶跃信号与正弦信号两种典型轨迹，分别用于评估系统的定点保持能力与连续跟踪能力，其表达式如下：
+\begin{equation}
+\theta^{*}(t) = A \cdot 1(t \ge t_0)
+\end{equation}
 
-\subsection{单向行走与过马路}
-单向行走与过马路是行人基础且关键的行为模式，行人通常从起点出发沿预设路径抵达目标位置，本研究设计简易路线规划系统以精确模拟行人过马路行为，允许其从街道一侧安全移动至对面。如图 \ref{fig:crossing_path}，行人从人行道的右侧走向人行道的左侧。
+\begin{equation}
+\theta^{*}(t) = A \cdot \sin(2\pi f t + \varphi)
+\end{equation}
 
-\begin{figure}[H]
-    \centering
-    \begin{minipage}{1\textwidth} 
-        \centering
-        \includegraphics[width=\textwidth]{images/crossing_path1.pdf}
-        \caption*{行人开始过马路}
-    \end{minipage}
-    
-    \vspace{0.5cm}  
+式子中的 $A$ 代表目标幅值，$t₀$ 代表阶跃发生的时刻，$f$ 和 $φ$ 分别代表正弦轨迹的频率和初始相位，这两种轨迹会一起显示在仿真界面上，人们可以通过界面同时查看控制算法的瞬时反应情况和稳定后的跟踪效果，肌肉激活信号本身会出现高频抖动和基线漂移的情况，所以控制算法会先对原始信号 $u (k)$ 进行一阶指数加权移动平均的低通滤波处理，这种滤波方式也可以简称为 EMA：
+\begin{equation}
+u_f(k) = \alpha u(k) + (1-\alpha) u_f(k-1)
+\end{equation}
 
-    \begin{minipage}{1\textwidth}
-        \centering
-        \includegraphics[width=\textwidth]{images/crossing_path2.pdf}
-        \caption*{行人成功通过马路}
-    \end{minipage}
-    \caption{行人单向行走与过马路示意图}
-    \label{fig:crossing_path}
-\end{figure}
+式中 $α ∈ (0, 1]$ 为平滑系数，$α$ 越小滤波越强但响应越慢。滤波后的信号继续经过死区处理以抑制零附近的随机抖动：
+\begin{equation}
+u_d = \text{sgn}(u_f) \cdot \max(|u_f| - u_{th}, 0)
+\end{equation}
 
-实现时通过设定明确目标位置使行人沿起点到终点的预定路径行走，核心是利用 Carla 平台 WalkerControl 组件设定行人位置、速度等运动参数，该模型作为初步探索 Carla 行人行为模拟的实践较为简单。
+式中 $uth$ 为死区阈值，$sgn(·)$ 为符号函数。死区之外，将处理后的信号经非线性增益函数 $g(·)$ 与比例增益 $Kp$ 映射至方向盘转角指令，并由饱和函数限制在物理可达范围之内：
+\begin{equation}
+\theta_{\text{cmd}} = \text{sat}\left( K_p \cdot g(u_d), -\theta_{\max}, \theta_{\max} \right)
+\end{equation}
 
-\subsection{来回走与路径控制}
+其中饱和函数定义为：
+\begin{equation}
+\text{sat}(x, l, h) = \max\left( \min(x, h), l \right)
+\end{equation}
 
-\begin{figure}[H]
-    \centering
-    \begin{minipage}{\textwidth}
-        \centering
-        \begin{subfigure}{0.48\textwidth}
-            \includegraphics[width=\textwidth]{images/crossing_walking1.pdf}
-        \end{subfigure}
-        \begin{subfigure}{0.48\textwidth}
-            \includegraphics[width=\textwidth]{images/crossing_walking2.pdf}
-        \end{subfigure}
+$θ_{\max}$ 指的是方向盘可以转动的最大角度，这种映射方式可以同时照顾到操作灵敏度和使用安全，在发力较小的区域，非线性增益会把细微的动作放大，以此提高小角度操控的准确程度，在发力较大的区域，饱和约束可以避免出现超调和设备损坏的情况，为了让方向盘可以按照闭环方式跟踪目标轨迹，需要对瞬时跟踪误差进行定义：
+\begin{equation}
+e(t) = \theta^{*}(t) - \theta(t)
+\end{equation}
 
-        \vspace{0.3cm}
-
-        \begin{subfigure}{0.48\textwidth}
-            \includegraphics[width=\textwidth]{images/crossing_walking3.pdf}
-        \end{subfigure}
-        \begin{subfigure}{0.48\textwidth}
-            \includegraphics[width=\textwidth]{images/crossing_walking4.pdf}
-        \end{subfigure}
-
-        \caption*{行人从右向左通过人行道过程}
-    \end{minipage}
-
-    \vspace{0.5cm}
-
-    \begin{minipage}{\textwidth}
-        \centering
-        \begin{subfigure}{0.48\textwidth}
-            \includegraphics[width=\textwidth]{images/crossing_walking5.pdf}
-        \end{subfigure}
-        \begin{subfigure}{0.48\textwidth}
-            \includegraphics[width=\textwidth]{images/crossing_walking6.pdf}
-        \end{subfigure}
-
-        \vspace{0.3cm}
-
-        \begin{subfigure}{0.48\textwidth}
-            \includegraphics[width=\textwidth]{images/crossing_walking7.pdf}
-        \end{subfigure}
-        \begin{subfigure}{0.48\textwidth}
-            \includegraphics[width=\textwidth]{images/crossing_walking8.pdf}
-        \end{subfigure}
-
-        \caption*{行人从左向右返回过程}
-    \end{minipage}
-
-    \vspace{0.5cm}
-    
-    \caption{行人来回通过人行道示意图}
-    \label{fig:walking_back_and_forth}
-\end{figure}
-
-来回走动是行人在两个固定点间循环往复的常见行走模式，适用于短距离反复行走场景如本次模拟的过马路过程，其实现通过设定目标点并实时更新目标位置确保行人按既定路径高效移动。如图 \ref{fig:walking_back_and_forth}，行人到达人行道一侧以后开始转向，向另一侧行进。
-
-实现时先指定两个目标位置，行人到达一个目标后系统自动切换目标使其返回起点，该过程可完全自动化或根据需求允许手动控制，为应对突发情况系统实时监测环境调整行人动作，如遇红灯原地等候、绿灯直接通行，动态路径调整功能确保行人依实际情况及时反应顺利到达下一个目标，这种智能路径规划技术既提高行走效率和安全性，也为后续导航系统设定目标位置奠定基础。
-
-\section{键盘控制行人移动}
-本研究设计并实现键盘控制功能以提升用户体验和系统互动性，用户可通过简单键盘输入直接操控行人运动，采用 Pygame 库监听键盘输入，支持按下 W、A、S、D 键实现前进、后退、转向等动作控制，同时在 Pygame 可视化框中提供障碍物识别和监测功能，遇障碍物时屏幕显示距离等实时反馈，如图 \ref{fig:collision_detection},此时屏幕上会显示出障碍物的距离以及相关警告，相关训练代码在地图 town1 中实现。
-
-\begin{figure}[H]
-    \centering
-    \includegraphics[width=1\textwidth]{images/collision_detection.pdf}
-    \caption{行人障碍物检测示意图}
-    \label{fig:collision_detection}
-\end{figure}
-
-具体实现过程包含以下步骤：通过 Pygame 库设置键盘事件监听功能使系统捕捉用户键盘操作并与行人运动方向精确映射，具体规则如下表所示，确保用户键盘输入的每一指令被系统准确识别执行；设计控制逻辑使用户输入指令后行人的 WalkerControl 模块实时响应，根据指令更新行人方向和速度，确保行人移动即时准确反映用户控制意图以实现精确控制；考虑行人运动安全性，系统加入碰撞检测与停止机制，当行人遇障碍物时内置碰撞传感器立即检测并触发碰撞事件，系统接收到事件后迅速反应停止行人运动，有效避免碰撞风险保障行人运动安全性。
-
-\begin{table}[H]
-    \centering
-    \renewcommand{\arraystretch}{1.3}
-    \begin{tabular}{
-      >{\centering\arraybackslash}p{6.5cm}
-      >{\centering\arraybackslash}p{4cm}
-    }
+该误差量同时作为视觉引导界面的实时反馈量与第 2.5 节中精度指标的计算输入，是连接控制算法与系统评估的关键桥梁。
+\section{系统评估指标体系}
+为全面、客观、量化地评价肌肉驱动生物力学人机交互系统的控制效果与运行性能，本研究构建多维度、模块化的评估指标体系，从数据质量、运动学解算、控制精度、仿真稳定性、综合任务效果五个维度开展评估。
+\begin{table}[htbp]
+  \centering
+  \caption{系统评估指标体系}
+  \label{tab:eval_index}
+  \begin{tabular}{ccc}
     \toprule
-    \textbf{控制说明} & \textbf{控制键} \\
+   模块 & 评估维度 & 核心指标 \\
     \midrule
-    WASD 移动 & 空格跳跃 \\
-    Shift 加速 & ESC 退出 \\
+    数据处理模块 & 数据质量 & 数据同步误差、预处理延迟、数据缺失率 \\
+    运动学模块 & 解算精度与合理性 & 关节位置误差、姿态平滑度、关节超限率 \\
+    控制模块 & 跟踪与控制精度 & 平均绝对误差 (MAE)、均方根误差 (RMSE)、响应延迟、最大误差 \\
+    仿真模块 & 运行稳定性 & 仿真帧率稳定性、无故障运行时长、角度漂移量 \\
+    评估模块 & 综合任务效果 & 轨迹相似度、生物合理性、目标跟踪成功率、任务完成度 \\
     \bottomrule
-    \end{tabular}
-    \caption{键盘控制人规则}
-    \label{tab:keyboard-control}
+  \end{tabular}
 \end{table}
 
-键盘控制模块不仅能实现对行人的灵活操控，也为调试与实验分析提供了完善的交互与可视化支持，为后续引入 AI 控制与自动化策略奠定基础。
+核心指标说明如下：
 
-\section{本章小结}
+平均绝对误差 MAE 可以用来表示方向盘角度跟踪的整体偏差情况，数值越小就代表控制的精准程度越高，均方根误差 RMSE 对于比较大的误差会更加敏感，人们常用它来判断系统控制的稳定程度和波动情况，响应延迟是从肌肉激活信号输入，到方向盘做出相应转动输出的时间间隔，能够体现系统的实时运行能力，角度漂移量是系统在长时间运行时，方向盘在没有控制输入的情况下出现的角度偏移数值，可用于评价系统的稳态稳定性能，轨迹相似度用来对比实际运动轨迹和目标运动轨迹的接近程度，能够体现视觉引导条件下的跟踪效果，生物合理性用于判断运动过程是否符合人体上肢肌肉和关节的正常运动规律，其中也包括关节是否超出限制、肌肉发力是否自然等内容，任务完成度是在规定时间内达到目标角度、保持稳定姿态并且完成操控任务的成功概率，为了能够定量描述系统的方向盘控制精准程度，我们将采样总数设为 N，第 i 个采样点对应的目标角度与实际角度分别设为 $θi∗和 θi$，平均绝对误差MAE可以按照如下方式进行定义：
+\begin{equation}
+\text{MAE} = \frac{1}{N} \sum_{i=1}^{N} |\theta_i^{*} - \theta_i|
+\end{equation}
 
-本章系统阐述行人导航系统构建的关键理论与技术支撑，基于 Carla 仿真平台实现环境设置、传感器配置、行人控制等核心功能模块并明确系统整体架构设计逻辑，详尽介绍行人骨骼控制原理及关键参数提取方式以为行为建模与路径规划提供数据基础，通过分段控制策略实现单向行走、过马路、来回路径切换等基本行为并结合动态目标点更新机制实现高层级行为仿真控制，借助键盘控制接口引入用户交互功能以提升系统调试效率与可视化能力。​
-本章内容完成从虚拟仿真环境搭建到基础行为控制模块构建的核心准备工作，为后续强化学习控制算法接入及训练环境部署奠定理论与工程基础。
+$MAE$ 反映方向盘角度跟踪的整体偏差水平，其值越小表示控制精度越高。在此基础上，对较大误差更加敏感的均方根误差（RMSE）定义为：
+\begin{equation}
+\text{RMSE} = \sqrt{\frac{1}{N} \sum_{i=1}^{N} \left( \theta_i^{*} - \theta_i \right)^2}
+\end{equation}
+
+$RMSE$ 在统计意义上等价于误差的二阶矩，能够有效反映系统控制的稳定性与波动程度。为进一步刻画极端误差，定义最大误差为：
+\begin{equation}
+e_{\max} = \max_i \left( \left| \theta_i^{*} - \theta_i \right| \right)
+\end{equation}
+
+$e_{\max}$ 用于判定系统在跟踪过程中是否出现单点超限现象，是评估安全性的重要指标。
+
+对于响应延迟，本研究采用实际角度序列 $θ(t)$ 与目标角度序列 $θ^*(t)$ 之间互相关函数取最大值时对应的时间偏移量作为定义：
+\begin{equation}
+t_d = \arg\max_{\tau} \left( \sum_{t} \theta(t+\tau) \cdot \theta^{*}(t) \right)
+\end{equation}
+
+式中 $t_d$ 即为系统从肌肉激活信号输入到方向盘输出对应转角所需的等效延迟时间。综合上述指标，可从均值偏差、波动程度、极端误差与时滞特性四个维度对肌肉驱动方向盘操控系统做出量化评估。
