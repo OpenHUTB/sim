@@ -2,10 +2,12 @@
 
 \documentclass[AutoFakeBold]{hutbthesis}
 
+\usepackage{tabularx}
+\usepackage{booktabs}
+\usepackage{array}
 \usepackage{calc}
 \usepackage{float}
 \usepackage{amsmath}
-\usepackage{tabularx}
 \usepackage{xeCJKfntef}
 \providecommand{\tightlist}{%
   \setlength{\itemsep}{0pt}\setlength{\parskip}{0pt}}
@@ -14,6 +16,7 @@
   \setCJKsansfont{Noto Sans CJK SC}[BoldFont=Noto Sans CJK SC Bold]
 }{}
 \graphicspath{{images/}}
+\renewcommand{\bibname}{参考文献}
 \renewcommand{\theequation}{\arabic{chapter}-\arabic{equation}}
 \lstset{
   language=Python,
@@ -28,6 +31,12 @@
   stringstyle=\color[RGB]{128,0,0},
   showstringspaces=false
 }
+
+
+% 将 \cite{} 显示为上标形式，同时保留 hyperref 跳转。
+\makeatletter
+\renewcommand{\@cite}[2]{\textsuperscript{[#1]}}
+\makeatother
 
 \include{content/cover}
 
