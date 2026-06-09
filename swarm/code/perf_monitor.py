@@ -2,7 +2,6 @@
 perf_monitor.py
 
 监控 AirSim 进程的 CPU 内核态/用户态占比
-2024/11
 
 修复: Linux 下 cpu_times 没有 iowait 字段导致的 AttributeError
 修复: 进程名匹配大小写问题
