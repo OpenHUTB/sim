@@ -9,7 +9,14 @@ import numpy as np
 try:
     import carla
 except ImportError:
-    carla_root = os.environ.get("CARLA_ROOT", r"D:\hutb\hutb")
+    carla_root = os.environ.get("CARLA_ROOT")
+    if not carla_root:
+        raise ImportError(
+            "未设置 CARLA_ROOT 环境变量。\n"
+            "请设置环境变量指向 CARLA 安装目录，例如：\n"
+            "  Windows: set CARLA_ROOT=D:\\hutb\\hutb\n"
+            "  或在代码中: os.environ['CARLA_ROOT'] = 'D:\\hutb\\hutb'"
+        )
     egg_dir = os.path.join(carla_root, "PythonAPI", "carla", "dist")
     egg_file = os.path.join(egg_dir,
         "carla-0.9.16-py3.7-win-amd64.egg" if os.name == "nt"

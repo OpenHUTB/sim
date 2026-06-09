@@ -1,23 +1,29 @@
-# 【终极版：任何环境都能跑，专门给你的新CARLA】
+# 【CARLA 连接测试 —— 通过环境变量 CARLA_ROOT 定位引擎】
 import sys
 import os
 import time
 
 # ======================
-# 1. 强制添加路径（核心！）
+# 1. 通过环境变量添加 CARLA 路径
 # ======================
-sys.path.insert(0, r"D:\hutb\hutb\PythonAPI")
-sys.path.insert(0, r"D:\hutb\hutb\PythonAPI\carla\dist")
+carla_root = os.environ.get("CARLA_ROOT")
+if not carla_root:
+    print("❌ 未设置 CARLA_ROOT 环境变量")
+    print("   请设置: set CARLA_ROOT=D:\\hutb\\hutb")
+    exit(1)
+
+sys.path.insert(0, os.path.join(carla_root, "PythonAPI"))
+sys.path.insert(0, os.path.join(carla_root, "PythonAPI", "carla", "dist"))
 
 # ======================
-# 2. 导入CARLA（现在一定能找到）
+# 2. 导入CARLA
 # ======================
 try:
     import carla
     print("✅ 成功导入 carla")
-except:
-    print("❌ 导入失败")
-    exit()
+except ImportError:
+    print("❌ 导入失败，请检查 CARLA_ROOT 路径是否正确: %s" % carla_root)
+    exit(1)
 
 # ======================
 # 3. 连接模拟器
