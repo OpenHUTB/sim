@@ -117,7 +117,7 @@ Result bench_m1(int n_workers, microseconds interval, int dur_sec) {
     return calc_stats("M1_dispatcher", n_workers, all_errs);
 }
 
-// M2: 每线程各自 sleep_until
+// M2: 每线程各自  sleep_until
 Result bench_m2(int n, microseconds interval, int dur_sec) {
     std::atomic<bool> running{true};
     std::vector<std::thread> threads;
