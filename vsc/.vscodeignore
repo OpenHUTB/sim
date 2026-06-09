@@ -1,6 +1,0 @@
-node_modules/
-.vscode-test/
-src/
-.gitignore
-tsconfig.json
-.eslintrc.json
