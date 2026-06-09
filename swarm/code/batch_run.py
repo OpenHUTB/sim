@@ -2,7 +2,6 @@
 batch_run.py
 
 批量运行实验，自动生成 settings.json 并调用 swarm_test.py
-2024/11
 
 用法:
     python scripts/batch_run.py --max_drones 30 --output results/data
