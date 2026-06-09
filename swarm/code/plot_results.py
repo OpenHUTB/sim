@@ -2,7 +2,6 @@
 plot_results.py
 
 画实验结果图
-2024/11
 
 用法:
     python analysis/plot_results.py --input results/data/swarm_summary.csv
