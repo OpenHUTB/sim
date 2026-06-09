@@ -100,7 +100,7 @@ pip install numpy matplotlib
 | 项目   | 配置            |
 | ---- | ------------- |
 | CPU  | Intel i5 8代以上 |
-| 内存   | ≥ 8 GB        |
+| 内存   | ≥ 16 GB(低于该配置能运行，但是非常卡)|
 | 显卡   | 支持 OpenGL 4.0 |
 | 磁盘空间 | ≥ 10 GB       |
 
