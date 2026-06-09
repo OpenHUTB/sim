@@ -1,7 +1,6 @@
 // thread_models.h
 // 各线程等待模型封装，供 benchmark 复用
 
-
 #pragma once
 #include <thread>
 #include <chrono>
