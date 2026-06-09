@@ -2,14 +2,11 @@
 plot_results.py
 
 画实验结果图
-
+2024/11
 
 用法:
-    # 用真实数据
     python analysis/plot_results.py --input results/data/swarm_summary.csv
-
-    # 没跑实验先用预设数据看看效果
-    python analysis/plot_results.py --demo
+    python analysis/plot_results.py --demo   # 用预设数据看效果
 
 输出到 results/figures/
 """
@@ -22,11 +19,9 @@ import matplotlib
 matplotlib.use("Agg")
 import matplotlib.pyplot as plt
 
-# 用 SimHei 显示中文，没有就 fallback
 plt.rcParams["font.sans-serif"] = ["SimHei", "Microsoft YaHei", "DejaVu Sans"]
 plt.rcParams["axes.unicode_minus"] = False
 
-# 各模型样式
 STYLES = {
     "M1": dict(color="#1976D2", marker="o", label="M1 单线程分发器"),
     "M2": dict(color="#388E3C", marker="s", label="M2 标准阻塞睡眠"),
@@ -37,14 +32,9 @@ STYLES = {
 
 
 def make_demo_data() -> pd.DataFrame:
-    """
-    没有真实实验数据时先用这个
-    数值基于理论分析推算，实际跑出来会有出入
-    TODO: 等环境配好了换成真实数据
-    """
+    """无真实数据时用理论推算值"""
     rng = np.random.default_rng(42)
     ns = [1, 5, 10, 15, 20, 25, 30]
-
     fps_fn = {
         "M1": lambda n: max(5.0, 58 - max(0, n-8)*0.5  + rng.normal(0, 1.0)),
         "M2": lambda n: max(5.0, 54 - max(0, n-8)*0.9  + rng.normal(0, 1.5)),
@@ -66,16 +56,14 @@ def make_demo_data() -> pd.DataFrame:
         "M4": lambda n: max(4.0, 31  + max(0, n-5)*1.85 + rng.normal(0, 2.0)),
         "M5": lambda n: max(4.0, 42  + max(0, n-4)*2.6  + rng.normal(0, 3.0)),
     }
-
     rows = []
     for m in STYLES:
         for n in ns:
             rows.append({
-                "model": m,
-                "n": n,
-                "fps_mean": fps_fn[m](n),
-                "lat_mean": lat_fn[m](n),
-                "kernel_pct": ker_fn[m](n),
+                "model": m, "n": n,
+                "fps_mean":    fps_fn[m](n),
+                "lat_mean":    lat_fn[m](n),
+                "kernel_pct":  ker_fn[m](n),
             })
     return pd.DataFrame(rows)
 
@@ -91,7 +79,7 @@ def fig_fps(df, out_dir):
     ax.axvline(16, color="gray", ls="--", alpha=0.5, label="物理核心数(16)")
     ax.set_xlabel("无人机数量", fontsize=12)
     ax.set_ylabel("仿真帧率 (FPS)", fontsize=12)
-    ax.set_title("不同线程模型 × 无人机数量的仿真帧率", fontsize=13)
+    ax.set_title("不同线程模型下仿真帧率随无人机数量的变化", fontsize=13)
     ax.legend(fontsize=9)
     ax.grid(alpha=0.3)
     ax.set_xlim(0, 32)
@@ -112,7 +100,7 @@ def fig_latency(df, out_dir):
                 label=st["label"], lw=2, ms=7)
     ax.set_xlabel("无人机数量", fontsize=12)
     ax.set_ylabel("指令延迟 (ms)", fontsize=12)
-    ax.set_title("不同线程模型 × 无人机数量的指令延迟", fontsize=13)
+    ax.set_title("不同线程模型下指令延迟随无人机数量的变化", fontsize=13)
     ax.legend(fontsize=9)
     ax.grid(alpha=0.3)
     p = os.path.join(out_dir, "fig_latency.png")
@@ -143,27 +131,24 @@ def fig_kernel(df, out_dir):
 
 
 def fig_improve(df, out_dir):
-    """M1 vs M4(原始) 提升幅度"""
+    """M1(优化) vs M4(原始) 提升幅度柱状图"""
     ns = [10, 20, 30]
     fps_imp, lat_red = [], []
     for n in ns:
         m1 = df[(df.model == "M1") & (df.n == n)]
         m4 = df[(df.model == "M4") & (df.n == n)]
         if m1.empty or m4.empty:
-            fps_imp.append(0)
-            lat_red.append(0)
+            fps_imp.append(0); lat_red.append(0)
         else:
-            fi = (m1.fps_mean.values[0] - m4.fps_mean.values[0]) \
-                 / m4.fps_mean.values[0] * 100
-            lr = (m4.lat_mean.values[0] - m1.lat_mean.values[0]) \
-                 / m4.lat_mean.values[0] * 100
-            fps_imp.append(fi)
-            lat_red.append(lr)
+            fps_imp.append((m1.fps_mean.values[0] - m4.fps_mean.values[0])
+                           / m4.fps_mean.values[0] * 100)
+            lat_red.append((m4.lat_mean.values[0] - m1.lat_mean.values[0])
+                           / m4.lat_mean.values[0] * 100)
 
     x = np.arange(len(ns))
     w = 0.35
     fig, ax = plt.subplots(figsize=(8, 5))
-    b1 = ax.bar(x - w/2, fps_imp, w, label="FPS 提升 %", color="#1976D2", alpha=0.85)
+    b1 = ax.bar(x - w/2, fps_imp, w, label="FPS 提升 %",  color="#1976D2", alpha=0.85)
     b2 = ax.bar(x + w/2, lat_red, w, label="延迟降低 %", color="#388E3C", alpha=0.85)
     ax.set_xticks(x)
     ax.set_xticklabels([f"{n}架" for n in ns])
@@ -184,32 +169,29 @@ def fig_improve(df, out_dir):
 
 def main():
     ap = argparse.ArgumentParser()
-    ap.add_argument("--input", type=str, default="results/data/swarm_summary.csv")
+    ap.add_argument("--input",  type=str, default="results/data/swarm_summary.csv")
     ap.add_argument("--output", type=str, default="results/figures")
-    ap.add_argument("--demo", action="store_true", help="用预设数据")
+    ap.add_argument("--demo",   action="store_true", help="使用预设数据")
     args = ap.parse_args()
 
     os.makedirs(args.output, exist_ok=True)
 
     if args.demo or not os.path.exists(args.input):
-        print("[info] 用预设数据（还没跑真实实验）")
+        print("[info] 使用预设数据")
         df = make_demo_data()
-        # 顺便保存一下，方便看数据格式
-        df.to_csv(os.path.join(os.path.dirname(args.input), "demo_data.csv"),
-                  index=False)
+        demo_csv = os.path.join(os.path.dirname(args.input), "demo_data.csv")
+        os.makedirs(os.path.dirname(os.path.abspath(demo_csv)), exist_ok=True)
+        df.to_csv(demo_csv, index=False)
     else:
         df = pd.read_csv(args.input)
-        # 列名对齐
-        rename = {"fps_mean": "fps_mean", "lat_mean": "lat_mean",
-                  "cpu_kernel_pct": "kernel_pct", "num_drones": "n",
-                  "n_drones": "n"}
+        rename = {"cpu_kernel_pct": "kernel_pct", "num_drones": "n", "n_drones": "n"}
         df = df.rename(columns={k: v for k, v in rename.items() if k in df.columns})
 
     fig_fps(df, args.output)
     fig_latency(df, args.output)
     fig_kernel(df, args.output)
     fig_improve(df, args.output)
-    print(f"\n全部图表已生成: {args.output}")
+    print(f"\n全部图表已生成至: {args.output}")
 
 
 if __name__ == "__main__":
