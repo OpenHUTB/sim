@@ -75,4 +75,4 @@ plot_metric(cpu_kernel, 'CPU内核态占用率（%）',    '不同线程方案CP
 plot_metric(latency,    '响应延迟（ms）',           '不同线程方案仿真响应延迟对比',       'fig3_latency.png')
 plot_metric(ctx_switch, '上下文切换次数（次/秒）', '不同线程方案线程上下文切换次数对比', 'fig4_ctx.png')
 
-print("\n全部图表生成完毕，保存在：D:/desktop/airsim-swarm-opt/results/figures/")
+print("\n全部图表生成完毕")
