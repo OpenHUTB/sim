@@ -201,6 +201,7 @@
 % 参考文献格式 GB/T7714-2015
 % 来自https://github.com/hushidong/biblatex-gb7714-2015
 % 参考文献已改为手工 thebibliography 环境，不再强制调用 biblatex/biber。
+% % 参考文献使用 thebibliography + \cite，不调用 biblatex/biber。
 % \RequirePackage[backend=biber,gbpub=false, style=gb7714-2015]{biblatex}
 
 \AtEndOfClass{
@@ -548,7 +549,10 @@
     breaklinks         = true,
     plainpages         = false,
     pdfdisplaydoctitle = true,
-    hidelinks,
+    colorlinks=true,
+    linkcolor=blue,
+    citecolor=blue,
+    urlcolor=blue,
   }
   \newcounter{hutb@bookmark}
   \renewcommand\hutb@pdfbookmark[2]{%
@@ -630,7 +634,7 @@
 \fancyhf[RH]{\heiti \zihao{-5} {\@titlecn}}
 % frontmatter设置
 \renewcommand{\frontmatter}{
-	\cleardoublepage
+	\clearpage
 	\@mainmatterfalse
 	% 根据学校要求使用大罗马编号
 	\pagenumbering{Roman}
@@ -647,7 +651,7 @@
 }
 % mainmatter设置
 \renewcommand{\mainmatter}{
-	\cleardoublepage
+	\clearpage
 	\@mainmattertrue
 	% 正文部分启用阿拉伯数字编号
 	\pagenumbering{arabic}
@@ -668,8 +672,8 @@
 % 而 1英寸＝25.4毫米，则1磅＝25.4/72≈0.353毫米。
 % 磅和 LaTeX的 pt- points (大约 1/72 inch) 是一致的。
 % 基本行间距设置
-\renewcommand*{\baselinestretch}{1.3}   % 几倍行间距
-\setlength{\baselineskip}{20pt}         % 基准行间距
+\renewcommand*{\baselinestretch}{1.0}   % 几倍行间距
+\setlength{\baselineskip}{22pt}         % 基准行间距
 % \setlength{\bibsep}{0.5ex} % 参考文献条目间距
 
 
@@ -790,8 +794,7 @@
 		\end{figure}
 		\vspace{10pt} % 空行
 		\begingroup
-		\linespread{1.3}
-		\zihao{-2} 
+			\zihao{-2} 
 		\songti
 		\begin{tabular}{ll}
 			\hspace{12pt} \makebox[4em][s]{\textbf{题\qquad 目：}} & \underline{\parbox[b][][c]{250pt}{\center \kaishu \@titlecn}} \\
@@ -808,7 +811,7 @@
 		\vspace{40pt}
 		% \vfill
 		\begingroup
-		{\zihao{2} \heiti 计算机学院 \par}
+		{\zihao{2} \heiti \@department \par}
 		\vspace{10pt}
 		{\zihao{-2} \heiti \@thesisdate \par}
 		\endgroup
@@ -828,10 +831,9 @@
 	\vspace*{0pt}
 	%	\begin{center} \zihao{-2} \heiti \@titlecn \end{center}
 	\vspace{0pt}
-	\begin{center} \zihao{2} \heiti 湖南工商大学本科毕业设计诚信声明 \end{center}  % 摘要为三号黑体
+	\begin{center} \fontsize{22pt}{26pt}\selectfont\heiti 湖南工商大学本科毕业设计诚信声明 \end{center}  % 摘要为三号黑体
 	\vspace{12pt}
-	\linespread{1.5}
-	\zihao{4}\songti  % 内容为四号宋体
+	\fontsize{14pt}{22pt}\selectfont\songti  % 声明正文按 Word 原文 14pt 宋体
 	
 	%\end{titlepage}%
 	
@@ -859,15 +861,14 @@
 	\vspace*{0pt}
 	%\begin{center} \zihao{-2} \heiti \@titlecn \end{center}
 	\vspace{0pt}
-	\begin{center} \zihao{3} \heiti 摘\qquad  要 \end{center}  % 摘要为三号黑体
+	\begin{center} \fontsize{16pt}{22pt}\selectfont\heiti 摘\qquad  要 \end{center}  % 摘要为三号黑体
 	\vspace{12pt}
-	\linespread{1.5}
-	\zihao{-4}\songti  % 内容为四号宋体
+	\fontsize{12pt}{22pt}\selectfont\songti  % 摘要正文按 Word 原文 12pt 宋体
 }
 % 显示中文关键词和分类号
 {
 	\begin{flushleft}
-		\noindent {\zihao{-4} \bfseries \songti 关键词：} {\zihao{-4} \songti \@keywordscn} \par % 关键词为小四号宋体加粗，内容为小四号宋体
+		\begin{center}\fontsize{14pt}{20pt}\selectfont\heiti 关键词\end{center}\par{\fontsize{12pt}{22pt}\selectfont\songti \@keywordscn} \par % 关键词为小四号宋体加粗，内容为小四号宋体
 	\end{flushleft}
 }
 
@@ -883,14 +884,13 @@
 	\vspace*{0pt}
 	%\begin{center} \zihao{-2} \bfseries \@titleen \end{center}
 	
-	\begin{center} \zihao{3} \bfseries ABSTRACT \end{center}
+	\begin{center} \fontsize{14pt}{22pt}\selectfont\bfseries Abstract \end{center}
 	\vspace{12pt}
-	\linespread{1.5}
-	\zihao{-4} % 内容为四号宋体
+	\fontsize{12pt}{22pt}\selectfont % English abstract body, Times New Roman 12pt
 }
 {
 	\begin{flushleft}
-		\noindent {\zihao{4} \bfseries Key\ words:~} {\zihao{4} \@keywordsen} \par % 关键词为四号黑体，内容为四号宋体
+		\begin{center}\fontsize{14pt}{22pt}\selectfont\bfseries Keywords\end{center}\par{\fontsize{12pt}{22pt}\selectfont \@keywordsen} \par % 关键词为四号黑体，内容为四号宋体
 	\end{flushleft}
 }
 
@@ -1107,24 +1107,20 @@ labelwidth=2em % 包含标签的盒子的正常宽度；若实际宽度更宽，
 % 各级标题格式设置。
 \ctexset{%
 chapter = {%
-	format       = \zihao{3} \heiti\centering,
-	name         = {第, 章},
+	format       = \fontsize{14pt}{22pt}\selectfont\heiti,
+	name         = {},
 	nameformat   = {},
-	number       = \arabic{chapter},
+	number       = \arabic{chapter}.,
 	numberformat = {},
 	titleformat  = {},
 	aftername    = \quad,
 	afterindent  = true,
-	% beforeskip 默认为 50pt 适当缩减
 	fixskip      = true,
-	beforeskip   = {15pt},
-	% beforeskip   = {\ifhutb@type@graduate 20pt \else 5pt\fi}
-	% afterskip 默认为 40pt 适当缩减
-	afterskip    = {40pt},
-	% afterskip    = {\ifhutb@type@graduate 30pt\else 20pt\fi},
+	beforeskip   = {0pt},
+	afterskip    = {1ex},
 },
 section = {%
-	format       = \zihao{-4} \heiti,
+	format       = \fontsize{12pt}{22pt}\selectfont\bfseries\songti,
 	afterindent  = true,
 	% beforeskip 默认为 3.5ex plus 1ex minus .2ex 适当缩减
 	% beforeskip   = {20pt},
@@ -1133,14 +1129,14 @@ section = {%
 	afterskip    = {1ex \@plus .2ex},
 },
 subsection = {%
-	format       = \zihao{-4} \bfseries \songti,
+	format       = \fontsize{12pt}{22pt}\selectfont\songti,
 	afterindent  = true,
 	% afterskip 默认为 2.3ex plus .2ex 适当缩减
 	afterskip    = {1ex \@plus .2ex},
 	%fixskip      = true,
 },
 subsubsection = {%
-	format       = \zihao{-4} \normalfont,
+	format       = \fontsize{12pt}{22pt}\selectfont\songti,
 	afterindent  = true,
 	afterskip    = {1ex \@plus .2ex},
 	%fixskip      = true,

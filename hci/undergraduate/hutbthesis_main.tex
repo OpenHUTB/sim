@@ -39,9 +39,6 @@
 
 \include{content/declarationzh}
 
-% 授权书
-\include{content/authorizationzh}
-
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % 中文摘要
 %
@@ -83,10 +80,20 @@
 \include{content/chapter3.tex}
 \include{content/chapter4.tex}
 \include{content/chapter5.tex}
+\include{content/chapter6.tex}
+\include{content/chapter7.tex}
 
 % % 主文件有代码去掉页眉章节编号的“.”，但这会因为bug导致无编号章节显示一个错误编号，所以这里在无编号章节之前再次重定义sectionmark。
 % \renewcommand{\sectionmark}[1]{\markright{#1}}
 
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% 致谢
+%
+% 存储在\content\acknowledgements.tex文件中
+% 根据本科生院的要求，致谢应该在参考文献的前面，不编章号，而附录应该位于参考文献后。
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\include{content/acknowledgements}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % 参考文献
@@ -104,6 +111,8 @@
 
 \printbibliography
 
+%\bibliography{hutbtheisi_main}
+\newpage
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -124,19 +133,6 @@
 % \renewcommand\appendix{\setcounter{secnumdepth}{-2}}
 \appendix
 \include{content/appendix}
-
-
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-% 致谢
-%
-% 存储在\content\acknowledgements.tex文件中
-% 根据本科生院的要求，致谢应该在参考文献的前面，不编章号，而附录应该位于参考文献后。
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\include{content/acknowledgements}
-
-%\bibliography{hutbtheisi_main}
-\newpage
-
 
 
 \end{document}

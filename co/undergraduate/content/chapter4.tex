@@ -23,36 +23,32 @@ Gazebo
 
 表~\ref{tab:software_stack} 给出本文采用的基准软件栈。
 
-\begin{longtable}[]{@{}
-  >{\raggedright\arraybackslash}p{(\columnwidth - 4\tabcolsep) * \real{0.2678}}
-  >{\raggedright\arraybackslash}p{(\columnwidth - 4\tabcolsep) * \real{0.3713}}
-  >{\raggedright\arraybackslash}p{(\columnwidth - 4\tabcolsep) * \real{0.3608}}@{}}
-\caption{基准软件栈}\label{tab:software_stack}\\
-\toprule\noalign{}
-\begin{minipage}[b]{\linewidth}\raggedright
-组件
-\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedright
-版本/状态
-\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedright
-用途
-\end{minipage} \\
-\midrule\noalign{}
-\endhead
-\bottomrule\noalign{}
-\endlastfoot
+\begin{table}[H]
+\centering
+\caption{基准软件栈}
+\label{tab:software_stack}
+\footnotesize
+\renewcommand{\arraystretch}{1.18}
+\begin{tabularx}{\textwidth}{p{0.22\textwidth}p{0.25\textwidth}X}
+\toprule
+组件 & 版本/状态 & 用途 \\
+\midrule
 Ubuntu & 18.04 LTS & 主机操作系统 \\
 ROS & Noetic Ninjemys & 节点通信、参数、消息、TF \\
 Gazebo & 11 & 刚体动力学、传感器与场景仿真 \\
 gazebo\_ros\_pkgs & Noetic 对应发行 & Gazebo 与 ROS 接口桥 \\
 gazebo\_ros\_control & Noetic 对应发行 & ros\_control 接入 Gazebo \\
 ros\_control & ROS 1 经典控制框架 & 控制器抽象与管理 \\
-robot\_state\_publisher & Noetic 对应发行 & 根据 URDF
-+~joint\_states发布 TF \\
+robot\_state\_publisher & Noetic 对应发行 & 根据 URDF 与 joint\_states 发布 TF \\
 tf2\_ros & Noetic 对应发行 & 坐标变换管理 \\
 xacro & Noetic 对应发行 & 宏化 URDF 生成 \\
 image\_pipeline & Noetic 对应发行 & 相机标定与图像处理链 \\
 OpenCV & ROS Noetic 兼容版本 & 飞机辅助感知标识识别 \\
-\end{longtable}
+\bottomrule
+\end{tabularx}
+\end{table}
+
+
 
 如下系统架构图适合在论文中绘制为 PNG 或 SVG，用于说明 ROS/Gazebo
 联合仿真的模块层级关系。其图元关系与 Gazebo ROS
@@ -87,26 +83,16 @@ URDF
 结构定义。表中``用途''与``建议参数''基于本项目双桥转向、小尺度机场地面车辆仿真的工程需求给出；若项目后续补充了
 CAD/BOM 或实测参数，应以实测量替换，具体见表~\ref{tab:urdf_structure}。
 
-\begin{longtable}[]{@{}
-  >{\raggedright\arraybackslash}p{(\columnwidth - 6\tabcolsep) * \real{0.2552}}
-  >{\raggedright\arraybackslash}p{(\columnwidth - 6\tabcolsep) * \real{0.2294}}
-  >{\raggedright\arraybackslash}p{(\columnwidth - 6\tabcolsep) * \real{0.1982}}
-  >{\raggedright\arraybackslash}p{(\columnwidth - 6\tabcolsep) * \real{0.3172}}@{}}
-\caption{车辆主要URDF结构定义}\label{tab:urdf_structure}\\
-\toprule\noalign{}
-\begin{minipage}[b]{\linewidth}\raggedright
-组件
-\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedright
-类型
-\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedright
-命名
-\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedright
-说明
-\end{minipage} \\
-\midrule\noalign{}
-\endhead
-\bottomrule\noalign{}
-\endlastfoot
+\begin{table}[H]
+\centering
+\caption{车辆主要URDF结构定义}
+\label{tab:urdf_structure}
+\footnotesize
+\renewcommand{\arraystretch}{1.18}
+\begin{tabularx}{\textwidth}{p{0.20\textwidth}p{0.18\textwidth}p{0.22\textwidth}X}
+\toprule
+组件 & 类型 & 命名 & 说明 \\
+\midrule
 车体根坐标 & link & base\_link & 仅作平面参考，不带惯量 \\
 主车体 & link & base\_link & 车体惯量、碰撞主体 \\
 前桥 & link & front\_steer\_link & 前转向桥中间体 \\
@@ -116,7 +102,11 @@ CAD/BOM 或实测参数，应以实测量替换，具体见表~\ref{tab:urdf_str
 相机 & fixed & front\_camera\_joint & 识别飞机辅助码主相机 \\
 深度相机 & fixed & depth\_camera\_joint & 近距深度感知 \\
 激光雷达 & fixed & lidar\_joint & 前向近距安全监测 \\
-\end{longtable}
+\bottomrule
+\end{tabularx}
+\end{table}
+
+
 
 在此示例部分关节定义如下：
 
