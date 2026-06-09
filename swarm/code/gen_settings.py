@@ -2,7 +2,7 @@
 gen_settings.py
 
 根据无人机数量自动生成 AirSim settings.json
-主要是坐标计算麻烦，手写容易出错，所以写了这个脚本
+
 
 用法:
     python scripts/gen_settings.py --num 10 --output settings.json
