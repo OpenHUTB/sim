@@ -549,7 +549,10 @@
     breaklinks         = true,
     plainpages         = false,
     pdfdisplaydoctitle = true,
-    hidelinks,
+    colorlinks=true,
+    linkcolor=blue,
+    citecolor=blue,
+    urlcolor=blue,
   }
   \newcounter{hutb@bookmark}
   \renewcommand\hutb@pdfbookmark[2]{%
