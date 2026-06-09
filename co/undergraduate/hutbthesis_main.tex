@@ -6,19 +6,68 @@
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 \documentclass[AutoFakeBold]{hutbthesis}
+\usepackage{tocloft}
+
+% 目录中二级标题，也就是 1.1、1.2 这种 section，加粗
+\renewcommand{\cftsecfont}{\bfseries}
+\renewcommand{\cftsecpagefont}{\bfseries}
 \usepackage{calc}
+% 只在正文第一章标题前显示论文题目
+\makeatletter
+\let\old@makechapterhead\@makechapterhead
+\def\@makechapterhead#1{%
+	\ifnum\value{chapter}=1
+	\begin{center}
+		{\heiti\zihao{3} 基于高保真模拟器的车辆与飞行器协同控制}
+	\end{center}
+	\vspace{1em}
+	\fi
+	\old@makechapterhead{#1}%
+}
+\makeatother
 \usepackage{enumitem}
 \usepackage{listings}
+\usepackage{xeCJKfntef}
+\usepackage{float}
+\usepackage{tabularx}
+\usepackage{array}
+\usepackage{booktabs}
+\usepackage{amsmath}
 \lstset{
-    basicstyle=\ttfamily\small,
+    basicstyle=\zihao{-5}\ttfamily,
     breaklines=true,
     columns=fullflexible,
+    keepspaces=true,
     frame=single,
     xleftmargin=2em,
-    xrightmargin=2em
+    xrightmargin=2em,
+    backgroundcolor=\color[RGB]{245,245,244},
+    keywordstyle=\color[RGB]{40,40,255},
+    commentstyle=\itshape\color[RGB]{0,96,96},
+    stringstyle=\color[RGB]{128,0,0},
+    showstringspaces=false
 }
 
 % 少数字体不包含个别生僻字时使用的兼容宏；Windows 下若有宋体则不影响显示。
+
+
+% 字体恢复：严格贴近 Word 原文（中文宋体/黑体，英文 Times New Roman）。
+\IfFontExistsTF{Times New Roman}{\setmainfont{Times New Roman}}{}
+\IfFontExistsTF{SimSun}{%
+  \setCJKmainfont{SimSun}[AutoFakeBold]
+  \setCJKsansfont{SimHei}[AutoFakeBold]
+  \setCJKfamilyfont{song}{SimSun}[AutoFakeBold]
+  \setCJKfamilyfont{hei}{SimHei}[AutoFakeBold]
+}{%
+  \IfFontExistsTF{Noto Serif CJK SC}{%
+    \setCJKmainfont{Noto Serif CJK SC}[BoldFont=Noto Serif CJK SC Bold]
+    \setCJKsansfont{Noto Sans CJK SC}[BoldFont=Noto Sans CJK SC Bold]
+  }{}%
+}
+% \cite{} 以上标形式显示，同时保留 hyperref 跳转。
+\makeatletter
+\renewcommand{\@cite}[2]{\textsuperscript{[#1]}}
+\makeatother
 
 \newcommand{\CJKfallbackchar}[1]{\IfFontExistsTF{Noto Serif CJK SC}{{\CJKfontspec{Noto Serif CJK SC}#1}}{#1}}
 
@@ -46,14 +95,14 @@
 
 % 前置部分：封面、承诺书、中英文摘要不显示页码；
 % 只从“目录”开始使用罗马数字页码。
-\cleardoublepage
+\clearpage
 \pagestyle{empty}
 \pagenumbering{gobble}
 
 %\include{content/info}
 
 \include{content/declarationzh}
-
+\include{content/authorization}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % 中文摘要
 %
@@ -76,19 +125,42 @@
 % 满足学校的样式要求
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % 目录部分：单独使用罗马数字页码，从 I 开始。
-\cleardoublepage
+\clearpage
 \frontmatter
 \setcounter{page}{1}
+
+\cleardoublepage
+\phantomsection
+\pdfbookmark[0]{目录}{toc}
+
+\begin{center}
+	{\heiti\zihao{3} 目\quad 录}
+\end{center}
+
+\vspace{1em}
+
+\makeatletter
+\@starttoc{toc}
+\makeatother
+%\frontmatter
+%\setcounter{page}{1}
 % 只在目录中显示到二级标题，避免目录过长
-\setcounter{tocdepth}{1}
-\tableofcontents
+%\setcounter{tocdepth}{1}
+%\tableofcontents
 
 
 % 启用数字编号，改为第 x 页  共 x 页格式
 % 正文从第 1 页开始使用阿拉伯数字页码。
-\cleardoublepage
+\clearpage
 \mainmatter
 
+% 正文页眉文字
+\fancyhead[C]{\songti\zihao{-5} 湖南工商大学毕业设计}
+\fancypagestyle{plain}{%
+	\fancyhf{}
+	\fancyhead[C]{\songti\zihao{-5} 湖南工商大学毕业设计}
+	\fancyfoot[C]{\zihao{-5}\songti 第\thepage 页，共\pageref{LastPage}页}
+}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % 正文
 %
