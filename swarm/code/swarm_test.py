@@ -2,7 +2,7 @@
 swarm_test.py
 
 多无人机集群控制 + 性能数据采集
-2024/10
+
 
 用法:
     python swarm_test.py --num_drones 10 --model M1 --duration 30
