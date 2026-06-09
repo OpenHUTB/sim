@@ -47,7 +47,7 @@
 \subsection{视觉识别模块}
 
 视觉识别模块安装于牵引车前部，主要面向飞机前起落架区域进行图像采集。其核心任务包括：
-\begin{enumerate}[label=（\arabic*）,leftmargin=2em]
+\begin{enumerate}[label=（\arabic*）,leftmargin=4em]
 \item 检测比对目标识别码；
 \item 提取目标区域方向特征；
 \item 输出目标身份确认结果。
@@ -60,7 +60,7 @@
 近距测量模块用于补充视觉感知在近距离工况下的局部测量能力。由于牵引车在最终对接阶段距离飞机前起落架较近，此时即使视觉系统能够识别目标，也可能受到视角遮挡、自动对焦的影响。因此，有必要引入激光雷达、超声或等效测距模块，对前方局部区域的距离边界进行测量，以作为视觉估计的校核或补充\cite{ref18}。
 
 该模块的主要作用包括：
-\begin{enumerate}[label=（\arabic*）,leftmargin=2em]
+\begin{enumerate}[label=（\arabic*）,leftmargin=4em]
 \item 判断牵引车前端与飞机局部结构之间的最近距离；
 \item 检测非目标障碍物是否进入安全边界；
 \item 在最终接近阶段为停车判定提供阈值依据。
@@ -105,7 +105,6 @@ C_{I} \geq C_{\min}
 \mathbf{e}_{p}=\begin{bmatrix}e_x\\e_y\end{bmatrix}.
 \label{eq:position_error}
 \end{equation}
-
 其中，\(e_{x}\) 表示沿牵引车纵向方向的距离误差，\(e_{y}\)
 表示沿牵引车横向方向的偏移误差。若从控制意义出发，\(e_{x}\)
 主要决定前进或减速行为，\(e_{y}\) 主要决定转向修正行为。
@@ -118,7 +117,6 @@ C_{I} \geq C_{\min}
 e_{\theta} = \theta_{a} - \theta_{v}
 \label{eq:17}
 \end{equation}
-
 该式表示牵引车当前朝向与目标对接方向之间的夹角偏差。其物理意义在于：即使车辆已经接近目标中心区域，如果
 \(e_{\theta}\)仍较大，则机械对接过程仍可能失败。因此，在最终对接阶段，姿态误差控制通常与横向误差控制具有同等重要性。
 
@@ -128,7 +126,6 @@ e_{\theta} = \theta_{a} - \theta_{v}
 \mathbf{z}=\begin{bmatrix}e_x & e_y & e_\theta\end{bmatrix}^{T}.
 \label{eq:perception_output}
 \end{equation}
-
 该状态向量构成本章感知环节向控制环节输出的核心接口。换言之，感知层的任务不是直接控制车辆，而是持续向控制层提供``还差多远、偏了多少、方向还差多少''的量化描述。
 
 \section{近距离态势感知与安全判定}
@@ -159,13 +156,12 @@ e_{x} \leq d_{t}
 \end{cases}
 \label{eq:docking_condition}
 \end{equation}
-
 这组三重约束共同定义了自动对接的局部成功条件。只有当纵向距离足够接近、横向偏差足够小且方向偏差足够小时，系统才可判定当前已具备机械对接条件。由此可见，近距态势感知并非孤立地``测个距离''，而是要将距离信息、位置误差和姿态误差统一纳入同一判定框架中。
 
 \section{感知流程设计}
 
 结合上述模型，本文将飞机辅助感知系统的工作流程划分为以下步骤：
-\begin{enumerate}[label=（\arabic*）,leftmargin=2em]
+\begin{enumerate}[label=（\arabic*）,leftmargin=4em]
 \item 牵引车进入任务区域后，启动视觉识别模块，对前方目标进行搜索；
 \item 检测到飞机辅助感知识别码后，解析目标身份信息，并与任务目标编号进行匹配；
 \item 若身份匹配成功，则提取目标中心点和方向参考特征，计算相对位置误差与姿态误差；
@@ -194,7 +190,6 @@ e_{x} \leq d_{t}
 \mathbf{x}=\begin{bmatrix}x & y & \theta & v\end{bmatrix}^{T}.
 \label{eq:control_state}
 \end{equation}
-
 其中，\(x\) 与 \(y\)表示牵引车参考点在全局坐标系中的位置坐标，\(\theta\)
 表示车辆航向角，\(v\) 表示车辆纵向线速度。
 
@@ -204,14 +199,12 @@ e_{x} \leq d_{t}
 \mathbf{u}=\begin{bmatrix}v & \delta_f & \delta_r\end{bmatrix}^{T}.
 \label{eq:control_input_velocity}
 \end{equation}
-
 或扩展为
 
 \begin{equation}
 \mathbf{u}=\begin{bmatrix}a & \delta_f & \delta_r\end{bmatrix}^{T}.
 \label{eq:control_input_acceleration}
 \end{equation}
-
 其中，\(\delta_{f}\) 与 \(\delta_{r}\)分别为前桥和后桥转角，\(a\)
 为车辆纵向加速度。前一种形式适用于直接速度控制实现，后一种形式更适合做速度平滑约束或模型预测控制扩展。
 
@@ -233,7 +226,7 @@ e_{x} & e_{y} & e_{\theta}
 \subsection{对接过程分阶段描述}
 
 为了使控制方法与真实作业过程保持一致，本文将牵引车自动对接过程划分为以下五个阶段。
-\begin{enumerate}[label=（\arabic*）,leftmargin=2em]
+\begin{enumerate}[label=（\arabic*）,leftmargin=4em]
 \item \textbf{搜索与等待阶段}。牵引车进入任务区域后，首先由视觉模块搜索飞机前起落架区域的特殊识别码，并与任务编号进行匹配。若当前识别结果与任务目标不一致，或者识别置信度低于阈值，则系统保持等待状态，不进入自动接近控制。此时输出为零速度、零转角保持命令，以防止误接近。
 \item \textbf{自动接近阶段}。当目标身份确认有效后，系统开始进入自动接近阶段。该阶段的主要目标是让牵引车从较远初始位置稳定接近飞机前起落架前方的预对接区域。此时控制重点不在于最终精确对位，而在于快速减小纵向距离，同时保持可接受的横向误差和姿态误差。
 \item \textbf{姿态对准阶段}。当牵引车与目标之间的纵向距离降低到一定阈值后，系统切换到姿态对准阶段。该阶段中，车辆不再追求较高接近速度，而是优先减小横向误差\(e_y\)和姿态误差\(e_\theta\)，使牵引车中心线逐步与飞机前起落架对接方向重合。
@@ -277,7 +270,6 @@ e_\theta=\theta_r-\theta.
 \end{cases}
 \label{eq:body_error_transform}
 \end{equation}
-
 该式的作用是把全局误差转化为车体系误差，使纵向和横向误差具有明确物理意义。其中，\(e_{x}\)
 表示车辆前方还剩多少距离，\(e_{y}\) 表示车辆当前偏离对接轴线的程度。
 
@@ -294,7 +286,7 @@ e_\theta=\theta_r-\theta.
 
 上述误差方程表明：
 
-\begin{enumerate}
+\begin{enumerate}[label=（\arabic*）,leftmargin=4em]
 \def\labelenumi{\arabic{enumi}.}
 \item
   纵向误差 \(e_{x}\)的变化不仅与前进速度
@@ -327,7 +319,6 @@ e_\theta=\theta_r-\theta.
 \begin{bmatrix}\cos\theta_a\\\sin\theta_a\end{bmatrix}.
 \label{eq:pre_docking_point}
 \end{equation}
-
 \(d_{pre}\)
 为预留接近距离。该点位于最终目标点前方一定距离处，主要用于完成姿态调整。最终对接点定义为
 
@@ -336,7 +327,6 @@ e_\theta=\theta_r-\theta.
 \begin{bmatrix}\cos\theta_a\\\sin\theta_a\end{bmatrix}.
 \label{eq:docking_point}
 \end{equation}
-
 \(d_{hook}\)
 为机械连接前的停车距离。该点用于微动对接阶段的最终停靠。如果牵引车从较远位置直接朝最终对接点收敛，往往会导致中后段横向修正不足或姿态调节过猛；引入预对接点后，车辆可以先对准姿态，再进行最后的缓慢接近\cite{ref20,ref21,ref26,ref27,ref28}。
 
@@ -351,7 +341,6 @@ e_\theta=\theta_r-\theta.
 v_{r}=\min\left(v_{stage},\sqrt{\frac{a_{y,\max}}{|\kappa_r|+\varepsilon_\kappa}},k_d[d_{\min}-d_s]_+\right).
 \label{eq:speed_schedule}
 \end{equation}
-
 其中：\(v_{stage}\)为当前控制模式允许的最大速度；
 \(a_{y,\max}\)为允许的最大横向加速度； \(\kappa_{r}\)为参考轨迹曲率；
 \(d_{\min}\)为前方最近障碍距离； \(d_{s}\)为安全距离阈值；
@@ -368,7 +357,6 @@ v_d=\operatorname{sat}_{[0,v_{\max}]}
 \left(v_r\cos e_\theta+k_xe_x\right).
 \label{eq:longitudinal_control}
 \end{equation}
-
 其中，\(k_{x}\) 为纵向误差增益，\(sat\) 表示饱和函数。
 
 该控制律由两部分组成：\(v_{r}\cos e_{\theta}\)：表示当车辆姿态误差较大时，自动减小前进速度，防止车辆在未对准状态下强行推进；
@@ -385,7 +373,6 @@ v_d=\operatorname{sat}_{[0,v_{\max}]}
 \left[\omega_r+v_r\left(k_ye_y+k_\theta\sin e_\theta\right)\right].
 \label{eq:angular_control}
 \end{equation}
-
 其中，\(k_{y}\) 和
 \(k_{\theta}\)分别为横向误差增益和姿态误差增益。该控制律的物理意义如下\cite{ref17,ref26,ref27,ref28}：
 
@@ -402,7 +389,7 @@ v_d=\operatorname{sat}_{[0,v_{\max}]}
 \subsection{对接过程中的控制行为分析}
 
 结合车辆对接全过程，上述控制律在不同阶段表现如下：
-\begin{enumerate}[label=（\arabic*）,leftmargin=2em]
+\begin{enumerate}[label=（\arabic*）,leftmargin=4em]
 \item \textbf{自动接近阶段}：此时 \(e_{x}\)较大，速度项 \(k_{x}e_{x}\)占主导，车辆以较快速度向预对接点推进。
 \item \textbf{姿态对准阶段}：随着 \(e_{x}\)逐步减小，横向误差 \(e_{y}\)和姿态误差 \(e_{\theta}\)开始主导控制器输出，角速度命令增大，车辆重点完成方向修正。
 \item \textbf{微动对接阶段}：此时 \(v_{r}\)已被速度调度压低，车辆角速度输出较平缓，控制器主要进行细小偏差修正，避免出现末端振荡。
@@ -420,7 +407,6 @@ v_d=\operatorname{sat}_{[0,v_{\max}]}
 \kappa_{d} = \frac{\omega_{d}}{\max(v_{d},\varepsilon_{v})}
 \label{eq:31}
 \end{equation}
-
 其中, \(\varepsilon_{v}\)为防止低速时分母趋近于零的安全常数。
 
 \subsection{双桥反向转向模式}
@@ -434,7 +420,6 @@ v_d=\operatorname{sat}_{[0,v_{\max}]}
 \end{cases}
 \label{eq:opposite_mapping}
 \end{equation}
-
 该模式可以显著减小等效转弯半径，适合从较远位置快速接近飞机前起落架区域。
 
 \subsection{前桥单转向模式}
@@ -448,7 +433,6 @@ v_d=\operatorname{sat}_{[0,v_{\max}]}
 \end{cases}
 \label{eq:front_mapping}
 \end{equation}
-
 该模式虽然机动性不如双桥反向转向，但执行器协调更简单，转向响应更平顺，适合最终精调。
 
 \subsection{速度与转角限幅}
@@ -463,7 +447,6 @@ v_d=\operatorname{sat}_{[0,v_{\max}]}
 \end{cases}
 \label{eq:command_limits}
 \end{equation}
-
 同时对速度变化率和转角变化率限制为
 
 \begin{equation}
@@ -473,7 +456,6 @@ v_d=\operatorname{sat}_{[0,v_{\max}]}
 \end{cases}
 \label{eq:rate_limits}
 \end{equation}
-
 这样可以避免由于离散控制导致的命令突变，从而减小Gazebo中常见的抖振与过冲现象。
 
 \section{终端停车判定与模式切换}
@@ -491,8 +473,7 @@ d_{\min}\geq d_s.
 \end{cases}
 \label{eq:terminal_conditions}
 \end{equation}
-
-将其定义为终端停车集合
+并将其定义为终端停车集合
 
 \begin{equation}
 \Omega_t=\left\{ |e_x|\leq d_t,\ |e_y|\leq e_{y,\max},\ |e_\theta|\leq e_{\theta,\max},\ d_{\min}\geq d_s \right\}.
@@ -504,16 +485,18 @@ d_{\min}\geq d_s.
 \subsection{模式切换规则}
 
 系统模式切换规则如下：
+\begin{enumerate}[label=（\arabic*）,leftmargin=6em]
 
-搜索-自动接近：识别码身份确认成功且置信度满足阈值；
+\item 搜索-自动接近：识别码身份确认成功且置信度满足阈值；
 
-自动接近-姿态对准：\(e_{x}\) 进入近距阈值；
+\item 自动接近-姿态对准：\(e_{x}\) 进入近距阈值；
 
-姿态对准-微动对接：\(e_{x}\) 足够小且 \(e_{\theta}\)已较小；
+\item 姿态对准-微动对接：\(e_{x}\) 足够小且 \(e_{\theta}\)已较小；
 
-任意模式-中止：目标丢失或最近距离低于中止阈值；
+\item 任意模式-中止：目标丢失或最近距离低于中止阈值；
 
-微动对接-停车保持：进入终端集合 \(\Omega_{t}\)。
+\item 微动对接-停车保持：进入终端集合 \(\Omega_{t}\)。
+\end{enumerate}
 
 这意味着控制系统并不是依赖一条连续控制律从头走到尾，而是通过``阶段切换 +
 连续控制''的混合方式实现更符合工程需求的动作组织。
