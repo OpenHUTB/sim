@@ -54,8 +54,19 @@ def _menu_evaluate():
 
 def _menu_compare():
     from experiments.compare import compare
-    p = input("对比对 (dqn/ppo): ").strip()
-    pair = ("DQN", "Attention-DQN") if p == "dqn" else ("PPO", "Smooth-PPO")
+    print("  对比对:")
+    print("    dqn   = DQN vs Attention-DQN")
+    print("    ppo   = PPO vs Smooth-PPO")
+    print("    cross1 = DQN vs PPO")
+    print("    cross2 = Attention-DQN vs Smooth-PPO")
+    p = input("对比对 (dqn/ppo/cross1/cross2): ").strip()
+    pair_map = {
+        "dqn": ("DQN", "Attention-DQN"),
+        "ppo": ("PPO", "Smooth-PPO"),
+        "cross1": ("DQN", "PPO"),
+        "cross2": ("Attention-DQN", "Smooth-PPO"),
+    }
+    pair = pair_map.get(p, pair_map["dqn"])
     sc = input("场景: ").strip()
     compare(pair, sc, {pair[0]: input("%s CSV: " % pair[0]).strip(),
                        pair[1]: input("%s CSV: " % pair[1]).strip()},
@@ -84,7 +95,7 @@ def _menu_export_xosc():
 
 
 def _menu_plot():
-    print("\n  [1]训练曲线 [2]对比图 [3]俯视图")
+    print("\n  [1]训练曲线 [2]对比图 [3]俯视图 [4]分类对比柱状图")
     c = input("选择: ").strip()
     if c == "1":
         from visualization import plot_reward_curve
@@ -103,6 +114,26 @@ def _menu_plot():
         from visualization import plot_scenario_topview
         try: plot_scenario_topview(sc, "results/plots/%s_topview.png" % sc.name)
         finally: sc.cleanup()
+    elif c == "4":
+        from visualization import plot_category_comparison, compute_category_scores
+        a1 = input("算法A名称 (如DQN): ").strip()
+        a2 = input("算法B名称 (如PPO): ").strip()
+        print("输入算法 %s 各场景评估JSON路径（空行结束）:" % a1)
+        paths_a = []
+        while True:
+            p = input("  %s JSON: " % a1).strip()
+            if not p: break
+            paths_a.append(p)
+        print("输入算法 %s 各场景评估JSON路径（空行结束）:" % a2)
+        paths_b = []
+        while True:
+            p = input("  %s JSON: " % a2).strip()
+            if not p: break
+            paths_b.append(p)
+        scores = compute_category_scores({a1: paths_a, a2: paths_b})
+        plot_category_comparison(scores, {a1: a1, a2: a2},
+                                 save_path="results/plots/category_comparison.png")
+        print("图表已保存: results/plots/category_comparison.png")
 
 
 def _menu_test():
@@ -124,7 +155,7 @@ if __name__ == "__main__":
     sp = p.add_subparsers(dest="cmd")
     pt = sp.add_parser("train"); pt.add_argument("--algo", required=True); pt.add_argument("--scenario", required=True); pt.add_argument("--episodes", type=int, default=500)
     pe = sp.add_parser("evaluate"); pe.add_argument("--algo", required=True); pe.add_argument("--scenario", required=True); pe.add_argument("--model", required=True); pe.add_argument("--episodes", type=int, default=10)
-    pc = sp.add_parser("compare"); pc.add_argument("--pair", required=True, choices=["dqn","ppo"]); pc.add_argument("--scenario", required=True)
+    pc = sp.add_parser("compare"); pc.add_argument("--pair", required=True, choices=["dqn","ppo","cross1","cross2"]); pc.add_argument("--scenario", required=True)
     px = sp.add_parser("export"); px.add_argument("--scenario", required=True); px.add_argument("--output", default="results/scenarios")
     pt2 = sp.add_parser("test"); pt2.add_argument("--suite", choices=["carla","scenario","agent","all"], default="all")
     args = p.parse_args()
@@ -135,7 +166,11 @@ if __name__ == "__main__":
                 "ppo":"experiments.run_ppo","smooth_ppo":"experiments.run_smooth_ppo"}
         importlib.import_module(mods[args.algo]).run(args.scenario, args.episodes)
     elif args.cmd == "evaluate": from experiments.evaluate import evaluate; evaluate(args.algo, args.scenario, args.model, args.episodes)
-    elif args.cmd == "compare": from experiments.compare import compare; pair = ("DQN","Attention-DQN") if args.pair=="dqn" else ("PPO","Smooth-PPO"); compare(pair, args.scenario, {}, {})
+    elif args.cmd == "compare":
+        from experiments.compare import compare
+        pair_map = {"dqn": ("DQN","Attention-DQN"), "ppo": ("PPO","Smooth-PPO"), "cross1": ("DQN","PPO"), "cross2": ("Attention-DQN","Smooth-PPO")}
+        pair = pair_map.get(args.pair, pair_map["dqn"])
+        compare(pair, args.scenario, {}, {})
     elif args.cmd == "export": s = create_scenario(args.scenario); s.setup(); print("导出: %s" % export_scenario(s, args.output)); s.cleanup()
     elif args.cmd == "test":
         if args.suite == "carla": from tests.test_carla_connection import run_all as t; t()
