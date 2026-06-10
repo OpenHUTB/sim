@@ -62,7 +62,6 @@ v & \delta_{f} & \delta_{r}
 \end{cases}
 \label{eq:planar_motion}
 \end{equation}
-
 式中，\(\omega\)
 为车辆偏航角速度。前两式给出了车辆质点速度在全局坐标系中的分解形式，第三式给出了车辆姿态随时间的演化规律。车辆轨迹由两个因素共同决定：一是沿当前朝向的平移速度
 \(v\)，二是决定航向变化速率的角速度 \(\omega\)。
@@ -92,7 +91,6 @@ v & \delta_{f} & \delta_{r}
 \end{cases}
 \label{eq:fourws_model}
 \end{equation}
-
 该模型是本课题后续路径规划、轨迹跟踪与对接控制设计的基础模型\cite{ref17,ref19,ref28}。
 
 \section{转弯半径与曲率模型}
@@ -104,14 +102,12 @@ v & \delta_{f} & \delta_{r}
 \omega = \frac{v}{R}
 \label{eq:3}
 \end{equation}
-
 结合上一节所得角速度表达式，可得双桥转向牵引车的等效转弯半径为
 
 \begin{equation}
 R = \frac{L}{\tan\delta_{f} - \tan\delta_{r}}
 \label{eq:4}
 \end{equation}
-
 若进一步定义轨迹曲率 \(\kappa\)为转弯半径的倒数，则有
 
 \begin{equation}
@@ -140,7 +136,6 @@ R = \frac{L}{\tan\delta_{f} - \tan\delta_{r}}
 \dot{\theta} = \frac{v}{L}\tan\delta_{f}
 \label{eq:6}
 \end{equation}
-
 此时车辆行为与传统前轮转向车辆基本一致，如图~\ref{fig:2-1} 所示。该模式实现简单、控制逻辑清晰，但在对接空间受限的场景下，其最小转弯半径较大，不利于快速完成姿态调整。
 
 \begin{figure}[htbp]
@@ -158,7 +153,6 @@ R = \frac{L}{\tan\delta_{f} - \tan\delta_{r}}
 \dot{\theta}=\frac{v}{L}\left[\tan\delta_{f}-\tan(-\delta_{f})\right]=\frac{2v}{L}\tan\delta_{f}.
 \label{eq:opposite_steering}
 \end{equation}
-
 此时车辆偏航角速度约为单桥转向工况的两倍，转弯半径显著减小，如图~\ref{fig:2-2} 所示，适用于牵引车在狭小机坪空间内快速调整姿态、靠近飞机前轮或完成局部避障。该模式是本课题中实现高机动性接近控制的重要运动模式。
 
 \begin{figure}[htbp]
@@ -195,7 +189,6 @@ R = \frac{L}{\tan\delta_{f} - \tan\delta_{r}}
 0 \leq v \leq v_{\max}
 \label{eq:velocity_limit}
 \end{equation}
-
 其中，\(v_{\max}\)
 为车辆允许的最大作业速度。该约束保证车辆在接近、对接和牵引过程中具有足够的可控性，同时减小碰撞风险。
 
@@ -210,7 +203,6 @@ R = \frac{L}{\tan\delta_{f} - \tan\delta_{r}}
 \end{cases}
 \label{eq:steering_limits}
 \end{equation}
-
 其中，\(\delta_{f,\max}\) 与
 \(\delta_{r,\max}\)分别为前桥与后桥最大允许转角。该约束直接限制车辆最大可实现曲率，也是最小转弯半径存在下界的原因。
 
@@ -222,7 +214,6 @@ R = \frac{L}{\tan\delta_{f} - \tan\delta_{r}}
 \kappa_{\max}=\frac{\tan\delta_{f,\max}-\tan(-\delta_{r,\max})}{L}.
 \label{eq:kappa_max}
 \end{equation}
-
 当车辆采用对称反向转向策略时，上式取到较大值。曲率约束在路径规划中具有重要作用，因为若规划轨迹的局部曲率超过车辆可实现上限，则该轨迹在物理上不可执行\cite{ref20,ref21,ref28}。
 
 \section{车辆动力学简化与驱动关系}
@@ -236,7 +227,6 @@ R = \frac{L}{\tan\delta_{f} - \tan\delta_{r}}
 F = m\dot{v}
 \label{eq:10}
 \end{equation}
-
 上述表达式的意义在于建立控制输入与速度变化之间的基本联系。式中，\(F\)
 不再作为独立控制量直接参与路径规划，而是通过车轮速度控制器间接实现。对本课题而言，该简化处理已经足以支撑Gazebo中的低速驱动仿真；若后续需要研究载荷变化、附着系数变化或高精度制动响应，再在此基础上扩展更高阶动力学模型即可。
 
@@ -270,7 +260,6 @@ a & \delta_{f} & \delta_{r}
 \end{cases}
 \label{eq:state_acceleration}
 \end{equation}
-
 后一形式更适合用于模型预测控制、轨迹平滑优化及速度规划问题，而前三维形式更适合用于基本路径跟踪与状态传播计算。考虑到本课题当前阶段主要完成仿真验证与控制策略设计，后续章节可根据算法需求在两种表达之间进行选取。
 
 \section{仿真实现中的参数映射关系}
@@ -293,7 +282,6 @@ a & \delta_{f} & \delta_{r}
 \omega_{fl}=\omega_{fr}=\omega_{rl}=\omega_{rr}=\frac{v}{r_w}.
 \label{eq:wheel_speed_all}
 \end{equation}
-
 其中，\(\omega_{fl},\omega_{fr},\omega_{rl},\omega_{rr}\)
 分别表示四个车轮的角速度。该关系建立了车辆运动学速度与Gazebo关节控制量之间的直接映射，是仿真中实现``给定线速度---车辆前进''行为的基础。
 
