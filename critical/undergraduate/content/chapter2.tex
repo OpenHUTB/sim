@@ -114,7 +114,8 @@ r_t(\theta) = \frac{\pi_\theta(a_t|s_t)}{\pi_{\theta_{\text{old}}}(a_t|s_t)}
   \centering
   \caption{DQN与PPO算法对比表}
   \label{tab:dqn_ppo_compare}
-  \begin{tabular}{ccc}
+  \small
+  \begin{tabular}{p{2.5cm}p{4.2cm}p{4.2cm}}
     \toprule
     对比维度 & DQN & PPO \\
     \midrule
@@ -238,24 +239,25 @@ r_t(\theta) = \frac{\pi_\theta(a_t|s_t)}{\pi_{\theta_{\text{old}}}(a_t|s_t)}
 
 \subsection{典型危险场景的确定}
 
-\begin{table}[htbp]
+\begin{table}[H]
   \centering
   \caption{10种典型极端驾驶场景列表}
   \label{tab:scene_list}
-  \begin{tabular}{ccccc}
+  \small
+  \begin{tabular}{p{1cm}p{2.5cm}p{1.8cm}p{4.5cm}p{3cm}}
     \toprule
     编号 & 场景名称 & 类别 & 关键参数 & 危险来源 \\
     \midrule
     1 & 大雨天气跟车 & 极端天气 & 降雨量80\%，能见度100m & 感知退化+制动距离增加 \\
     2 & 浓雾天气巡航 & 极端天气 & 能见度50m & 探测距离受限 \\
     3 & 夜间城市道路 & 极端天气 & 光照度0.5 lux & 低光照感知挑战 \\
-    4 & 前车紧急制动 & 车辆对抗 & 减速度$-6\mathrm{m/s^2}$，初始距离20m & 突发制动+反应时间 \\
-    5 & 旁车强行加塞 & 车辆对抗 & 切入角度$15^\circ$，切入时间2s & 突然变道+安全距离不足 \\
+    4 & 前车紧急制动 & 车辆对抗 & 减速度$-6\mathrm{m/s^2}$，初始距离20m & 突发制动 + 反应时间 \\
+    5 & 旁车强行加塞 & 车辆对抗 & 切入角度$15^\circ$，切入时间2s & 突然变道 + 安全距离不足 \\
     6 & 行人横穿马路 & 行人危险 & 横穿速度1.5m/s，初始距离30m & 行人的不确定性 \\
     7 & 鬼探头 & 行人危险 & 遮挡物后冲出，纵向距离10m & 感知盲区+极短反应时间 \\
     8 & 行人闯红灯 & 行人危险 & 主车绿灯，行人红灯横穿 & 违反预期+突发性 \\
-    9 & 夜间行人横穿 & 多因素耦合 & 光照0.5 lux+横穿速度1.5m/s & 低光照+行人不确定性 \\
-    10 & 雾天鬼探头 & 多因素耦合 & 能见度50m+遮挡物后冲出 & 探测受限+感知盲区 \\
+    9 & 夜间行人横穿 & 多因素耦合 & 光照0.5 lux + 横穿速度1.5m/s & 低光照 + 行人不确定性 \\
+    10 & 雾天鬼探头 & 多因素耦合 & 能见度50m + 遮挡物后冲出 & 探测受限 + 感知盲区 \\
     \bottomrule
   \end{tabular}
 \end{table}
