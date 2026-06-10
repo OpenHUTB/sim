@@ -619,13 +619,15 @@
 \patchcmd{\chapter}{\thispagestyle}{\@gobble}{}{}
 % 内芯页眉设置
 \ifhutb@type@print
-\fancyhead[L]{\includegraphics[scale=0.10]{hutb_logo_maoti.png}}
+%\fancyhead[L]{\includegraphics[scale=0.10]{hutb_logo_maoti.png}}
 \else
-\fancyhead[L]{\includegraphics[scale=0.10]{hutb_logo_maoti.png}}
+%\fancyhead[L]{\includegraphics[scale=0.10]{hutb_logo_maoti.png}}
 \fi
 % \fancyhf[RH]{\heiti \zihao{-5} {图像与激光融合的轨道扣件脱落检测}} % 设置所有（奇数和偶数）右侧页眉
 % UPDATE 更新配置为论文标题
-\fancyhf[RH]{\heiti \zihao{-5} {\@titlecn}}
+% 清空页眉，具体设置规则参考：https://www.overleaf.com/learn/latex/Headers_and_footers
+\fancyhf{}
+\fancyhf[CH]{\heiti \zihao{-5} 湖南工商大学毕业论文}
 % frontmatter设置
 \renewcommand{\frontmatter}{
 	\cleardoublepage
@@ -792,7 +794,7 @@
 		\vspace{40pt}
 		% \vfill
 		\begingroup
-		{\zihao{2} \heiti 人工智能与先进计算学院 \par}
+		{\zihao{2} \heiti \@department \par}
 		\vspace{10pt}
 		{\zihao{-2} \heiti \@thesisdate \par}
 		\endgroup
@@ -1108,7 +1110,7 @@ chapter = {%
 	% afterskip    = {\ifhutb@type@graduate 30pt\else 20pt\fi},
 },
 section = {%
-	format       = \zihao{-4} \heiti,
+	format       = \zihao{-4} \bfseries \songti,
 	afterindent  = true,
 	% beforeskip 默认为 3.5ex plus 1ex minus .2ex 适当缩减
 	% beforeskip   = {20pt},
@@ -1117,7 +1119,7 @@ section = {%
 	afterskip    = {1ex \@plus .2ex},
 },
 subsection = {%
-	format       = \zihao{-4} \bfseries \songti,
+	format       = \zihao{-4} \songti,
 	afterindent  = true,
 	% afterskip 默认为 2.3ex plus .2ex 适当缩减
 	afterskip    = {1ex \@plus .2ex},

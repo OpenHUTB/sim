@@ -215,3 +215,56 @@ class MovingAverage:
         if len(self.window) < 2:
             return 0.0
         return np.std(self.window)
+
+
+# ================================================================
+# 综合危险分数（用于算法跨类别对比柱状图）
+# ================================================================
+
+def composite_danger_score(eval_summary):
+    """
+    从评估汇总数据计算综合危险分数（0-100）。
+
+    公式: 0.40 × TTC评分 + 0.30 × 碰撞评分 + 0.20 × 熵评分 + 0.10 × 效率评分
+
+    eval_summary: 来自 EpisodeStats.summary() 或 aggregate_episodes()
+    """
+    # TTC 评分：TTC 越大越安全（TTC > 10s = 满分, TTC < 1s = 0 分）
+    mean_ttc = eval_summary.get("mean_min_ttc", 0)
+    ttc_score = min(100, max(0, (mean_ttc - 1.0) / 9.0 * 100))
+
+    # 碰撞评分：无碰撞 = 满分
+    collision_rate = eval_summary.get("collision_rate", 0)
+    collision_score = (1.0 - collision_rate) * 100
+
+    # 熵评分：行为稳定性（危险等级越低越稳定）
+    mean_danger = eval_summary.get("mean_max_danger_level", 3)
+    entropy_score = (1.0 - mean_danger / 3.0) * 100
+
+    # 效率评分：安全完成率
+    success_rate = eval_summary.get("success_rate", 0)
+    efficiency_score = success_rate * 100
+
+    return 0.40 * ttc_score + 0.30 * collision_score + 0.20 * entropy_score + 0.10 * efficiency_score
+
+
+# 场景类别映射
+SCENARIO_CATEGORIES = {
+    "rain_storm": "extreme_weather",
+    "heavy_fog": "extreme_weather",
+    "tunnel_night": "extreme_weather",
+    "emergency_brake": "vehicle_adversarial",
+    "cut_in": "vehicle_adversarial",
+    "pedestrian_cross": "pedestrian_danger",
+    "ghost_peek": "pedestrian_danger",
+    "jaywalking": "pedestrian_danger",
+    "night_pedestrian": "multi_factor_coupled",
+    "fog_ghost": "multi_factor_coupled",
+}
+
+CATEGORY_LABELS_CN = {
+    "multi_factor_coupled": "多因素耦合类",
+    "pedestrian_danger": "行人危险类",
+    "vehicle_adversarial": "车辆对抗类",
+    "extreme_weather": "极端天气类",
+}

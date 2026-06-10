@@ -229,6 +229,21 @@ def _plot_comparison(train_data, eval_data, algo_pair, scenario_name, output_dir
     """生成对比图表（需 matplotlib）"""
     import matplotlib
     matplotlib.use("Agg")
+    from matplotlib import font_manager
+    # 直接指定字体文件路径，绕过缓存
+    font_paths = [
+        "C:/Windows/Fonts/simhei.ttf",
+        "C:/Windows/Fonts/msyh.ttc",
+        "C:/Windows/Fonts/simsun.ttc",
+    ]
+    for fp in font_paths:
+        try:
+            font_manager.fontManager.addfont(fp)
+        except Exception:
+            pass
+    matplotlib.rcParams["font.family"] = "sans-serif"
+    matplotlib.rcParams["font.sans-serif"] = ["SimHei", "Microsoft YaHei", "SimSun", "DejaVu Sans"]
+    matplotlib.rcParams["axes.unicode_minus"] = False
     import matplotlib.pyplot as plt
 
     fig, axes = plt.subplots(1, 2, figsize=(14, 5))
@@ -286,6 +301,13 @@ def _plot_comparison(train_data, eval_data, algo_pair, scenario_name, output_dir
     print("图表已保存至: %s" % plot_path)
 
 
+def _find_latest(pattern):
+    """在模式中包含通配符时查找最新文件"""
+    import glob
+    matches = sorted(glob.glob(pattern))
+    return matches[-1] if matches else pattern
+
+
 # ================================================================
 # 入口
 # ================================================================
@@ -331,10 +353,3 @@ if __name__ == "__main__":
     }
 
     compare(algo_pair, args.scenario, log_paths, eval_paths, args.output_dir)
-
-
-def _find_latest(pattern):
-    """在模式中包含通配符时查找最新文件"""
-    import glob
-    matches = sorted(glob.glob(pattern))
-    return matches[-1] if matches else pattern
