@@ -51,6 +51,7 @@ CARLA平台包含丰富的虚拟传感器类型，如RGB摄像头、深度传感
 强化学习目标就是寻求最优策略$\pi^*$，使从某个初始状态出发所获得的总折现奖励期望最大，即：
 \begin{equation}
 \pi^* = \arg\max_{\pi} \mathbb{E}_{\pi}\left[ \sum_{t=0}^{\infty} \gamma^t R(s_t, a_t) \right]
+\label{eq:rl_objective}
 \end{equation}
 
 \subsection{DQN算法原理}
@@ -59,6 +60,7 @@ CARLA平台包含丰富的虚拟传感器类型，如RGB摄像头、深度传感
 深度强化学习(DQN)的基本思路为用一个较深的神经网络拟合状态动作价值函数($Q(s,a)$)，这个值表示在给定状态下采取某个动作后能得到的平均未来奖励，而它的最终目的是让经验数据学习尽可能接近贝尔曼最优方程给出的目标。
 \begin{equation}
 Q^{*}(s,a) = R(s,a) + \gamma \sum_{s'} P(s'|s,a) \max_{a'} Q^{*}(s',a')
+\label{eq:bellman_optimal}
 \end{equation}
 
 DQN在传统Q学习的基础上引入了两项关键改进：
@@ -68,26 +70,27 @@ DQN在传统Q学习的基础上引入了两项关键改进：
 （2）目标网络(Target Network)：为了使策略学习和价值估计分开，在DQN的基础上增加了一个双网络的方法。其中主网络用于进行每次动作的选择，而目标网络只用来求出目标Q值并且保持其参数基本不变，在每隔一段时间之后，目标网络就会用来自主网络的权值更新自身的权值从而提高整个算法的鲁棒性和收敛速度，它的损失函数可以用如下的方式来表示：
 \begin{equation}
 L(\theta) = \mathbb{E}_{(s,a,r,s') \sim D} \left[ \left( r + \gamma \max_{a'} Q(s',a';\theta^-) - Q(s,a;\theta) \right)^2 \right]
+\label{eq:dqn_loss}
 \end{equation}
-
 其中$\theta$是主网络的参数，$\theta^-$是目标网络的参数。
 
 由于DQN算法对于离散的动作空间具有良好的适用性，在该应用场景下，可以将目标车辆可进行的操作对应到一定数量离散的状态集（例如加速、减速、变道等），利用DQN来学习各个状态下最优的动作。
 \subsection{PPO算法原理}
 一种基于OpenAI于2017年提出的一种新的策略梯度优化方法——近端策略优化（Proximal Policy Optimization, PPO），它打破了传统的强化学习的思想是以价值函数为中心的思想。不同于以往使用价值函数来进行间接选择的方法，PPO是直接对策略网络$\pi(a|s)$进行优化得到每一个状态下的各个动作的概率大小。这使得PPO具有更好的效果以及更广泛的应用场景。
 
-Proximal Policy Optimization (PPO) 的主要思想是在策略更新时找到一个在每一轮都可使算法得到改进同时又不至于因为调整过大而导致不稳定的方法，在此基础之上提出了梯度裁剪的方法来限制每个训练步骤中对策略参数的改变量，进而避免由于改变过多带来的问题。
+PPO的主要思想是在策略更新时找到一个在每一轮都可使算法得到改进同时又不至于因为调整过大而导致不稳定的方法，在此基础之上提出了梯度裁剪的方法来限制每个训练步骤中对策略参数的改变量，进而避免由于改变过多带来的问题。
 
 PPO的目标函数为：
 \begin{equation}
 L^{\text{CLIP}}(\theta) = \mathbb{E}_t\left[ \min\left( r_t(\theta)\hat{A}_t, \text{clip}(r_t(\theta), 1-\epsilon, 1+\epsilon)\hat{A}_t \right) \right]
+\label{eq:ppo_clip_objective}
 \end{equation}
-
 其中：
 
 （1）PPO在训练时使用了一个概率比来表示新旧策略变化大小。
 \begin{equation}
 r_t(\theta) = \frac{\pi_\theta(a_t|s_t)}{\pi_{\theta_{\text{old}}}(a_t|s_t)}
+\label{eq:ppo_ratio}
 \end{equation}
 
 （2）$A_t$是优势函数的估计值，在状态$s_t$下执行动作$a_t$相比于平均值的优势。
@@ -109,7 +112,7 @@ r_t(\theta) = \frac{\pi_\theta(a_t|s_t)}{\pi_{\theta_{\text{old}}}(a_t|s_t)}
 
 （3）训练更加稳定，不易出现Q值过估计或发散问题。
 
-本文基于Proximal Policy Optimization (PPO) 算法，提出更加复杂以及具有较高难度极限驾驶任务的同时也对这两种经典方法进行比较研究。为了更好地突出两者区别，本文从不同方面对其进行对比，包括它们的基本原理、学习速度以及鲁棒性等（如表~\ref{tab:dqn_ppo_compare}所示）\cite{zhang2025deep}。
+本文基于PPO算法，提出更加复杂以及具有较高难度极限驾驶任务的同时也对这两种经典方法进行比较研究。为了更好地突出两者区别，本文从不同方面对其进行对比，包括它们的基本原理、学习速度以及鲁棒性等（如表~\ref{tab:dqn_ppo_compare}所示）\cite{zhang2025deep}。
 \begin{table}[htbp]
   \centering
   \caption{DQN与PPO算法对比表}
