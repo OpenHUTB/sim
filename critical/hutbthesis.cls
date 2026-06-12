@@ -591,7 +591,7 @@
 \newcommand*{\interestmajor}[1]{\gdef\@interestmajor{#1}}               % 研究方向，关键词组
 \newcommand*{\department}[1]{\gdef\@department{#1}}                     % 二级培养单位
 \newcommand*{\supervisor}[1]{\gdef\@supervisor{#1}}                     % 导师
-\newcommand*{\supervisortitle}[1]{\gdef\@supervisortitle{#1}}               % 导师职称
+\newcommand*{\supervisortitle}[1]{\gdef\@supervisortitle{#1}}           % 导师职称
 \newcommand*{\myclass}[1]{\gdef\@myclass{#1}}                           % 班级
 \newcommand*{\subsupervisor}[1]{\gdef\@subsupervisor{#1}}               % 副导师
 \newcommand*{\studentid}[1]{\gdef\@studentid{#1}}                       % 学号
@@ -787,7 +787,7 @@
 			\hspace{12pt} \makebox[4em][s]{\textbf{专\qquad 业：}} & \underline{\makebox[250pt][c]{\kaishu \@priormajor}}  \\
 			\hspace{12pt} \makebox[4em][s]{\textbf{班\qquad 级：}} & \underline{\makebox[250pt][c]{\kaishu \@myclass}}  \\
 			\hspace{12pt} \makebox[4em][s]{\textbf{指导老师：}} &  \underline{\makebox[250pt][c]{\kaishu \@supervisor}}  \\
-			\hspace{12pt} \makebox[4em][s]{\textbf{职\qquad 称：}} & \underline{\makebox[250pt][c]{\kaishu \@supervisortitle}}  \\
+			\hspace{12pt} \makebox[4em][s]{\textbf{职\qquad 称：}} & \underline{\makebox[250pt][c]{\kaishu \@supervisortitle}}    \\
 			%\hspace{12pt} \makebox[4em][s]{学\qquad 院：} & \underline{\makebox[220pt][c]{\kaishu \@department}}  \\
 			
 		\end{tabular}
