@@ -1,0 +1,8 @@
+%!TEX root = ../hutbthesis_main.tex
+
+\begingroup
+\small
+\sloppy
+\setlength{\emergencystretch}{3em}
+\printbibliography[heading=bibintoc,title={参考文献}]
+\endgroup
