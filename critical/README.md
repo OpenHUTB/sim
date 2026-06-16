@@ -43,7 +43,7 @@
 
 ```bash
 # 1. 启动 CARLA 仿真器
-cd D:\hutb\hutb && CarlaUE4.exe
+双击 CarlaUE4.exe
 
 # 2. 运行项目
 python main.py
