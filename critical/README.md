@@ -39,6 +39,14 @@
 | 9 | 夜间行人横穿 | 多因素耦合 | 黑暗 + 行人 |
 | 10 | 雾天鬼探头 | 多因素耦合 | 浓雾 + 盲区 |
 
+
+### 安装 Python 依赖
+
+```bash
+pip install -r requirements.txt
+```
+
+
 ## 快速开始
 
 ```bash
@@ -54,7 +62,6 @@ python main.py evaluate --algo smooth_ppo --scenario emergency_brake --model mod
 python main.py export --scenario ghost_peek
 python main.py test --suite all
 ```
-
 ## 环境要求
 
 - Windows 10 / Ubuntu 18.04+

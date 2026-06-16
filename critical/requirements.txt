@@ -1,0 +1,28 @@
+# ============================================================
+# 基于 CARLA 的极端驾驶仿真场景生成算法研究
+# Python 3.7+ 环境依赖
+# 安装方式: pip install -r requirements.txt
+# ============================================================
+
+# --- 深度学习框架 ---
+torch>=1.9.0,<1.14.0
+
+# --- 数值计算与数据处理 ---
+numpy>=1.19.0,<1.24.0
+pandas>=1.0.0,<1.4.0
+pyyaml>=5.4.0
+
+# --- 可视化 ---
+matplotlib>=3.0.0,<3.6.0
+
+# --- OpenSCENARIO 导出 (OSC-Generator) ---
+scenariogeneration
+pyproj
+simplekml
+geographiclib
+shapely
+scipy
+
+# --- 测试 ---
+pytest>=5.0.0
+xmldiff
