@@ -1,0 +1,116 @@
+<!--?xml version="1.0" encoding="UTF-8"?-->
+<svg xmlns="http://www.w3.org/2000/svg" width="1700" height="1100" viewBox="0 0 1700 1100">
+
+<!-- background -->
+<rect width="1700" height="1100" fill="white"></rect>
+
+<defs>
+<style>
+.title { font: bold 26px Arial, "Noto Sans SC"; }
+
+.box { fill:#ffffff; stroke:#222; stroke-width:1.5; rx:12; ry:12; }
+.group { fill:#f7f9fc; stroke:#cfd8e3; stroke-width:1.2; rx:14; ry:14; }
+
+.metric { fill:#f2f6ff; stroke:#2b4c7e; stroke-width:1.4; rx:10; ry:10; }
+
+.baseline { fill:#fff3e6; stroke:#d46b08; stroke-width:2; rx:12; ry:12; }
+
+.text { font: 15px Arial, "Noto Sans SC"; }
+.small { font: 12px Arial, "Noto Sans SC"; fill:#444; }
+
+.arrow { stroke:#222; stroke-width:1.4; fill:none; marker-end:url(#m); }
+</style>
+
+<marker id="m" markerWidth="10" markerHeight="10" refX="8" refY="3" orient="auto">
+<path d="M0,0 L10,3 L0,6 Z" fill="#222"></path>
+</marker>
+
+</defs>
+
+<!-- TITLE -->
+<text x="850" y="45" text-anchor="middle" class="title">测试方案与指标体系</text>
+
+<!-- ROOT -->
+<rect x="700" y="80" width="300" height="60" class="box"></rect>
+<text x="850" y="115" text-anchor="middle" class="text">系统综合测试</text>
+
+<!-- LINES TO GROUPS -->
+<line x1="850" y1="140" x2="850" y2="170" class="arrow"></line>
+
+<!-- GROUP BOXES -->
+<rect x="120" y="170" width="460" height="320" class="group"></rect>
+<rect x="620" y="170" width="460" height="320" class="group"></rect>
+<rect x="1120" y="170" width="460" height="320" class="group"></rect>
+
+<!-- GROUP TITLES -->
+<text x="350" y="200" text-anchor="middle" class="text">功能测试</text>
+<text x="850" y="200" text-anchor="middle" class="text">精度测试</text>
+<text x="1350" y="200" text-anchor="middle" class="text">稳定性 / 易用性测试</text>
+
+<!-- FUNCTIONAL -->
+<rect x="160" y="230" width="380" height="55" class="box"></rect>
+<text x="350" y="265" text-anchor="middle" class="small">遥控驾驶任务</text>
+
+<rect x="160" y="300" width="380" height="55" class="box"></rect>
+<text x="350" y="335" text-anchor="middle" class="small">控制精度任务</text>
+
+<rect x="160" y="370" width="380" height="55" class="box"></rect>
+<text x="350" y="405" text-anchor="middle" class="small">小物体触碰任务</text>
+
+<!-- PRECISION -->
+<rect x="660" y="230" width="380" height="55" class="box"></rect>
+<text x="850" y="265" text-anchor="middle" class="small">阶跃跟踪</text>
+
+<rect x="660" y="300" width="380" height="55" class="box"></rect>
+<text x="850" y="335" text-anchor="middle" class="small">正弦跟踪</text>
+
+<rect x="660" y="370" width="380" height="55" class="box"></rect>
+<text x="850" y="405" text-anchor="middle" class="small">定点保持</text>
+
+<!-- STABILITY -->
+<rect x="1160" y="230" width="380" height="55" class="box"></rect>
+<text x="1350" y="265" text-anchor="middle" class="small">连续 1 h 运行</text>
+
+<rect x="1160" y="300" width="380" height="55" class="box"></rect>
+<text x="1350" y="335" text-anchor="middle" class="small">角度漂移监测</text>
+
+<rect x="1160" y="370" width="380" height="55" class="box"></rect>
+<text x="1350" y="405" text-anchor="middle" class="small">仿真帧率监测</text>
+
+<!-- METRICS LABEL -->
+<text x="850" y="540" text-anchor="middle" class="text">↓ 量化指标输出 ↓</text>
+
+<!-- METRICS -->
+<rect x="180" y="580" width="250" height="80" class="metric"></rect>
+<text x="305" y="615" text-anchor="middle" class="text">MAE</text>
+<text x="305" y="640" text-anchor="middle" class="small">平均绝对误差</text>
+
+<rect x="450" y="580" width="250" height="80" class="metric"></rect>
+<text x="575" y="615" text-anchor="middle" class="text">RMSE</text>
+<text x="575" y="640" text-anchor="middle" class="small">均方根误差</text>
+
+<rect x="720" y="580" width="250" height="80" class="metric"></rect>
+<text x="845" y="615" text-anchor="middle" class="text">e_max</text>
+<text x="845" y="640" text-anchor="middle" class="small">最大误差</text>
+
+<rect x="990" y="580" width="250" height="80" class="metric"></rect>
+<text x="1115" y="615" text-anchor="middle" class="text">t_d</text>
+<text x="1115" y="640" text-anchor="middle" class="small">响应延迟</text>
+
+<rect x="1260" y="580" width="250" height="80" class="metric"></rect>
+<text x="1385" y="615" text-anchor="middle" class="text">稳定性</text>
+<text x="1385" y="640" text-anchor="middle" class="small">漂移量 / 频率</text>
+
+<!-- BASELINE -->
+<rect x="250" y="730" width="1200" height="140" class="baseline"></rect>
+<text x="850" y="770" text-anchor="middle" class="text">指标合格基线</text>
+
+<text x="850" y="810" text-anchor="middle" class="small">
+MAE ≤ 3.0°  ·  RMSE ≤ 3.5°  ·  响应延迟 ≤ 10 ms
+</text>
+
+<text x="850" y="840" text-anchor="middle" class="small">
+连续 60 min 无漂移 / 无明显振荡 / 无异常抖动
+</text>
+
+</svg>
