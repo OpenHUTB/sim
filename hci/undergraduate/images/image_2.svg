@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" width="901" height="421" viewBox="0 0 901 421">
+
+  <defs>
+    <marker id="arrow" markerWidth="10" markerHeight="10" refX="8" refY="3" orient="auto">
+      <path d="M0,0 L10,3 L0,6 Z" fill="#333"/>
+    </marker>
+    <style>
+      .bone { fill:#666; }
+      .line { stroke:#333; stroke-width:2; fill:none; }
+      .thin { stroke:#333; stroke-width:1.5; fill:none; }
+      .spring { stroke:#2a7; stroke-width:2; fill:none; }
+      .spring2 { stroke:#c53; stroke-width:2; fill:none; }
+      .text { font-family: Arial, "Noto Sans SC"; font-size:14px; fill:#222; }
+      .title { font-size:18px; font-weight:bold; }
+      .box { fill:#fff; stroke:#333; stroke-width:1.5; }
+      .ce { fill:#d9ecff; stroke:#1f5fbf; stroke-width:2; }
+    </style>
+  </defs>
+
+  <!-- bones -->
+  <rect x="30" y="90" width="20" height="240" class="bone"/>
+  <rect x="851" y="90" width="20" height="240" class="bone"/>
+
+  <text x="10" y="80" class="text">骨骼端</text>
+  <text x="820" y="80" class="text">肌腱端</text>
+
+  <!-- title -->
+  <text x="300" y="40" class="text title">Hill 二元黏肌肉模型 (CE+PE+SE)</text>
+
+  <!-- main loop line -->
+  <path d="M50 160 L120 160" class="line" marker-end="url(#arrow)"/>
+  <text x="60" y="150" class="text">F</text>
+
+  <!-- CE -->
+  <circle cx="220" cy="140" r="35" class="ce"/>
+  <text x="205" y="145" class="text">CE</text>
+
+  <!-- activation -->
+  <path d="M220 90 L220 105" class="line" marker-end="url(#arrow)"/>
+  <text x="180" y="80" class="text">激活信号 a(t)</text>
+
+  <!-- upper path to SE -->
+  <path d="M255 140 L350 140" class="line"/>
+  <path d="M350 140 
+           l10 -10 l10 20 l10 -20 l10 20 l10 -20 l10 20 l10 -10" class="spring2"/>
+  <text x="360" y="120" class="text">SE 串联弹性元(肌腱)</text>
+
+  <path d="M410 140 L820 140" class="line"/>
+  <path d="M820 140 L851 140" class="line"/>
+
+  <!-- lower path PE -->
+  <path d="M120 220 L180 220" class="line"/>
+  <path d="M180 220 
+           l10 -10 l10 20 l10 -20 l10 20 l10 -20 l10 20 l10 -10" class="spring"/>
+  <text x="180" y="250" class="text">PE 并联弹性元 fP(Ī)</text>
+
+  <path d="M240 220 L350 220" class="line"/>
+
+  <!-- damper -->
+  <rect x="360" y="210" width="40" height="20" class="box"/>
+  <text x="365" y="205" class="text">β·v</text>
+  <path d="M400 220 L820 220" class="line"/>
+  <path d="M820 220 L851 220" class="line"/>
+
+  <!-- force labels -->
+  <text x="840" y="165" class="text">F</text>
+
+  <!-- equation -->
+  <rect x="200" y="310" width="500" height="70" fill="#fff7f0" stroke="#d66"/>
+  <text x="220" y="340" class="text">
+    F = F₀ · [ a·fL(Ī)·fV(v̄) + fP(Ī) + β·v̄ ]
+  </text>
+
+  <text x="240" y="360" class="text">主动收缩力 + 被动弹性力 + 阻尼力</text>
+
+</svg>
