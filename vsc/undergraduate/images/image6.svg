@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="750" height="180" xmlns="http://www.w3.org/2000/svg">
+  <!-- 样式定义 -->
+  <defs>
+    <style>
+      .process-box {
+        fill: #ffffff;
+        stroke: #000000;
+        stroke-width: 1;
+      }
+      .process-text {
+        font-family: "Microsoft YaHei", "SimHei", sans-serif;
+        font-size: 14px;
+        text-anchor: middle;
+      }
+      .arrow-line {
+        stroke: #000000;
+        stroke-width: 1.5;
+        marker-end: url(#arrowhead);
+      }
+      .arrow-vertical {
+        stroke: #000000;
+        stroke-width: 1.5;
+        marker-end: url(#arrowhead);
+      }
+    </style>
+    <!-- 箭头标记定义 -->
+    <marker id="arrowhead" markerWidth="10" markerHeight="7" refX="9" refY="3.5" orient="auto">
+      <polygon points="0 0, 10 3.5, 0 7" fill="#000000"/>
+    </marker>
+  </defs>
+
+  <!-- 第一行流程 -->
+  <!-- 插件初始化 -->
+  <rect class="process-box" x="10" y="30" width="120" height="40" rx="3" ry="3"/>
+  <text class="process-text" x="70" y="55">插件初始化</text>
+
+  <!-- 编码交互 -->
+  <rect class="process-box" x="190" y="30" width="120" height="40" rx="3" ry="3"/>
+  <text class="process-text" x="250" y="55">编码交互</text>
+
+  <!-- 调试配置 -->
+  <rect class="process-box" x="370" y="30" width="120" height="40" rx="3" ry="3"/>
+  <text class="process-text" x="430" y="55">调试配置</text>
+
+  <!-- 参数热重载 -->
+  <rect class="process-box" x="550" y="30" width="120" height="40" rx="3" ry="3"/>
+  <text class="process-text" x="610" y="55">参数热重载</text>
+
+  <!-- 第二行流程 -->
+  <!-- 实时监控 -->
+  <rect class="process-box" x="190" y="110" width="120" height="40" rx="3" ry="3"/>
+  <text class="process-text" x="250" y="135">实时监控</text>
+
+  <!-- 批量测试 -->
+  <rect class="process-box" x="370" y="110" width="120" height="40" rx="3" ry="3"/>
+  <text class="process-text" x="430" y="135">批量测试</text>
+
+  <!-- 环境打包 -->
+  <rect class="process-box" x="550" y="110" width="120" height="40" rx="3" ry="3"/>
+  <text class="process-text" x="610" y="135">环境打包</text>
+
+  <!-- 连接线 - 第一行横向 -->
+  <line class="arrow-line" x1="130" y1="50" x2="190" y2="50"/>
+  <line class="arrow-line" x1="310" y1="50" x2="370" y2="50"/>
+  <line class="arrow-line" x1="490" y1="50" x2="550" y2="50"/>
+
+  <!-- 连接线 - 编码交互向下到实时监控 -->
+  <line class="arrow-vertical" x1="250" y1="70" x2="250" y2="110"/>
+
+  <!-- 连接线 - 第二行横向 -->
+  <line class="arrow-line" x1="310" y1="130" x2="370" y2="130"/>
+  <line class="arrow-line" x1="490" y1="130" x2="550" y2="130"/>
+</svg>
