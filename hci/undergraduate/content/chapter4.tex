@@ -24,12 +24,20 @@
 
 \section{人体上肢肌肉骨骼模型构建}
 人体上肢肌肉骨骼模型来自 User-in-the-Box 框架里的 bm\_models 生物力学模型文件夹，模型用 MuJoCo 可以识别的 XML 格式进行结构化编写，依靠 User-in-the-Box 开源框架完成模型调用和仿真环境的搭建，不需要从头制作骨骼结构，很大程度降低了人体生物力学建模的难度，本研究选用 User-in-the-Box 框架自带的人体上肢骨骼模型，借助 MuJoCo 仿真引擎实现模型加载和画面显示，如图~\ref{fig:upper_limb_model}所示，模型完整包含胸廓、脊柱和两侧上肢的骨骼结构，还设置了符合人体活动范围的关节限制条件，能够模拟肩部、肘部、腕部的多方向运动，模型通过连接 VR 手柄设备，模拟出双手握住方向盘的初始姿势，为后续肌肉驱动控制和转向交互仿真提供了贴近真实的生物力学条件。
-\begin{figure}[htbp]
+\begin{figure}[H]
   \centering
   \includegraphics[width=0.8\textwidth]{image_7.png}
   \caption{Simulato.xml模型}
   \label{fig:upper_limb_model}
 \end{figure}  
+
+
+
+
+
+
+
+
 
 模型文件被放在指定的 bm\_models 文件夹里，文件夹中包含模型主体的 XML 文件、外观材质设置、碰撞几何参数和肌肉布局定义等配套资源，各个文件之间有规范的关联关系，能够被 MuJoCo 仿真引擎直接读取并加载，在仿真搭建的过程中，系统通过路径读取的方式导入这个目录下的模型文件，完成模型坐标校准、关节限位设置和物理参数初始化，实现人体上肢模型在仿真场景里的定位和静态载入。
 
