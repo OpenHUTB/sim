@@ -1,0 +1,107 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="800" height="300" xmlns="http://www.w3.org/2000/svg">
+  <!-- 样式定义 -->
+  <defs>
+    <style>
+      .title-box {
+        fill: #ffffff;
+        stroke: #000000;
+        stroke-width: 1;
+      }
+      .module-box {
+        fill: #ffffff;
+        stroke: #000000;
+        stroke-width: 1;
+      }
+      .title-text {
+        font-family: "Microsoft YaHei", "SimHei", sans-serif;
+        font-size: 14px;
+        text-anchor: middle;
+      }
+      .module-text {
+        font-family: "Microsoft YaHei", "SimHei", sans-serif;
+        font-size: 12px;
+        text-anchor: middle;
+      }
+      .connector-line {
+        stroke: #000000;
+        stroke-width: 1;
+      }
+    </style>
+  </defs>
+
+  <!-- 主标题框 -->
+  <rect class="title-box" x="200" y="30" width="400" height="40" rx="5" ry="5"/>
+  <text class="title-text" x="400" y="55">面向人车模拟器的快速开发验证插件系统</text>
+
+  <!-- 连接线 - 竖线 -->
+  <line class="connector-line" x1="400" y1="70" x2="400" y2="100"/>
+  
+  <!-- 连接线 - 横线 -->
+  <line class="connector-line" x1="50" y1="100" x2="750" y2="100"/>
+
+  <!-- 模块1: 代码智能补全模块 -->
+  <line class="connector-line" x1="55" y1="100" x2="55" y2="130"/>
+  <rect class="module-box" x="10" y="130" width="90" height="120" rx="3" ry="3"/>
+  <text class="module-text" x="55" y="180">代码智能补全模块</text>
+
+  <!-- 模块2: 实时错误检测模块 -->
+  <line class="connector-line" x1="115" y1="100" x2="115" y2="130"/>
+  <rect class="module-box" x="70" y="130" width="90" height="120" rx="3" ry="3"/>
+  <text class="module-text" x="115" y="180">实时错误检测模块</text>
+
+  <!-- 模块3: 仿真参数热重载模块 -->
+  <line class="connector-line" x1="175" y1="100" x2="175" y2="130"/>
+  <rect class="module-box" x="130" y="130" width="90" height="120" rx="3" ry="3"/>
+  <text class="module-text" x="175" y="180">仿真参数热重载模块</text>
+
+  <!-- 模块4: 多场景调试模块 -->
+  <line class="connector-line" x1="235" y1="100" x2="235" y2="130"/>
+  <rect class="module-box" x="190" y="130" width="90" height="120" rx="3" ry="3"/>
+  <text class="module-text" x="235" y="180">多场景调试模块</text>
+
+  <!-- 模块5: 实时监控面板模块 -->
+  <line class="connector-line" x1="295" y1="100" x2="295" y2="130"/>
+  <rect class="module-box" x="250" y="130" width="90" height="120" rx="3" ry="3"/>
+  <text class="module-text" x="295" y="180">实时监控面板模块</text>
+
+  <!-- 模块6: 批量测试模块 -->
+  <line class="connector-line" x1="355" y1="100" x2="355" y2="130"/>
+  <rect class="module-box" x="310" y="130" width="90" height="120" rx="3" ry="3"/>
+  <text class="module-text" x="355" y="180">批量测试模块</text>
+
+  <!-- 模块7: 环境打包模块 -->
+  <line class="connector-line" x1="415" y1="100" x2="415" y2="130"/>
+  <rect class="module-box" x="370" y="130" width="90" height="120" rx="3" ry="3"/>
+  <text class="module-text" x="415" y="180">环境打包模块</text>
+
+  <!-- 模块8: 状态交互模块 -->
+  <line class="connector-line" x1="475" y1="100" x2="475" y2="130"/>
+  <rect class="module-box" x="430" y="130" width="90" height="120" rx="3" ry="3"/>
+  <text class="module-text" x="475" y="180">状态交互模块</text>
+
+  <!-- 模块9: 场景快照与断点续跑模块 -->
+  <line class="connector-line" x1="535" y1="100" x2="535" y2="130"/>
+  <rect class="module-box" x="490" y="130" width="90" height="120" rx="3" ry="3"/>
+  <text class="module-text" x="535" y="180">场景快照与断点续跑模块</text>
+
+  <!-- 模块10: 仿真场景二维快速预览模块 -->
+  <line class="connector-line" x1="595" y1="100" x2="595" y2="130"/>
+  <rect class="module-box" x="550" y="130" width="90" height="120" rx="3" ry="3"/>
+  <text class="module-text" x="595" y="180">仿真场景二维快速预览模块</text>
+
+  <!-- 模块11: 仿真实验报告自动生成模块 -->
+  <line class="connector-line" x1="655" y1="100" x2="655" y2="130"/>
+  <rect class="module-box" x="610" y="130" width="90" height="120" rx="3" ry="3"/>
+  <text class="module-text" x="655" y="180">仿真实验报告自动生成模块</text>
+
+  <!-- 模块12: 批量仿真测试增强模块 -->
+  <line class="connector-line" x1="715" y1="100" x2="715" y2="130"/>
+  <rect class="module-box" x="670" y="130" width="90" height="120" rx="3" ry="3"/>
+  <text class="module-text" x="715" y="180">批量仿真测试增强模块</text>
+
+  <!-- 模块13: 语法高亮增强模块 -->
+  <line class="connector-line" x1="775" y1="100" x2="775" y2="130"/>
+  <rect class="module-box" x="730" y="130" width="90" height="120" rx="3" ry="3"/>
+  <text class="module-text" x="775" y="180">语法高亮增强模块</text>
+</svg>
