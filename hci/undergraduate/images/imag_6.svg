@@ -1,0 +1,98 @@
+<!--?xml version="1.0" encoding="UTF-8"?-->
+<svg xmlns="http://www.w3.org/2000/svg" width="1500" height="1350" viewBox="0 0 1500 1350">
+
+<!-- background -->
+<rect width="1500" height="1350" fill="white"></rect>
+
+<defs>
+<style>
+.title { font: bold 24px Arial, "Noto Sans SC"; }
+
+.box { fill:#fff7e6; stroke:#333; stroke-width:1.6; rx:12; ry:12; }
+.start { fill:#e8f1ff; stroke:#2b4c7e; stroke-width:1.6; }
+.diamond { fill:#ffe9e9; stroke:#a33; stroke-width:1.6; }
+.end { fill:#e8ffe8; stroke:#2d7a2d; stroke-width:1.6; }
+
+.text { font: 14px Arial, "Noto Sans SC"; }
+.small { font: 12px Arial, "Noto Sans SC"; }
+
+.arrow { stroke:#222; stroke-width:1.4; fill:none; marker-end:url(#m); }
+</style>
+
+<marker id="m" markerWidth="10" markerHeight="10" refX="8" refY="3" orient="auto">
+<path d="M0,0 L10,3 L0,6 Z" fill="#222"></path>
+</marker>
+</defs>
+
+<!-- TITLE -->
+<text x="750" y="40" text-anchor="middle" class="title">系统工作流程</text>
+
+<!-- START -->
+<ellipse cx="750" cy="100" rx="120" ry="35" class="start"></ellipse>
+<text x="750" y="105" text-anchor="middle" class="text">系统启动</text>
+
+<line x1="750" y1="135" x2="750" y2="170" class="arrow"></line>
+
+<!-- LOAD -->
+<rect x="520" y="170" width="460" height="80" class="box"></rect>
+<text x="750" y="205" text-anchor="middle" class="text">加载配置文件</text>
+<text x="750" y="230" text-anchor="middle" class="small">模型路径 / 参数 / 步长 / 引导轨迹</text>
+
+<line x1="750" y1="250" x2="750" y2="300" class="arrow"></line>
+
+<!-- INIT -->
+<rect x="520" y="300" width="460" height="80" class="box"></rect>
+<text x="750" y="335" text-anchor="middle" class="text">初始化仿真环境</text>
+<text x="750" y="360" text-anchor="middle" class="small">载入肌肉骨骼模型 + 方向盘模型</text>
+
+<line x1="750" y1="380" x2="750" y2="430" class="arrow"></line>
+
+<!-- DIAMOND -->
+<polygon points="750,430 870,500 750,570 630,500" class="diamond"></polygon>
+<text x="750" y="505" text-anchor="middle" class="text">物理参数自检通过？</text>
+
+<!-- LOOP BACK -->
+<path d="M630 500 L420 500 L420 205 L520 205" class="arrow"></path>
+<text x="430" y="485" class="small">否</text>
+
+<!-- MAIN FLOW -->
+<line x1="750" y1="570" x2="750" y2="610" class="arrow"></line>
+
+<!-- muscle -->
+<rect x="520" y="610" width="460" height="80" class="box"></rect>
+<text x="750" y="645" text-anchor="middle" class="text">获取肌肉激活信号 u(t)</text>
+<text x="750" y="670" text-anchor="middle" class="small">键盘 / 仿真生成 / 控制输入</text>
+
+<line x1="750" y1="690" x2="750" y2="740" class="arrow"></line>
+
+<!-- control -->
+<rect x="520" y="740" width="460" height="80" class="box"></rect>
+<text x="750" y="775" text-anchor="middle" class="text">控制算法处理</text>
+<text x="750" y="800" text-anchor="middle" class="small">滤波 / 死区 / 映射 / 限幅</text>
+
+<line x1="750" y1="820" x2="750" y2="870" class="arrow"></line>
+
+<!-- visual -->
+<rect x="520" y="870" width="460" height="80" class="box"></rect>
+<text x="750" y="905" text-anchor="middle" class="text">更新视觉引导界面</text>
+<text x="750" y="930" text-anchor="middle" class="small">目标 / 当前 / 误差显示</text>
+
+<line x1="750" y1="950" x2="750" y2="990" class="arrow"></line>
+
+<!-- STOP -->
+<polygon points="750,990 870,1060 750,1130 630,1060" class="diamond"></polygon>
+<text x="750" y="1065" text-anchor="middle" class="text">达到停止条件？</text>
+
+<!-- END (FIXED INSIDE CANVAS) -->
+<ellipse cx="750" cy="1230" rx="150" ry="40" class="end"></ellipse>
+<text x="750" y="1235" text-anchor="middle" class="text">输出评估结果</text>
+
+<!-- LOOP BACK -->
+<path d="M630 1060 L420 1060 L420 650 L520 650" class="arrow"></path>
+<text x="430" y="1045" class="small">否</text>
+
+<!-- YES -->
+<line x1="870" y1="1060" x2="750" y2="1190" class="arrow"></line>
+<text x="880" y="1080" class="small">是</text>
+
+</svg>
