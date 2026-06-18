@@ -105,10 +105,3 @@ python analysis/plot_results.py --input results/data/swarm_summary.csv
 python analysis/plot_results.py --demo
 ```
 
-## 进度
-
-- [x] 问题定位，分析 AirSim 源码
-- [x] 五种方案设计与独立基准测试
-- [x] Python 集群控制与数据采集脚本
-- [x] AirSim 源码修改 patch
-- [ ] 完整实验数据（等环境搭好）
