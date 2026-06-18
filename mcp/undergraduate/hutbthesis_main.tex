@@ -54,6 +54,20 @@
   captionpos=b
 }
 \lstset{style=hutbcode}
+
+% 参考文献上标跳转命令：保持正文 [1] 样式，同时点击可跳转到参考文献条目。
+\makeatletter
+\newcommand{\myrefcite}[1]{%
+  \textsuperscript{[%
+    \def\@citecomma{}%
+    \@for\@citenum:=#1\do{%
+      \@citecomma\hyperref[bib:\@citenum]{\@citenum}%
+      \def\@citecomma{,}%
+    }%
+  ]}%
+}
+\makeatother
+
 \providecommand{\tightlist}{%
   \setlength{\itemsep}{0pt}\setlength{\parskip}{0pt}}
 \IfFontExistsTF{Noto Serif CJK SC}{%
