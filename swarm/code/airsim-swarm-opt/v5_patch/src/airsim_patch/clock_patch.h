@@ -1,7 +1,6 @@
 // clock_patch.h
 // 替换 AirSim ClockBase::sleep_for 的优化版本
 // 对应 AirLib/include/common/ClockBase.hpp
-// 2024/11
 
 #pragma once
 #include <thread>
