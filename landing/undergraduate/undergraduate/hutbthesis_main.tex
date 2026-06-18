@@ -1,0 +1,95 @@
+%!TEX program = xelatex
+% !BIB program = biber
+
+\documentclass[AutoFakeBold]{hutbthesis}
+
+\usepackage{calc}
+\usepackage{float}
+\usepackage{longtable}
+\usepackage{booktabs}
+\usepackage{array}
+\usepackage{tabularx}
+\usepackage{caption}
+\usepackage{xcolor}
+\usepackage{listings}
+\usepackage{amsmath}
+\usepackage{chngcntr}
+\usepackage{xeCJKfntef}
+
+\counterwithin{figure}{chapter}
+\counterwithin{table}{chapter}
+\numberwithin{equation}{chapter}
+\renewcommand{\thefigure}{\thechapter-\arabic{figure}}
+\renewcommand{\thetable}{\thechapter-\arabic{table}}
+\renewcommand{\theequation}{\thechapter-\arabic{equation}}
+\captionsetup[figure]{name=图,labelsep=space,font=small,skip=6pt}
+\captionsetup[table]{name=表,labelsep=space,font=small,skip=6pt}
+
+\definecolor{codebg}{RGB}{248,248,248}
+\definecolor{codekw}{RGB}{0,92,175}
+\definecolor{codestr}{RGB}{163,21,21}
+\definecolor{codecom}{RGB}{0,128,0}
+\renewcommand{\lstlistingname}{代码}
+\lstdefinestyle{hutbcode}{%
+  backgroundcolor=\color{codebg},
+  basicstyle=\ttfamily\small,
+  keywordstyle=\color{codekw}\bfseries,
+  stringstyle=\color{codestr},
+  commentstyle=\color{codecom}\itshape,
+  numbers=left,
+  numberstyle=\scriptsize\color{gray},
+  stepnumber=1,
+  numbersep=8pt,
+  frame=single,
+  rulecolor=\color{gray!50},
+  breaklines=true,
+  columns=fullflexible,
+  keepspaces=true,
+  showstringspaces=false,
+  tabsize=2,
+  captionpos=b
+}
+\lstset{style=hutbcode}
+\providecommand{\tightlist}{\setlength{\itemsep}{0pt}\setlength{\parskip}{0pt}}
+\newcommand{\linkcite}[1]{\textsuperscript{\hyperlink{ref:#1}{[#1]}}}
+\IfFontExistsTF{Noto Serif CJK SC}{%
+  \setCJKmainfont{Noto Serif CJK SC}[BoldFont=Noto Serif CJK SC Bold]
+  \setCJKsansfont{Noto Sans CJK SC}[BoldFont=Noto Sans CJK SC Bold]
+}{}
+\graphicspath{{images/}}
+
+\include{content/cover}
+
+\begin{document}
+
+\maketitle
+
+\clearpage
+\pagestyle{empty}
+\pagenumbering{gobble}
+\input{content/declarationzh}
+\clearpage
+\input{content/authorization}
+\clearpage
+\input{content/abstractzh}
+\clearpage
+\input{content/abstracten}
+
+\frontmatter
+\setcounter{page}{1}
+\tableofcontents
+
+\mainmatter
+\include{content/chapter1}
+\include{content/chapter2}
+\include{content/chapter3}
+\include{content/chapter4}
+\include{content/chapter5}
+\include{content/chapter6}
+\include{content/chapter7}
+
+\include{content/references}
+\include{content/appendix}
+\include{content/acknowledgements}
+
+\end{document}
