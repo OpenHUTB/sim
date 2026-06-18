@@ -8,7 +8,6 @@ gen_settings.py
     python scripts/gen_settings.py --num 10 --output settings.json
     python scripts/gen_settings.py --num 30 --layout circle --radius 15
 
-2024/10
 """
 
 import json
