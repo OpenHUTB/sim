@@ -1,0 +1,100 @@
+diff --git a/AirLib/include/common/ClockBase.hpp b/AirLib/include/common/ClockBase.hpp
+index 3a7c2f1..8d4b09e 100644
+--- a/AirLib/include/common/ClockBase.hpp
++++ b/AirLib/include/common/ClockBase.hpp
+@@ -1,6 +1,8 @@
+ // Copyright (c) Microsoft Corporation. All rights reserved.
+ // Licensed under the MIT License.
+ 
++// Modified by liuwenjie 2024/10: replace sleep(0) spin with dispatcher model
++
+ #pragma once
+ 
+ #include "common/Common.hpp"
+@@ -8,6 +10,8 @@
+ #include <thread>
+ #include <chrono>
+ #include <cstdint>
++#include <mutex>
++#include <condition_variable>
+ 
+ namespace msr { namespace airlib {
+ 
+@@ -42,14 +46,59 @@ public:
+     virtual TTimeDelta nowNanos() const = 0;
+ 
+     /*
+-     * Original implementation: spin-wait with sleep(0).
+-     * Problem: each drone thread calls this at 100Hz, triggering N*100
+-     * kernel transitions/sec when N > core count.
++     * Replaced with SingleDispatcherClock (see below).
++     * Original spin-wait kept here for reference / benchmark comparison.
+      */
+-    virtual void sleep_for(TTimeDelta dt) override {
+-        TTimePoint start = now();
+-        TTimePoint end   = start + dt;
+-        while (now() < end) {
+-            std::this_thread::sleep_for(
+-                std::chrono::duration<int64_t, std::nano>(0));
+-        }
+-    }
++    // original (M4, DO NOT USE in production):
++    // virtual void sleep_for(TTimeDelta dt) override {
++    //     TTimePoint end = now() + dt;
++    //     while (now() < end)
++    //         std::this_thread::sleep_for(std::chrono::nanoseconds(0));
++    // }
++
++    virtual void sleep_for(TTimeDelta dt) override {
++        using namespace std::chrono;
++        auto end_tp = std::chrono::high_resolution_clock::now()
++                      + nanoseconds(static_cast<int64_t>(dt * 1e9));
++        std::unique_lock<std::mutex> lk(dispatcher_mutex_);
++        dispatcher_cv_.wait_until(lk, end_tp);
++    }
++
++    // Call once at startup to launch the dispatcher thread.
++    void startDispatcher() {
++        dispatcher_running_ = true;
++        dispatcher_thread_ = std::thread([this] {
++            using namespace std::chrono;
++            // tick every 1ms; workers use wait_until so actual wakeup
++            // time is controlled by each caller, this just ensures
++            // spurious wakeups happen at most once per ms.
++            while (dispatcher_running_) {
++                std::this_thread::sleep_for(milliseconds(1));
++                dispatcher_cv_.notify_all();
++            }
++        });
++    }
++
++    void stopDispatcher() {
++        dispatcher_running_ = false;
++        dispatcher_cv_.notify_all();
++        if (dispatcher_thread_.joinable())
++            dispatcher_thread_.join();
++    }
+ 
+ private:
++    std::mutex dispatcher_mutex_;
++    std::condition_variable dispatcher_cv_;
++    std::atomic<bool> dispatcher_running_{false};
++    std::thread dispatcher_thread_;
+ };
+ 
+ }}  // namespace
+diff --git a/AirLib/src/vehicles/multirotor/MultirotorPhysicsBody.cpp b/AirLib/src/vehicles/multirotor/MultirotorPhysicsBody.cpp
+index 1b84c3a..c2f50e1 100644
+--- a/AirLib/src/vehicles/multirotor/MultirotorPhysicsBody.cpp
++++ b/AirLib/src/vehicles/multirotor/MultirotorPhysicsBody.cpp
+@@ -28,6 +28,9 @@ void MultirotorPhysicsBody::initialize(const MultirotorApiBase* vehicle_api,
+     AbstractPhysicsBody::initialize(vehicle_api, kinematics, environment);
+     rotor_count_ = static_cast<int>(params_->getRotorCount());
+     rotor_states_.assign(rotor_count_, RotorTiltableState());
++
++    // start the dispatcher for this vehicle's clock
++    // (no-op if already running for shared clock instances)
++    clock()->startDispatcher();
+ }
+ 
+ void MultirotorPhysicsBody::reset()

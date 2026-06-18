@@ -1,169 +1,242 @@
-\section*{附录}
-\addcontentsline{toc}{section}{附录}
 
-[1] 实验硬件配置清单
+%!TEX root = ../hutbthesis_main.tex
 
-[2] 软件环境版本与依赖清单
+\clearpage
+\chapter*{附录}
+\addcontentsline{toc}{chapter}{附录}
 
-[3] 实验原始数据记录表
+{[}1{]} 实验硬件配置清单
 
-[4] 优化模型编译与使用说明
+{[}2{]} 软件环境版本与依赖清单
+
+{[}3{]} 实验原始数据记录表
+
+{[}4{]} 优化模型编译与使用说明
 
 \section*{附录1 实验硬件配置清单}
 
-\begin{table}[H]
-    \centering
-    \caption{实验硬件配置清单}
-    \begin{tabular}{|p{4cm}|p{6cm}|c|}
-        \hline
-        设备名称 & 型号/规格 & 数量 \\
-        \hline
-        CPU & Intel Core i9-12900K & 1 \\
-        \hline
-        内存 & 64GB DDR5 4800MHz & 4条 \\
-        \hline
-        显卡 & NVIDIA RTX 4090 24GB & 1 \\
-        \hline
-        服务器主板 & 华硕 ROG Z690 & 1 \\
-        \hline
-        固态硬盘 & 2TB PCIe4.0 & 1 \\
-        \hline
-    \end{tabular}
-\end{table}
+\begin{longtable}[]{@{}
+  >{\raggedright\arraybackslash}p{(\columnwidth - 4\tabcolsep) * \real{0.2994}}
+  >{\raggedright\arraybackslash}p{(\columnwidth - 4\tabcolsep) * \real{0.5533}}
+  >{\raggedright\arraybackslash}p{(\columnwidth - 4\tabcolsep) * \real{0.1472}}@{}}
+\caption{实验硬件配置清单}\\
+\toprule\noalign{}
+\begin{minipage}[b]{\linewidth}\raggedright
+设备名称
+\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedright
+型号 / 规格
+\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedright
+数量
+\end{minipage} \\
+\midrule\noalign{}
+\endhead
+\bottomrule\noalign{}
+\endlastfoot
+CPU & Intel Core i9-12900K & 1 \\
+内存 & 64GB DDR5 4800MHz & 4条 \\
+显卡 & NVIDIA RTX 4090 24GB & 1 \\
+服务器主板 & 华硕 ROG Z690 & 1 \\
+固态硬盘 & 2TB PCIe4.0 & 1 \\
+\end{longtable}
 
 \section*{附录2 软件环境版本与依赖清单}
 
-\begin{table}[H]
-    \centering
-    \caption{软件环境版本依赖清单}
-    \begin{tabular}{|p{4cm}|p{6cm}|}
-        \hline
-        软件名称 & 版本号 \\
-        \hline
-        操作系统 & Windows 11专业版 \\
-        \hline
-        Unreal Engine & 5.1 \\
-        \hline
-        Visual Studio & 2022 \\
-        \hline
-        Python & 3.9 \\
-        \hline
-        AirSim & 1.8.1 \\
-        \hline
-        CMake & 3.24.1 \\
-        \hline
-    \end{tabular}
-\end{table}
+\begin{longtable}[]{@{}
+  >{\raggedright\arraybackslash}p{(\columnwidth - 2\tabcolsep) * \real{0.4471}}
+  >{\raggedright\arraybackslash}p{(\columnwidth - 2\tabcolsep) * \real{0.5529}}@{}}
+\caption{软件环境版本依赖清单表}\\
+\toprule\noalign{}
+\begin{minipage}[b]{\linewidth}\raggedright
+软件名称
+\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedright
+版本号
+\end{minipage} \\
+\midrule\noalign{}
+\endhead
+\bottomrule\noalign{}
+\endlastfoot
+操作系统 & Windows 11专业版 \\
+Unreal Engine & 5.1 \\
+Visual Studio & 2022 \\
+Python & 3.9 \\
+AirSim & 1.8.1 \\
+CMake & 3.24.1 \\
+\end{longtable}
 
 \section*{附录3 实验原始数据记录表}
 
-测试环境：i9-12900K + 64GB + RTX4090 + Unity2021.3.15f1 + AirSim1.8.1
+测试环境：i9-12900K+64GB+RTX4090+Unity2021.3.15f1+AirSim1.8.1
 
 测试场景：标准化室外场景，无人机悬停模式
 
 单位：FPS（帧/秒）
 
-\begin{table}[H]
-    \centering
-    \caption{1架无人机仿真帧率数据}
-    \begin{tabular}{|c|c|}
-        \hline
-        无人机编号 & 帧率 \\
-        \hline
-        UAV1 & 61 \\
-        \hline
-        平均帧率 & 61.0 \\
-        \hline
-    \end{tabular}
-\end{table}
+\begin{longtable}[]{@{}
+  >{\raggedright\arraybackslash}p{(\columnwidth - 4\tabcolsep) * \real{0.4307}}
+  >{\raggedright\arraybackslash}p{(\columnwidth - 4\tabcolsep) * \real{0.2117}}
+  >{\raggedright\arraybackslash}p{(\columnwidth - 4\tabcolsep) * \real{0.3577}}@{}}
+\caption{1架无人机仿真帧率数据}\\
+\toprule\noalign{}
+\begin{minipage}[b]{\linewidth}\raggedright
+无人机编号
+\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedright
+UAV1
+\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedright
+平均帧率
+\end{minipage} \\
+\midrule\noalign{}
+\endhead
+\bottomrule\noalign{}
+\endlastfoot
+帧率 & 61 & 61.0 \\
+\end{longtable}
 
-\begin{table}[H]
-    \centering
-    \caption{5架无人机仿真帧率数据}
-    \begin{tabular}{|c|c|c|c|c|c|c|}
-        \hline
-        无人机编号 & UAV1 & UAV2 & UAV3 & UAV4 & UAV5 & 平均帧率 \\
-        \hline
-        帧率 & 58 & 57 & 59 & 58 & 57 & 57.8 \\
-        \hline
-    \end{tabular}
-\end{table}
+\begin{longtable}[]{@{}
+  >{\raggedright\arraybackslash}p{(\columnwidth - 12\tabcolsep) * \real{0.2332}}
+  >{\raggedright\arraybackslash}p{(\columnwidth - 12\tabcolsep) * \real{0.1146}}
+  >{\raggedright\arraybackslash}p{(\columnwidth - 12\tabcolsep) * \real{0.1146}}
+  >{\raggedright\arraybackslash}p{(\columnwidth - 12\tabcolsep) * \real{0.1146}}
+  >{\raggedright\arraybackslash}p{(\columnwidth - 12\tabcolsep) * \real{0.1146}}
+  >{\raggedright\arraybackslash}p{(\columnwidth - 12\tabcolsep) * \real{0.1146}}
+  >{\raggedright\arraybackslash}p{(\columnwidth - 12\tabcolsep) * \real{0.1937}}@{}}
+\caption{5架无人机仿真帧率数据}\\
+\toprule\noalign{}
+\begin{minipage}[b]{\linewidth}\raggedright
+无人机编号
+\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedright
+UAV1
+\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedright
+UAV2
+\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedright
+UAV3
+\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedright
+UAV4
+\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedright
+UAV5
+\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedright
+平均帧率
+\end{minipage} \\
+\midrule\noalign{}
+\endhead
+\bottomrule\noalign{}
+\endlastfoot
+帧率 & 58 & 57 & 59 & 58 & 57 & 57.8 \\
+\end{longtable}
 
-\begin{table}[H]
-    \centering
-    \caption{10架无人机仿真帧率数据}
-    \begin{tabular}{|c|c|}
-        \hline
-        无人机编号 & UAV1~UAV10单台帧率 \\
-        \hline
-        帧率 & 46、45、44、46、45、44、46、45、44、45 \\
-        \hline
-        平均帧率 & 45.0 \\
-        \hline
-    \end{tabular}
-\end{table}
+\begin{longtable}[]{@{}
+  >{\raggedright\arraybackslash}p{(\columnwidth - 4\tabcolsep) * \real{0.1922}}
+  >{\raggedright\arraybackslash}p{(\columnwidth - 4\tabcolsep) * \real{0.6482}}
+  >{\raggedright\arraybackslash}p{(\columnwidth - 4\tabcolsep) * \real{0.1596}}@{}}
+\caption{10架无人机仿真帧率数据}\\
+\toprule\noalign{}
+\begin{minipage}[b]{\linewidth}\raggedright
+无人机编号
+\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedright
+UAV1\textasciitilde UAV10 单台帧率
+\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedright
+平均帧率
+\end{minipage} \\
+\midrule\noalign{}
+\endhead
+\bottomrule\noalign{}
+\endlastfoot
+帧率 & 46、45、44、46、45、44、46、45、44、45 & 45.0 \\
+\end{longtable}
 
-\begin{table}[H]
-    \centering
-    \caption{15架无人机仿真帧率数据}
-    \begin{tabular}{|c|c|}
-        \hline
-        无人机编号 & UAV1~UAV15单台帧率 \\
-        \hline
-        帧率 & 29、28、27、29、28、27、29、28、27、29、28、27、29、28、27 \\
-        \hline
-        平均帧率 & 28.0 \\
-        \hline
-    \end{tabular}
-\end{table}
+\begin{longtable}[]{@{}
+  >{\raggedright\arraybackslash}p{(\columnwidth - 4\tabcolsep) * \real{0.1470}}
+  >{\raggedright\arraybackslash}p{(\columnwidth - 4\tabcolsep) * \real{0.7231}}
+  >{\raggedright\arraybackslash}p{(\columnwidth - 4\tabcolsep) * \real{0.1299}}@{}}
+\caption{15架无人机仿真帧率数据}\\
+\toprule\noalign{}
+\begin{minipage}[b]{\linewidth}\raggedright
+无人机编号
+\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedright
+UAV1\textasciitilde UAV15 单台帧率
+\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedright
+平均帧率
+\end{minipage} \\
+\midrule\noalign{}
+\endhead
+\bottomrule\noalign{}
+\endlastfoot
+帧率 & 29、28、27、29、28、27、29、28、27、29、28、27、29、28、27 &
+28.0 \\
+\end{longtable}
 
-\begin{table}[H]
-    \centering
-    \caption{20架无人机仿真帧率数据}
-    \begin{tabular}{|c|c|}
-        \hline
-        无人机编号 & UAV1~UAV20单台帧率 \\
-        \hline
-        帧率 & 13、12、11、13、12、11、13、12、11、13、12、11、13、12、11、13、12、11、12、12 \\
-        \hline
-        平均帧率 & 12.1 \\
-        \hline
-    \end{tabular}
-\end{table}
+\begin{longtable}[]{@{}
+  >{\raggedright\arraybackslash}p{(\columnwidth - 4\tabcolsep) * \real{0.1240}}
+  >{\raggedright\arraybackslash}p{(\columnwidth - 4\tabcolsep) * \real{0.7576}}
+  >{\raggedright\arraybackslash}p{(\columnwidth - 4\tabcolsep) * \real{0.1183}}@{}}
+\caption{20架无人机仿真帧率数据}\\
+\toprule\noalign{}
+\begin{minipage}[b]{\linewidth}\raggedright
+无人机编号
+\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedright
+UAV1\textasciitilde UAV20 单台帧率
+\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedright
+平均帧率
+\end{minipage} \\
+\midrule\noalign{}
+\endhead
+\bottomrule\noalign{}
+\endlastfoot
+帧率 &
+13、12、11、13、12、11、13、12、11、13、12、11、13、12、11、13、12、11、12、12
+& 12.1 \\
+\end{longtable}
 
-\begin{table}[H]
-    \centering
-    \caption{25架无人机仿真帧率数据}
-    \begin{tabular}{|c|c|}
-        \hline
-        无人机编号 & UAV1~UAV25单台帧率 \\
-        \hline
-        帧率 & 7、6、5、7、6、5、7、6、5、7、6、5、7、6、5、7、6、5、6、6、6、5、6、6、5 \\
-        \hline
-        平均帧率 & 6.0 \\
-        \hline
-    \end{tabular}
-\end{table}
+\begin{longtable}[]{@{}
+  >{\raggedright\arraybackslash}p{(\columnwidth - 4\tabcolsep) * \real{0.1292}}
+  >{\raggedright\arraybackslash}p{(\columnwidth - 4\tabcolsep) * \real{0.7551}}
+  >{\raggedright\arraybackslash}p{(\columnwidth - 4\tabcolsep) * \real{0.1157}}@{}}
+\caption{25 架无人机仿真帧率数据}\\
+\toprule\noalign{}
+\begin{minipage}[b]{\linewidth}\raggedright
+无人机编号
+\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedright
+UAV1\textasciitilde UAV25 单台帧率
+\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedright
+平均帧率
+\end{minipage} \\
+\midrule\noalign{}
+\endhead
+\bottomrule\noalign{}
+\endlastfoot
+帧率 &
+7、6、5、7、6、5、7、6、5、7、6、5、7、6、5、7、6、5、6、6、6、5、6、6、5
+& 6.0 \\
+\end{longtable}
 
-\begin{table}[H]
-    \centering
-    \caption{30架无人机仿真帧率数据}
-    \begin{tabular}{|c|c|}
-        \hline
-        无人机编号 & UAV1~UAV30单台帧率 \\
-        \hline
-        帧率 & 3、3、2、3、3、2、3、3、2、3、3、2、3、3、2、3、3、2、3、3、2、3、3、2、3、3、2、3、3、2 \\
-        \hline
-        平均帧率 & 3.0 \\
-        \hline
-    \end{tabular}
-\end{table}
+\begin{longtable}[]{@{}
+  >{\raggedright\arraybackslash}p{(\columnwidth - 4\tabcolsep) * \real{0.1169}}
+  >{\raggedright\arraybackslash}p{(\columnwidth - 4\tabcolsep) * \real{0.7750}}
+  >{\raggedright\arraybackslash}p{(\columnwidth - 4\tabcolsep) * \real{0.1081}}@{}}
+\caption{30架无人机仿真帧率数据}\\
+\toprule\noalign{}
+\begin{minipage}[b]{\linewidth}\raggedright
+无人机编号
+\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedright
+UAV1\textasciitilde UAV30 单台帧率
+\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedright
+平均帧率
+\end{minipage} \\
+\midrule\noalign{}
+\endhead
+\bottomrule\noalign{}
+\endlastfoot
+帧率 &
+3、3、2、3、3、2、3、3、2、3、3、2、3、3、2、3、3、2、3、3、2、3、3、2、3、3、2、3、3、2
+& 3.0 \\
+\end{longtable}
 
 \section*{附录4 优化模型编译与使用说明}
 
-\begin{enumerate}
-    \item 执行build\_release.bat编译工程
-    \item 将生成的AirSim.dll替换插件目录
-    \item 在UE中重启"LiveLink"连接生效
-    \item 支持命令行 -allow-thread-optimize 开启优化
-\end{enumerate}
+优化模型的编译与使用步骤如代码~\ref{lst:airsim-opt-build}所示。
+
+\begin{lstlisting}[style=hutbcode,language=bash,caption={AirSim优化模型编译与启用流程},label={lst:airsim-opt-build}]
+build_release.bat
+copy /Y AirSim.dll <AirSimPluginDir>\Binaries\Win64\AirSim.dll
+UnrealEditor.exe <Project>.uproject
+AirSim.exe -allow-thread-optimize
+\end{lstlisting}

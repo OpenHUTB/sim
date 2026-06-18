@@ -1,0 +1,14 @@
+# Python 依赖
+# 主要是数据采集和画图用的
+# airsim 本体需要单独装，见 README
+
+airsim>=1.8.1
+numpy>=1.23.0
+pandas>=1.5.0
+matplotlib>=3.6.0
+psutil>=5.9.0
+scipy>=1.9.0
+
+# 可选，跑 jupyter notebook 分析用
+# jupyter>=1.0.0
+# seaborn>=0.12.0
