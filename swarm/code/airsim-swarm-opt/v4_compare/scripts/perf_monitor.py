@@ -2,7 +2,6 @@
 perf_monitor.py
 
 监控进程的 CPU 内核态/用户态占比
-2024/10
 
 用法:
     python perf_monitor.py --pid 12345 --duration 30
