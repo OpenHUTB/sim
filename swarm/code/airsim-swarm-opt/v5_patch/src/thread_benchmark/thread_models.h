@@ -1,6 +1,5 @@
 // thread_models.h
 // 各线程等待模型封装，供 benchmark 复用
-// 2024/11
 
 #pragma once
 #include <thread>
