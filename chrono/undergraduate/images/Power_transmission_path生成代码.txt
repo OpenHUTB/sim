@@ -1,0 +1,28 @@
+flowchart LR
+    subgraph 中央差速器
+        C[Central diff.<br/>中央差速器]
+    end
+    %% 前传动支路
+    F1[Front shaft 1<br/>前传动轴1]
+    FG[Conical gear<br/>锥齿轮]
+    F2[Front shaft 2<br/>前传动轴2]
+    FD[Front diff.<br/>前差速器]
+    FA[Front axle<br/>前半轴]
+    FS[Front spindle<br/>前轮轴头/轮毂]
+    %% 后传动支路
+    R1[Rear shaft 1<br/>后传动轴1]
+    RG[Conical gear<br/>锥齿轮]
+    R2[Rear shaft 2<br/>后传动轴2]
+    RD[Rear diff.<br/>后差速器]
+    RA[Rear axle<br/>后半轴]
+    RS[Rear spindle<br/>后轮轴头/轮毂]
+    
+    %% 连线
+    C -.-> F1
+    C -.-> R1
+    F1 --> FG --> F2 --> FD --> FA --> FS
+    R1 --> RG --> R2 --> RD --> RA --> RS
+    
+    %% 样式匹配原图紫色
+    classDef box fill:#f3efff,stroke:#9944dd,stroke-width:2px
+    class C,F1,FG,F2,FD,FA,FS,R1,RG,R2,RD,RA,RS box
