@@ -1,0 +1,35 @@
+flowchart TD
+    %% 定义所有节点
+    DRIVER["DRIVER<br/>驾驶员"]
+    Throttle["油门输入"]
+    Powertrain["POWERTRAIN<br/>动力传动系统"]
+    Torque["传动轴扭矩"]
+    RotSpeed["传动轴转速"]
+    SteerBrake["转向输入<br/>制动输入"]
+    Vehicle["VEHICLE<br/>车辆本体"]
+    WheelState["车轮状态"]
+    WheelForce["车轮受力与扭矩"]
+    Terrain["地形"]
+    RoadHeight["路面高度（法向）"]
+    TireModel["轮胎模型"]
+
+    %% 连线关系
+    DRIVER --> Throttle
+    DRIVER --> SteerBrake
+    Throttle --> Powertrain
+    Powertrain --> Torque
+    Torque --> Vehicle
+    SteerBrake --> Vehicle
+    Vehicle --> RotSpeed
+    RotSpeed --> Powertrain
+    Vehicle --> WheelState
+    Vehicle --> WheelForce
+    WheelState --> TireModel
+    WheelForce --> TireModel
+    Terrain --> RoadHeight
+    RoadHeight --> TireModel
+    TireModel --> WheelForce
+
+    %% 样式：黑色实线方框，白底，匹配原图
+    classDef box fill:#fff,stroke:#000,stroke-width:1.2px
+    class DRIVER,Throttle,Powertrain,Torque,RotSpeed,SteerBrake,Vehicle,WheelState,WheelForce,Terrain,RoadHeight,TireModel box
