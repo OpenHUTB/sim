@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" width="1380" height="720" viewBox="0 0 1380 720">
+<defs>
+  <marker id="arrow" markerWidth="10" markerHeight="10" refX="8" refY="3" orient="auto" markerUnits="strokeWidth">
+    <path d="M0,0 L0,6 L8,3 z" fill="#222"/>
+  </marker>
+  <filter id="shadow" x="-10%" y="-10%" width="120%" height="120%">
+    <feDropShadow dx="0" dy="1.5" stdDeviation="1.5" flood-color="#000" flood-opacity="0.15"/>
+  </filter>
+</defs>
+<rect x="0" y="0" width="1380" height="720" fill="#ffffff"/>
+<text x="690.00" y="63.50" font-family="Noto Sans CJK SC, Microsoft YaHei, SimSun, Arial, sans-serif" font-size="30" font-weight="700" fill="#111" text-anchor="middle" dominant-baseline="middle"><tspan x="690.00" dy="0.00">面向人车模拟器的快速开发验证插件系统</tspan></text>
+<rect x="110" y="118" width="1160" height="74" rx="18" fill="#F4F8FF" stroke="#2F6FBB" stroke-width="2.4"/>
+<text x="690.00" y="163.40" font-family="Noto Sans CJK SC, Microsoft YaHei, SimSun, Arial, sans-serif" font-size="24" font-weight="700" fill="#164C8A" text-anchor="middle" dominant-baseline="middle"><tspan x="690.00" dy="0.00">统一插件管理与人车仿真器快速开发验证能力</tspan></text>
+<rect x="42.0" y="258" width="168" height="92" rx="16" fill="#EAF3FF" stroke="#2D2D2D" stroke-width="2.0"/>
+<text x="126.00" y="310.30" font-family="Noto Sans CJK SC, Microsoft YaHei, SimSun, Arial, sans-serif" font-size="18" font-weight="600" fill="#111" text-anchor="middle" dominant-baseline="middle"><tspan x="126.00" dy="0.00">代码智能补全模块</tspan></text>
+<line x1="690.0" y1="192" x2="126.0" y2="250" stroke="#888" stroke-width="1.5" marker-end="url(#arrow)"/>
+<rect x="230.0" y="258" width="168" height="92" rx="16" fill="#F2F8EC" stroke="#2D2D2D" stroke-width="2.0"/>
+<text x="314.00" y="310.30" font-family="Noto Sans CJK SC, Microsoft YaHei, SimSun, Arial, sans-serif" font-size="18" font-weight="600" fill="#111" text-anchor="middle" dominant-baseline="middle"><tspan x="314.00" dy="0.00">实时错误检测模块</tspan></text>
+<line x1="690.0" y1="192" x2="314.0" y2="250" stroke="#888" stroke-width="1.5" marker-end="url(#arrow)"/>
+<rect x="418.0" y="258" width="168" height="92" rx="16" fill="#FFF7E8" stroke="#2D2D2D" stroke-width="2.0"/>
+<text x="502.00" y="299.05" font-family="Noto Sans CJK SC, Microsoft YaHei, SimSun, Arial, sans-serif" font-size="18" font-weight="600" fill="#111" text-anchor="middle" dominant-baseline="middle"><tspan x="502.00" dy="0.00">仿真参数热重载模</tspan><tspan x="502.00" dy="22.50">块</tspan></text>
+<line x1="690.0" y1="192" x2="502.0" y2="250" stroke="#888" stroke-width="1.5" marker-end="url(#arrow)"/>
+<rect x="606.0" y="258" width="168" height="92" rx="16" fill="#FCEEEE" stroke="#2D2D2D" stroke-width="2.0"/>
+<text x="690.00" y="310.30" font-family="Noto Sans CJK SC, Microsoft YaHei, SimSun, Arial, sans-serif" font-size="18" font-weight="600" fill="#111" text-anchor="middle" dominant-baseline="middle"><tspan x="690.00" dy="0.00">多场景调试模块</tspan></text>
+<line x1="690.0" y1="192" x2="690.0" y2="250" stroke="#888" stroke-width="1.5" marker-end="url(#arrow)"/>
+<rect x="794.0" y="258" width="168" height="92" rx="16" fill="#EAF3FF" stroke="#2D2D2D" stroke-width="2.0"/>
+<text x="878.00" y="310.30" font-family="Noto Sans CJK SC, Microsoft YaHei, SimSun, Arial, sans-serif" font-size="18" font-weight="600" fill="#111" text-anchor="middle" dominant-baseline="middle"><tspan x="878.00" dy="0.00">实时监控面板模块</tspan></text>
+<line x1="690.0" y1="192" x2="878.0" y2="250" stroke="#888" stroke-width="1.5" marker-end="url(#arrow)"/>
+<rect x="982.0" y="258" width="168" height="92" rx="16" fill="#F2F8EC" stroke="#2D2D2D" stroke-width="2.0"/>
+<text x="1066.00" y="310.30" font-family="Noto Sans CJK SC, Microsoft YaHei, SimSun, Arial, sans-serif" font-size="18" font-weight="600" fill="#111" text-anchor="middle" dominant-baseline="middle"><tspan x="1066.00" dy="0.00">批量测试模块</tspan></text>
+<line x1="690.0" y1="192" x2="1066.0" y2="250" stroke="#888" stroke-width="1.5" marker-end="url(#arrow)"/>
+<rect x="1170.0" y="258" width="168" height="92" rx="16" fill="#FFF7E8" stroke="#2D2D2D" stroke-width="2.0"/>
+<text x="1254.00" y="310.30" font-family="Noto Sans CJK SC, Microsoft YaHei, SimSun, Arial, sans-serif" font-size="18" font-weight="600" fill="#111" text-anchor="middle" dominant-baseline="middle"><tspan x="1254.00" dy="0.00">环境打包模块</tspan></text>
+<line x1="690.0" y1="192" x2="1254.0" y2="250" stroke="#888" stroke-width="1.5" marker-end="url(#arrow)"/>
+<rect x="42.0" y="438" width="168" height="92" rx="16" fill="#FCEEEE" stroke="#2D2D2D" stroke-width="2.0"/>
+<text x="126.00" y="490.30" font-family="Noto Sans CJK SC, Microsoft YaHei, SimSun, Arial, sans-serif" font-size="18" font-weight="600" fill="#111" text-anchor="middle" dominant-baseline="middle"><tspan x="126.00" dy="0.00">状态栏交互模块</tspan></text>
+<line x1="690.0" y1="192" x2="126.0" y2="430" stroke="#888" stroke-width="1.5" marker-end="url(#arrow)"/>
+<rect x="230.0" y="438" width="168" height="92" rx="16" fill="#EAF3FF" stroke="#2D2D2D" stroke-width="2.0"/>
+<text x="314.00" y="479.05" font-family="Noto Sans CJK SC, Microsoft YaHei, SimSun, Arial, sans-serif" font-size="18" font-weight="600" fill="#111" text-anchor="middle" dominant-baseline="middle"><tspan x="314.00" dy="0.00">场景快照与断点续</tspan><tspan x="314.00" dy="22.50">跑模块</tspan></text>
+<line x1="690.0" y1="192" x2="314.0" y2="430" stroke="#888" stroke-width="1.5" marker-end="url(#arrow)"/>
+<rect x="418.0" y="438" width="168" height="92" rx="16" fill="#F2F8EC" stroke="#2D2D2D" stroke-width="2.0"/>
+<text x="502.00" y="479.05" font-family="Noto Sans CJK SC, Microsoft YaHei, SimSun, Arial, sans-serif" font-size="18" font-weight="600" fill="#111" text-anchor="middle" dominant-baseline="middle"><tspan x="502.00" dy="0.00">仿真场景二维快速</tspan><tspan x="502.00" dy="22.50">预览模块</tspan></text>
+<line x1="690.0" y1="192" x2="502.0" y2="430" stroke="#888" stroke-width="1.5" marker-end="url(#arrow)"/>
+<rect x="606.0" y="438" width="168" height="92" rx="16" fill="#FFF7E8" stroke="#2D2D2D" stroke-width="2.0"/>
+<text x="690.00" y="479.05" font-family="Noto Sans CJK SC, Microsoft YaHei, SimSun, Arial, sans-serif" font-size="18" font-weight="600" fill="#111" text-anchor="middle" dominant-baseline="middle"><tspan x="690.00" dy="0.00">仿真实验报告自动</tspan><tspan x="690.00" dy="22.50">生成模块</tspan></text>
+<line x1="690.0" y1="192" x2="690.0" y2="430" stroke="#888" stroke-width="1.5" marker-end="url(#arrow)"/>
+<rect x="794.0" y="438" width="168" height="92" rx="16" fill="#FCEEEE" stroke="#2D2D2D" stroke-width="2.0"/>
+<text x="878.00" y="479.05" font-family="Noto Sans CJK SC, Microsoft YaHei, SimSun, Arial, sans-serif" font-size="18" font-weight="600" fill="#111" text-anchor="middle" dominant-baseline="middle"><tspan x="878.00" dy="0.00">批量仿真测试增强</tspan><tspan x="878.00" dy="22.50">模块</tspan></text>
+<line x1="690.0" y1="192" x2="878.0" y2="430" stroke="#888" stroke-width="1.5" marker-end="url(#arrow)"/>
+<rect x="982.0" y="438" width="168" height="92" rx="16" fill="#EAF3FF" stroke="#2D2D2D" stroke-width="2.0"/>
+<text x="1066.00" y="490.30" font-family="Noto Sans CJK SC, Microsoft YaHei, SimSun, Arial, sans-serif" font-size="18" font-weight="600" fill="#111" text-anchor="middle" dominant-baseline="middle"><tspan x="1066.00" dy="0.00">语法高亮增强模块</tspan></text>
+<line x1="690.0" y1="192" x2="1066.0" y2="430" stroke="#888" stroke-width="1.5" marker-end="url(#arrow)"/>
+<rect x="254" y="630" width="872" height="42" rx="12" fill="#FAFAFA" stroke="#999" stroke-width="1.5"/>
+<text x="690.00" y="657.30" font-family="Noto Sans CJK SC, Microsoft YaHei, SimSun, Arial, sans-serif" font-size="18" font-weight="400" fill="#555" text-anchor="middle" dominant-baseline="middle"><tspan x="690.00" dy="0.00">所有模块均采用原生 SVG 元素重绘，文字可编辑、线条清晰、适合论文插图</tspan></text>
+</svg>

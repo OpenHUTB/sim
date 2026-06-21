@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" width="1180" height="670" viewBox="0 0 1180 670">
+<defs>
+  <marker id="arrow" markerWidth="10" markerHeight="10" refX="8" refY="3" orient="auto" markerUnits="strokeWidth">
+    <path d="M0,0 L0,6 L8,3 z" fill="#222"/>
+  </marker>
+  <filter id="shadow" x="-10%" y="-10%" width="120%" height="120%">
+    <feDropShadow dx="0" dy="1.5" stdDeviation="1.5" flood-color="#000" flood-opacity="0.15"/>
+  </filter>
+</defs>
+<rect x="0" y="0" width="1180" height="670" fill="#ffffff"/>
+<text x="590.00" y="56.80" font-family="Noto Sans CJK SC, Microsoft YaHei, SimSun, Arial, sans-serif" font-size="28" font-weight="700" fill="#111" text-anchor="middle" dominant-baseline="middle"><tspan x="590.00" dy="0.00">插件模块运行关系图</tspan></text>
+<rect x="45" y="90" width="1090" height="120" rx="16" fill="#EAF3FF" stroke="#303030" stroke-width="2"/>
+<rect x="45" y="260" width="1090" height="220" rx="16" fill="#F2F8EC" stroke="#303030" stroke-width="2"/>
+<rect x="45" y="535" width="1090" height="100" rx="16" fill="#FFF7E8" stroke="#303030" stroke-width="2"/>
+<rect x="165" y="126" width="205" height="62" rx="12" fill="#FFFFFF" stroke="#7A4EB0" stroke-width="2.4"/>
+<text x="267.50" y="151.50" font-family="Noto Sans CJK SC, Microsoft YaHei, SimSun, Arial, sans-serif" font-size="20" font-weight="600" fill="#111" text-anchor="middle" dominant-baseline="middle"><tspan x="267.50" dy="0.00">VSCode</tspan><tspan x="267.50" dy="25.00">界面集成</tspan></text>
+<rect x="425" y="126" width="205" height="62" rx="12" fill="#FFFFFF" stroke="#7A4EB0" stroke-width="2.4"/>
+<text x="527.50" y="151.50" font-family="Noto Sans CJK SC, Microsoft YaHei, SimSun, Arial, sans-serif" font-size="20" font-weight="600" fill="#111" text-anchor="middle" dominant-baseline="middle"><tspan x="527.50" dy="0.00">状态栏</tspan><tspan x="527.50" dy="25.00">展示</tspan></text>
+<rect x="685" y="126" width="205" height="62" rx="12" fill="#FFFFFF" stroke="#7A4EB0" stroke-width="2.4"/>
+<text x="787.50" y="151.50" font-family="Noto Sans CJK SC, Microsoft YaHei, SimSun, Arial, sans-serif" font-size="20" font-weight="600" fill="#111" text-anchor="middle" dominant-baseline="middle"><tspan x="787.50" dy="0.00">错误提示</tspan><tspan x="787.50" dy="25.00">面板</tspan></text>
+<rect x="945" y="126" width="205" height="62" rx="12" fill="#FFFFFF" stroke="#7A4EB0" stroke-width="2.4"/>
+<text x="1047.50" y="151.50" font-family="Noto Sans CJK SC, Microsoft YaHei, SimSun, Arial, sans-serif" font-size="20" font-weight="600" fill="#111" text-anchor="middle" dominant-baseline="middle"><tspan x="1047.50" dy="0.00">命令与</tspan><tspan x="1047.50" dy="25.00">菜单</tspan></text>
+<rect x="260" y="305" width="215" height="58" rx="12" fill="#FFFFFF" stroke="#3A7D44" stroke-width="2.2"/>
+<text x="367.50" y="341.00" font-family="Noto Sans CJK SC, Microsoft YaHei, SimSun, Arial, sans-serif" font-size="20" font-weight="600" fill="#111" text-anchor="middle" dominant-baseline="middle"><tspan x="367.50" dy="0.00">代码智能补全</tspan></text>
+<rect x="530" y="305" width="215" height="58" rx="12" fill="#FFFFFF" stroke="#3A7D44" stroke-width="2.2"/>
+<text x="637.50" y="341.00" font-family="Noto Sans CJK SC, Microsoft YaHei, SimSun, Arial, sans-serif" font-size="20" font-weight="600" fill="#111" text-anchor="middle" dominant-baseline="middle"><tspan x="637.50" dy="0.00">实时错误检测</tspan></text>
+<rect x="800" y="305" width="215" height="58" rx="12" fill="#FFFFFF" stroke="#3A7D44" stroke-width="2.2"/>
+<text x="907.50" y="341.00" font-family="Noto Sans CJK SC, Microsoft YaHei, SimSun, Arial, sans-serif" font-size="20" font-weight="600" fill="#111" text-anchor="middle" dominant-baseline="middle"><tspan x="907.50" dy="0.00">多场景调试</tspan></text>
+<rect x="260" y="402" width="215" height="58" rx="12" fill="#FFFFFF" stroke="#3A7D44" stroke-width="2.2"/>
+<text x="367.50" y="438.00" font-family="Noto Sans CJK SC, Microsoft YaHei, SimSun, Arial, sans-serif" font-size="20" font-weight="600" fill="#111" text-anchor="middle" dominant-baseline="middle"><tspan x="367.50" dy="0.00">环境打包部署</tspan></text>
+<rect x="530" y="402" width="215" height="58" rx="12" fill="#FFFFFF" stroke="#3A7D44" stroke-width="2.2"/>
+<text x="637.50" y="438.00" font-family="Noto Sans CJK SC, Microsoft YaHei, SimSun, Arial, sans-serif" font-size="20" font-weight="600" fill="#111" text-anchor="middle" dominant-baseline="middle"><tspan x="637.50" dy="0.00">状态栏交互</tspan></text>
+<rect x="800" y="402" width="215" height="58" rx="12" fill="#FFFFFF" stroke="#3A7D44" stroke-width="2.2"/>
+<text x="907.50" y="438.00" font-family="Noto Sans CJK SC, Microsoft YaHei, SimSun, Arial, sans-serif" font-size="20" font-weight="600" fill="#111" text-anchor="middle" dominant-baseline="middle"><tspan x="907.50" dy="0.00">API 加载器</tspan></text>
+<rect x="440" y="568" width="220" height="50" rx="10" fill="#FFFFFF" stroke="#B36B00" stroke-width="2.2"/>
+<text x="550.00" y="600.00" font-family="Noto Sans CJK SC, Microsoft YaHei, SimSun, Arial, sans-serif" font-size="20" font-weight="600" fill="#111" text-anchor="middle" dominant-baseline="middle"><tspan x="550.00" dy="0.00">API 定义文件</tspan></text>
+<rect x="735" y="568" width="220" height="50" rx="10" fill="#FFFFFF" stroke="#B36B00" stroke-width="2.2"/>
+<text x="845.00" y="600.00" font-family="Noto Sans CJK SC, Microsoft YaHei, SimSun, Arial, sans-serif" font-size="20" font-weight="600" fill="#111" text-anchor="middle" dominant-baseline="middle"><tspan x="845.00" dy="0.00">调试模板文件</tspan></text>
+<text x="112.00" y="145.95" font-family="Noto Sans CJK SC, Microsoft YaHei, SimSun, Arial, sans-serif" font-size="22" font-weight="700" fill="#111" text-anchor="middle" dominant-baseline="middle"><tspan x="112.00" dy="0.00">表现</tspan><tspan x="112.00" dy="27.50">层</tspan></text>
+<text x="112.00" y="373.95" font-family="Noto Sans CJK SC, Microsoft YaHei, SimSun, Arial, sans-serif" font-size="22" font-weight="700" fill="#111" text-anchor="middle" dominant-baseline="middle"><tspan x="112.00" dy="0.00">业务</tspan><tspan x="112.00" dy="27.50">层</tspan></text>
+<text x="112.00" y="578.95" font-family="Noto Sans CJK SC, Microsoft YaHei, SimSun, Arial, sans-serif" font-size="22" font-weight="700" fill="#111" text-anchor="middle" dominant-baseline="middle"><tspan x="112.00" dy="0.00">数据</tspan><tspan x="112.00" dy="27.50">层</tspan></text>
+<line x1="590.0" y1="210" x2="590.0" y2="254" stroke="#222" stroke-width="2.2" marker-end="url(#arrow)"/>
+<line x1="590.0" y1="490" x2="590.0" y2="530" stroke="#222" stroke-width="2.2" marker-end="url(#arrow)"/>
+<line x1="267" y1="190" x2="367" y2="300" stroke="#777" stroke-width="1.7" marker-end="url(#arrow)"/>
+<line x1="527" y1="190" x2="367" y2="300" stroke="#777" stroke-width="1.7" marker-end="url(#arrow)"/>
+<line x1="787" y1="190" x2="637" y2="300" stroke="#777" stroke-width="1.7" marker-end="url(#arrow)"/>
+<line x1="1047" y1="190" x2="907" y2="300" stroke="#777" stroke-width="1.7" marker-end="url(#arrow)"/>
+<line x1="367" y1="462" x2="367" y2="563" stroke="#777" stroke-width="1.7" marker-end="url(#arrow)"/>
+<line x1="637" y1="462" x2="637" y2="563" stroke="#777" stroke-width="1.7" marker-end="url(#arrow)"/>
+<line x1="907" y1="462" x2="907" y2="563" stroke="#777" stroke-width="1.7" marker-end="url(#arrow)"/>
+<text x="925.00" y="649.55" font-family="Noto Sans CJK SC, Microsoft YaHei, SimSun, Arial, sans-serif" font-size="13" font-weight="400" fill="#666" text-anchor="middle" dominant-baseline="middle"><tspan x="925.00" dy="0.00">原生 SVG 图形，可直接编辑</tspan></text>
+</svg>
