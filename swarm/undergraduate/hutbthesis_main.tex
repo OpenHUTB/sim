@@ -1,0 +1,101 @@
+%!TEX program = xelatex
+% !BIB program = biber
+
+\documentclass[AutoFakeBold]{hutbthesis}
+
+\usepackage{calc}
+\usepackage{float}
+\usepackage{longtable}
+\usepackage{booktabs}
+\usepackage{array}
+\usepackage{tabularx}
+\usepackage{caption}
+\usepackage{xcolor}
+\usepackage{listings}
+\usepackage{chngcntr}
+\usepackage{xeCJKfntef}
+\usepackage{amsmath}
+\providecommand{\tightlist}{%
+  \setlength{\itemsep}{0pt}\setlength{\parskip}{0pt}}
+\IfFontExistsTF{Noto Serif CJK SC}{%
+  \setCJKmainfont{Noto Serif CJK SC}[BoldFont=Noto Serif CJK SC Bold]
+  \setCJKsansfont{Noto Sans CJK SC}[BoldFont=Noto Sans CJK SC Bold]
+}{}
+\graphicspath{{images/}}
+
+% 图、表、公式统一采用章节编号，并保证图题/表题与对象绑定。
+\counterwithin{figure}{chapter}
+\counterwithin{table}{chapter}
+\numberwithin{equation}{chapter}
+\renewcommand{\thefigure}{\thechapter-\arabic{figure}}
+\renewcommand{\thetable}{\thechapter-\arabic{table}}
+\renewcommand{\theequation}{\thechapter-\arabic{equation}}
+\captionsetup[figure]{name=图,labelsep=space,font=small,skip=6pt}
+\captionsetup[table]{name=表,labelsep=space,font=small,skip=6pt}
+
+% 代码段模板样式：用于 BAT、命令行、配置片段等代码清单。
+\definecolor{codebg}{RGB}{248,248,248}
+\definecolor{codekw}{RGB}{0,92,175}
+\definecolor{codestr}{RGB}{163,21,21}
+\definecolor{codecom}{RGB}{0,128,0}
+\renewcommand{\lstlistingname}{代码}
+\lstdefinestyle{hutbcode}{%
+  backgroundcolor=\color{codebg},
+  basicstyle=\ttfamily\small,
+  keywordstyle=\color{codekw}\bfseries,
+  stringstyle=\color{codestr},
+  commentstyle=\color{codecom}\itshape,
+  numbers=left,
+  numberstyle=\scriptsize\color{gray},
+  stepnumber=1,
+  numbersep=8pt,
+  frame=single,
+  rulecolor=\color{gray!50},
+  breaklines=true,
+  breakatwhitespace=false,
+  columns=fullflexible,
+  keepspaces=true,
+  showstringspaces=false,
+  tabsize=2,
+  captionpos=b
+}
+\lstset{style=hutbcode}
+% 本文参考文献采用手工编号文件 content/references.tex，不调用 biber。
+
+\include{content/cover}
+
+\begin{document}
+
+\maketitle
+
+% 封面后的声明、授权书、摘要页不显示页码；仅目录页使用罗马数字页码。
+\clearpage
+\pagestyle{empty}
+\pagenumbering{gobble}
+\input{content/declarationzh}
+\clearpage
+\input{content/authorization}
+\clearpage
+\input{content/abstractzh}
+\clearpage
+\input{content/abstracten}
+
+% 目录单独使用罗马数字页码。
+\frontmatter
+\setcounter{page}{1}
+\tableofcontents
+
+\mainmatter
+\include{content/chapter1}
+\include{content/chapter2}
+\include{content/chapter3}
+\include{content/chapter4}
+\include{content/chapter5}
+\include{content/chapter6}
+
+\include{content/references}
+\include{content/symbols}
+\include{content/appendix}
+\include{content/acknowledgements}
+
+\end{document}
