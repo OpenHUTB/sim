@@ -2,6 +2,7 @@
 name: Auto test
 
 on: 
+  pull_request:
   # 手动触发事件
   workflow_dispatch:
     inputs:
@@ -130,6 +131,12 @@ jobs:
             apk add msttcorefonts-installer fontconfig
             update-ms-fonts
             fc-cache -f
+      - uses: actions/upload-artifact@v4
+        with:
+          name: paper
+          path: |
+            critical/undergraduate/hutbthesis_main.pdf
+
 
       # 基于预训练大模型的高保真三维智能驾驶场景生成系统论文的 action
       - name: Compile Scene LaTeX document
