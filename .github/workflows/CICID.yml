@@ -36,6 +36,7 @@ jobs:
       - name: Launch Simulation
         run: python launch.py -t ${{ secrets.GITHUB_TOKEN }} # 执行
 
+
       # 触发行人论文的 action
       - name: Compile Pedestrian LaTeX document
         uses: xu-cheng/latex-action@v3
@@ -49,6 +50,12 @@ jobs:
             apk add msttcorefonts-installer fontconfig
             update-ms-fonts
             fc-cache -f
+      - uses: actions/upload-artifact@v4
+        with:
+          name: pedestrian
+          path: |
+            pedestrian/undergraduate/hutbthesis_main.pdf
+
 
       # 触发强化学习论文的 action
       - name: Compile Reinforment Learning LaTeX document
@@ -63,7 +70,13 @@ jobs:
             apk add msttcorefonts-installer fontconfig
             update-ms-fonts
             fc-cache -f
-            
+      - uses: actions/upload-artifact@v4
+        with:
+          name: rl
+          path: |
+            rl/undergraduate/hutbthesis_main.pdf
+
+
       # 触发面向智慧交通场景的多目标跟踪算法和评测论文的 action
       - name: Compile MOT LaTeX document
         uses: xu-cheng/latex-action@v3
@@ -77,6 +90,12 @@ jobs:
             apk add msttcorefonts-installer fontconfig
             update-ms-fonts
             fc-cache -f
+      - uses: actions/upload-artifact@v4
+        with:
+          name: mot
+          path: |
+            mot/undergraduate/hutbthesis_main.pdf
+
 
       # 触发Cornet类脑论文的 action
       - name: Compile Pedestrian LaTeX document
@@ -91,6 +110,12 @@ jobs:
             apk add msttcorefonts-installer fontconfig
             update-ms-fonts
             fc-cache -f
+      - uses: actions/upload-artifact@v4
+        with:
+          name: recognition
+          path: |
+            recognition/undergraduate/main.pdf
+
 
       # 触发面向自动驾驶的视觉目标跟踪和意图分析算法论文的 action
       - name: Compile SOT LaTeX document
@@ -105,6 +130,13 @@ jobs:
             apk add msttcorefonts-installer fontconfig
             update-ms-fonts
             fc-cache -f
+      - uses: actions/upload-artifact@v4
+        with:
+          name: sot
+          path: |
+            sot/undergraduate/hutbthesis_main.pdf
+
+
      # 基于虚拟仿真引擎的深度学习训练和评测系统论文的 action
       - name: Compile data LaTeX document
         uses: xu-cheng/latex-action@v3
@@ -118,6 +150,11 @@ jobs:
             apk add msttcorefonts-installer fontconfig
             update-ms-fonts
             fc-cache -f
+      - uses: actions/upload-artifact@v4
+        with:
+          name: sim
+          path: |
+            sim/undergraduate/hutbthesis_main.pdf
 
       # 智能驾驶危险仿真场景的生成和优化算法论文的 action
       - name: Compile critical LaTeX document
@@ -134,7 +171,7 @@ jobs:
             fc-cache -f
       - uses: actions/upload-artifact@v4
         with:
-          name: paper
+          name: critical
           path: |
             critical/undergraduate/hutbthesis_main.pdf
 
@@ -151,4 +188,9 @@ jobs:
             apk add msttcorefonts-installer fontconfig
             update-ms-fonts
             fc-cache -f
+      - uses: actions/upload-artifact@v4
+        with:
+          name: scene
+          path: |
+            scene/undergraduate/hutbthesis_main.pdf
 
