@@ -3,6 +3,7 @@ name: Auto test
 
 on: 
   pull_request:
+  push:
   # 手动触发事件
   workflow_dispatch:
     inputs:
