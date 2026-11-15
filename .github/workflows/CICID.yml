@@ -52,7 +52,7 @@ jobs:
             fc-cache -f
       - uses: actions/upload-artifact@v4
         with:
-          name: Upload phys thesis
+          name: phys
           path: |
             phys/undergraduate/hutbthesis_main.pdf
 
