@@ -1,5 +1,5 @@
-# underwater 模块依赖
-# 说明：仿真平台（Carla / muoco 等）及版本以导师要求与仓库根目录 requirements.txt 为准，
+# comm 模块依赖
+# 说明：仿真平台（Carla / mujoco/muoco 等）及版本以导师要求与仓库根目录 requirements.txt 为准，
 # 确认平台后再在此处补充对应依赖并锁定版本。
 
 # 数值计算与数据处理
