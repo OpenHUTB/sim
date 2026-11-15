@@ -1,0 +1,23 @@
+# LaTeX 编译缓存
+*.aux
+*.log
+*.out
+*.toc
+*.lof
+*.lot
+*.bbl
+*.blg
+*.synctex.gz
+*.pdf
+
+# Python
+__pycache__/
+*.pyc
+venv/
+.venv/
+
+# VSCode
+.vscode/
+
+# 系统文件
+Thumbs.db
