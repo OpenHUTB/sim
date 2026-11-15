@@ -252,3 +252,21 @@ jobs:
           path: |
             comm/undergraduate/hutbthesis_main.pdf
 
+      # 基于MCP的机器人载具交互仿真控制系统论文的 action
+      - name: Compile MCP LaTeX document
+        uses: xu-cheng/latex-action@v3
+        with:
+          working_directory: mcp/undergraduate
+          root_file: hutbthesis_main.tex
+          texlive_version: 2023
+          latexmk_use_xelatex: true
+          # 下载安装Times New Roman字体
+          pre_compile: |
+            apk add msttcorefonts-installer fontconfig
+            update-ms-fonts
+            fc-cache -f
+      - uses: actions/upload-artifact@v4
+        with:
+          name: mcp
+          path: |
+            mcp/undergraduate/hutbthesis_main.pdf
