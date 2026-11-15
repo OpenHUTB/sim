@@ -1,0 +1,39 @@
+name: Urlab latex CI/CD
+
+on: 
+  push:
+    branches:
+      - master
+    paths:
+      - 'urlab/undergraduate/**'
+  pull_request:
+    branches:
+      - master
+    paths:
+      - 'urlab/undergraduate/**'
+    
+jobs:
+  work:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.head.sha }}
+          fetch-depth: 0
+
+      - name: Compile urlab LaTeX document
+        uses: xu-cheng/latex-action@v3
+        with:
+          working_directory: urlab/undergraduate
+          root_file: hutbthesis_main.tex
+          texlive_version: 2023
+          latexmk_use_xelatex: true
+          pre_compile: |
+            apk add msttcorefonts-installer fontconfig
+            update-ms-fonts
+            fc-cache -f
+      - uses: actions/upload-artifact@v4
+        with:
+          name: urlab
+          path: |
+            urlab/undergraduate/hutbthesis_main.pdf
