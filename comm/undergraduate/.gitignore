@@ -16,6 +16,9 @@ elegant*-cn.pdf
 elegant*-en.pdf
 *.dates
 
+## 本地编译生成的主论文 PDF 不入库（插图 PDF 放 images/ 仍需提交）
+/hutbthesis_main.pdf
+
 ## Intermediate documents:
 *.dvi
 *.xdv
