@@ -1,0 +1,79 @@
+%!TEX program = xelatex
+
+\documentclass[AutoFakeBold]{hutbthesis}
+
+\usepackage{tabularx}
+\usepackage{booktabs}
+\usepackage{array}
+\usepackage{calc}
+\usepackage{float}
+\usepackage{amsmath}
+\usepackage{xeCJKfntef}
+\providecommand{\tightlist}{%
+  \setlength{\itemsep}{0pt}\setlength{\parskip}{0pt}}
+\IfFontExistsTF{Noto Serif CJK SC}{%
+  \setCJKmainfont{Noto Serif CJK SC}[BoldFont=Noto Serif CJK SC Bold]
+  \setCJKsansfont{Noto Sans CJK SC}[BoldFont=Noto Sans CJK SC Bold]
+}{}
+\graphicspath{{images/}}
+\renewcommand{\bibname}{参考文献}
+\renewcommand{\theequation}{\arabic{chapter}-\arabic{equation}}
+\lstset{
+  language=Python,
+  basicstyle=\zihao{-5}\ttfamily,
+  breaklines=true,
+  columns=fullflexible,
+  keepspaces=true,
+  frame=single,
+  backgroundcolor=\color[RGB]{245,245,244},
+  keywordstyle=\color[RGB]{40,40,255},
+  commentstyle=\itshape\color[RGB]{0,96,96},
+  stringstyle=\color[RGB]{128,0,0},
+  showstringspaces=false
+}
+
+
+% 将 \cite{} 显示为上标形式，同时保留 hyperref 跳转。
+\makeatletter
+\renewcommand{\@cite}[2]{\textsuperscript{[#1]}}
+\makeatother
+
+\include{content/cover}
+
+\begin{document}
+
+\maketitle
+
+% 封面后的声明、授权书、摘要页不显示页码；仅目录页使用罗马数字页码。
+\clearpage
+\pagestyle{empty}
+\pagenumbering{gobble}
+\input{content/declarationzh}
+\clearpage
+\input{content/authorization}
+\clearpage
+\input{content/abstractzh}
+\clearpage
+\input{content/abstracten}
+
+% 目录单独使用罗马数字页码。
+\frontmatter
+\setcounter{page}{1}
+\tableofcontents
+
+\mainmatter
+\include{content/chapter1}
+\include{content/chapter2}
+\include{content/chapter3}
+\include{content/chapter4}
+\include{content/chapter5}
+\include{content/chapter6}
+\include{content/chapter7}
+\include{content/references}
+\include{content/acknowledgements}
+
+% 如无附录，可以注释以下两行；保留入口便于后续扩展。
+% \appendix
+% \include{content/appendix}
+
+\end{document}
