@@ -1,0 +1,44 @@
+
+name: comm latex CI/CD
+
+on: 
+  push:
+    branches:
+      - master
+    paths:
+      - 'comm/undergraduate/**'   # 只有 comm/undergraduate 目录下的文件被修改时才会触发
+  pull_request:
+    branches:
+      - master
+    paths:
+      - 'comm/undergraduate/**'
+    
+jobs:
+  work:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          # github action 默认签出只包含最后一次提交
+          # 解决方案参考：https://stackoverflow.com/questions/62334460/git-history-in-a-github-action
+          ref: ${{ github.event.pull_request.head.sha }}
+          fetch-depth: 0
+
+      # 触发基于水下工作环境的传感器与通信链路仿真系统论文的 action
+      - name: Compile Comm LaTeX document
+        uses: xu-cheng/latex-action@v3
+        with:
+          working_directory: comm/undergraduate
+          root_file: hutbthesis_main.tex
+          texlive_version: 2023
+          latexmk_use_xelatex: true
+          # 下载安装Times New Roman字体
+          pre_compile: |
+            apk add msttcorefonts-installer fontconfig
+            update-ms-fonts
+            fc-cache -f
+      - uses: actions/upload-artifact@v4
+        with:
+          name: comm
+          path: |
+            comm/undergraduate/hutbthesis_main.pdf
