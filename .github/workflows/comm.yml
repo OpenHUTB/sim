@@ -1,17 +1,17 @@
 
-name: Phys latex CI/CD
+name: comm latex CI/CD
 
 on: 
   push:
     branches:
       - master
     paths:
-      - 'phys/undergraduate/**'   # 只有 phys/undergraduate 目录下的文件被修改时才会触发
+      - 'comm/undergraduate/**'   # 只有 comm/undergraduate 目录下的文件被修改时才会触发
   pull_request:
     branches:
       - master
     paths:
-      - 'phys/undergraduate/**'
+      - 'comm/undergraduate/**'
     
 jobs:
   work:
