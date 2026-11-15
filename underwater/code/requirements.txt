@@ -1,0 +1,14 @@
+# underwater 模块依赖
+# 说明：仿真平台（Carla / muoco 等）及版本以导师要求与仓库根目录 requirements.txt 为准，
+# 确认平台后再在此处补充对应依赖并锁定版本。
+
+# 数值计算与数据处理
+numpy>=1.24.0
+scipy>=1.11.0
+
+# 可视化与交互界面（仓库规范：界面统一用 pygame）
+pygame>=2.5.0
+matplotlib>=3.7.0
+
+# 测试
+pytest>=7.4.0
