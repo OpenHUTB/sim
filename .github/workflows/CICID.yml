@@ -37,6 +37,26 @@ jobs:
         run: python launch.py -t ${{ secrets.GITHUB_TOKEN }} # 执行
 
 
+      # 触发《基于 PhysX 5 物理引擎的高保真车辆仿真系统》论文的编译
+      - name: Compile phys LaTeX document
+        uses: xu-cheng/latex-action@v3
+        with:
+          working_directory: phys/undergraduate
+          root_file: hutbthesis_main.tex
+          texlive_version: 2023
+          latexmk_use_xelatex: true
+          # 下载安装Times New Roman字体
+          pre_compile: |
+            apk add msttcorefonts-installer fontconfig
+            update-ms-fonts
+            fc-cache -f
+      - uses: actions/upload-artifact@v4
+        with:
+          name: phys
+          path: |
+            phys/undergraduate/hutbthesis_main.pdf
+
+
       # 触发行人论文的 action
       - name: Compile Pedestrian LaTeX document
         uses: xu-cheng/latex-action@v3
@@ -193,6 +213,44 @@ jobs:
           name: scene
           path: |
             scene/undergraduate/hutbthesis_main.pdf
+          
+      # 触发水下机器人场景的视觉图像增强与目标识别论文的 action
+      - name: Compile Enhance LaTeX document
+        uses: xu-cheng/latex-action@v3
+        with:
+          working_directory: enhance/undergraduate
+          root_file: hutbthesis_main.tex
+          texlive_version: 2023
+          latexmk_use_xelatex: true
+          # 下载安装Times New Roman字体
+          pre_compile: |
+            apk add msttcorefonts-installer fontconfig
+            update-ms-fonts
+            fc-cache -f
+      - uses: actions/upload-artifact@v4
+        with:
+          name: enhance
+          path: |
+            enhance/undergraduate/hutbthesis_main.pdf
+
+      # 触发基于水下工作环境的传感器与通信链路仿真系统论文的 action
+      - name: Compile Comm LaTeX document
+        uses: xu-cheng/latex-action@v3
+        with:
+          working_directory: comm/undergraduate
+          root_file: hutbthesis_main.tex
+          texlive_version: 2023
+          latexmk_use_xelatex: true
+          # 下载安装Times New Roman字体
+          pre_compile: |
+            apk add msttcorefonts-installer fontconfig
+            update-ms-fonts
+            fc-cache -f
+      - uses: actions/upload-artifact@v4
+        with:
+          name: comm
+          path: |
+            comm/undergraduate/hutbthesis_main.pdf
 
 
   build-undergraduate-thesis:
