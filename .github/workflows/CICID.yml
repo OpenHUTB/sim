@@ -194,12 +194,3 @@ jobs:
           path: |
             scene/undergraduate/hutbthesis_main.pdf
 
-
-  build-undergraduate-thesis:
-    name: 本科毕业论文编译检查
-    # 只在phys/undergraduate目录下文件改动时才执行，不改论文直接跳过
-    if: |
-      github.event_name == 'pull_request' &&
-      contains(github.event.pull_request.files.*.filename, 'phys/undergraduate/')
-    uses: ./.github/workflows/build-thesis-reusable.yml
-
