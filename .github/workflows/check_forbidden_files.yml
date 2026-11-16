@@ -12,10 +12,10 @@ jobs:
       - name: Fail if forbidden file extensions exist
         run: |
           # 查找指定后缀的文件，排除 .git 目录
-          FILES=$(find . -path ./.git -prune -o \( -name "*.log" -o -name "*.tmp" \) -print)
+          FILES=$(find . -path ./.git -prune -o \( -name "*.log" -o -name "*.tmp" -name "*.aux" -name "*.out" hutbthesis_main.pdf \) -print)
           
           if [ -n "$FILES" ]; then
-            echo "❌ 错误：发现不允许的文件后缀："
+            echo "❌ 错误：发现不允许的文件："
             echo "$FILES"
             exit 1
           fi
