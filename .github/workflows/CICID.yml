@@ -2,8 +2,6 @@
 name: Auto test
 
 on: 
-  pull_request:
-  push:
   # 手动触发事件
   workflow_dispatch:
     inputs:
@@ -193,4 +191,27 @@ jobs:
           name: scene
           path: |
             scene/undergraduate/hutbthesis_main.pdf
+          
+      # 触发水下机器人场景的视觉图像增强与目标识别论文的 action
+      - name: Compile Enhance LaTeX document
+        uses: xu-cheng/latex-action@v3
+        with:
+          working_directory: enhance/undergraduate
+          root_file: hutbthesis_main.tex
+          texlive_version: 2023
+          latexmk_use_xelatex: true
+          # 下载安装Times New Roman字体
+          pre_compile: |
+            apk add msttcorefonts-installer fontconfig
+            update-ms-fonts
+            fc-cache -f
+      - uses: actions/upload-artifact@v4
+        with:
+          name: enhance
+          path: |
+            enhance/undergraduate/hutbthesis_main.pdf
+
+
+
+
 
