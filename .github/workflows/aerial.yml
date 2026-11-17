@@ -1,0 +1,40 @@
+name: Build Aerial Thesis
+on:
+  push:
+    paths:
+      - 'data/undergraduate/**.tex'
+      - 'data/undergraduate/**.bib'
+      - 'data/undergraduate/hutbthesis.cls'
+  pull_request:
+    paths:
+      - 'data/undergraduate/**.tex'
+      - 'data/undergraduate/**.bib'
+      - 'data/undergraduate/hutbthesis.cls'
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout source
+        uses: actions/checkout@v4
+
+      - name: Compile LaTeX Thesis
+        uses: xu-cheng/latex-action@v3
+        with:
+          root_file: data/undergraduate/hutbthesis_main.tex
+          compiler: xelatex
+          args: "-shell-escape"
+          extra_packages: |
+            ctex
+            geometry
+            amsmath
+            amssymb
+            graphicx
+            enumitem
+            hyperref
+
+      - name: Upload compiled PDF
+        uses: actions/upload-artifact@v4
+        with:
+          name: aerial-thesis-pdf
+          path: data/undergraduate/*.pdf
