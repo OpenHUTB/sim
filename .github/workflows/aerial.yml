@@ -22,14 +22,13 @@ jobs:
           root_file: aerial/undergraduate/hutbthesis_main.tex
           compiler: xelatex
           args: "-shell-escape"
-          extra_packages: |
-            ctex
-            geometry
-            amsmath
-            amssymb
-            graphicx
-            enumitem
-            hyperref
+      - name: Compile LaTeX Thesis
+  uses: xu-cheng/latex-action@v3
+  with:
+    root_file: aerial/undergraduate/hutbthesis_main.tex
+    compiler: xelatex
+    args: "-shell-escape"
+
 
       - name: Upload compiled PDF
         uses: actions/upload-artifact@v4
