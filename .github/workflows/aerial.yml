@@ -2,14 +2,12 @@ name: Build Aerial Thesis
 on:
   push:
     paths:
-      - 'data/undergraduate/**.tex'
-      - 'data/undergraduate/**.bib'
-      - 'data/undergraduate/hutbthesis.cls'
+      - 'aerial/undergraduate/**'
+      - '.github/workflows/aerial.yml'
   pull_request:
     paths:
-      - 'data/undergraduate/**.tex'
-      - 'data/undergraduate/**.bib'
-      - 'data/undergraduate/hutbthesis.cls'
+      - 'aerial/undergraduate/**'
+      - '.github/workflows/aerial.yml'
 
 jobs:
   build:
@@ -21,7 +19,7 @@ jobs:
       - name: Compile LaTeX Thesis
         uses: xu-cheng/latex-action@v3
         with:
-          root_file: data/undergraduate/hutbthesis_main.tex
+          root_file: aerial/undergraduate/hutbthesis_main.tex
           compiler: xelatex
           args: "-shell-escape"
           extra_packages: |
@@ -37,4 +35,4 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: aerial-thesis-pdf
-          path: data/undergraduate/*.pdf
+          path: aerial/undergraduate/*.pdf
