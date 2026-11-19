@@ -28,6 +28,7 @@ jobs:
           sed -i 's/SimHei/FandolHei/g' hutbthesis.cls
           sed -i 's/KaiTi/FandolKai/g' hutbthesis.cls
           sed -i 's/FangSong/FandolFang/g' hutbthesis.cls
+          sed -i 's/Times New Roman/FandolBravo/g' hutbthesis.cls
 
       - name: Compile LaTeX Thesis
         uses: xu-cheng/latex-action@v3
