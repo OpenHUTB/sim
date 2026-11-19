@@ -15,12 +15,11 @@ jobs:
       - name: Checkout source
         uses: actions/checkout@v4
 
-      - name: Fix line endings & CI临时替换fontset（只在CI内存生效，不改动仓库源文件）
+      - name: Fix line endings & CI临时替换fontset（仅CI虚拟机内部生效，不改动仓库源码）
         run: |
           cd aerial/undergraduate
           sed -i 's/\r$//' hutbthesis.cls
           sed -i 's/\r$//' hutbthesis_main.tex
-          # ⚠️仅CI运行时临时修改这一行，不会提交回仓库，本地源文件保持fontset=windows不变
           sed -i 's/fontset=windows/fontset=fandol/g' hutbthesis_main.tex
 
       - name: Compile LaTeX Thesis
@@ -30,8 +29,6 @@ jobs:
           work_in_root_file_dir: true
           latexmk_use_xelatex: true
           args: "-shell-escape"
-          extra_fonts: |
-            tex-gyre
 
       - name: Upload compiled PDF
         uses: actions/upload-artifact@v4
