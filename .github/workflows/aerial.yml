@@ -14,13 +14,14 @@ jobs:
     steps:
       - name: Checkout source
         uses: actions/checkout@v4
-
+        with:
+          submodules: true
+          fetch-depth: 0
       - name: Fix line endings (CRLF → LF)
         run: |
           cd aerial/undergraduate
           sed -i 's/\r$//' hutbthesis.cls
           sed -i 's/\r$//' hutbthesis_main.tex
-
       - name: Replace Windows font names with Fandol for CI environment
         run: |
           cd aerial/undergraduate
@@ -28,14 +29,12 @@ jobs:
           sed -i 's/SimHei/FandolHei/g' hutbthesis.cls
           sed -i 's/KaiTi/FandolKai/g' hutbthesis.cls
           sed -i 's/FangSong/FandolFang/g' hutbthesis.cls
-
       - name: Compile LaTeX Thesis
         uses: xu-cheng/latex-action@v3
         with:
           root_file: aerial/undergraduate/hutbthesis_main.tex
           latexmk_use_xelatex: true
           args: "-shell-escape"
-
       - name: Upload compiled PDF
         uses: actions/upload-artifact@v4
         with:
