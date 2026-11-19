@@ -7,38 +7,30 @@ on:
   pull_request:
     paths:
       - 'aerial/undergraduate/**'
+      - '.github/workflows/aerial.yml'
+
 jobs:
   build:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout source
         uses: actions/checkout@v4
-
-      - name: CI‑only runtime patch（仅虚拟机内存修改，仓库源码完全不变）
+      - name: Fix line endings (CRLF → LF)
         run: |
           cd aerial/undergraduate
-          # 修复Windows换行符CRLF
           sed -i 's/\r$//' hutbthesis.cls
           sed -i 's/\r$//' hutbthesis_main.tex
-          # Times New Roman → TeX Gyre Termes
-          sed -i 's/Times New Roman/TeX Gyre Termes/g' hutbthesis.cls
-          # Arial → TeX Gyre Heros（替换原来的Liberation Sans，这个latex-action自带）
-          sed -i 's/Arial/TeX Gyre Heros/g' hutbthesis.cls
-          # SimHei → Noto Sans CJK SC
-          sed -i 's/SimHei/Noto Sans CJK SC/g' hutbthesis.cls
-          # Microsoft YaHei → Noto Sans CJK SC
-          sed -i 's/Microsoft YaHei/Noto Sans CJK SC/g' hutbthesis.cls
-          # SimSun → Noto Serif CJK SC
-          sed -i 's/SimSun/Noto Serif CJK SC/g' hutbthesis.cls
-
       - name: Compile LaTeX Thesis
         uses: xu-cheng/latex-action@v3
         with:
           root_file: aerial/undergraduate/hutbthesis_main.tex
-          work_in_root_file_dir: true
           latexmk_use_xelatex: true
           args: "-shell-escape"
-
+          pre_compile: |
+      sed -i 's/SimSun/FandolSong/g' hutbthesis.cls
+      sed -i 's/SimHei/FandolHei/g' hutbthesis.cls
+      sed -i 's/KaiTi/FandolKai/g' hutbthesis.cls
+      sed -i 's/FangSong/FandolFang/g' hutbthesis.cls
       - name: Upload compiled PDF
         uses: actions/upload-artifact@v4
         with:
