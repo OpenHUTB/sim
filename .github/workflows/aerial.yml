@@ -7,7 +7,6 @@ on:
   pull_request:
     paths:
       - 'aerial/undergraduate/**'
-      - '.github/workflows/aerial.yml'
 jobs:
   build:
     runs-on: ubuntu-latest
@@ -15,12 +14,14 @@ jobs:
       - name: Checkout source
         uses: actions/checkout@v4
 
-      - name: Fix line endings & CI临时替换fontset（仅CI虚拟机内部生效，不改动仓库源码）
+      - name: CI‑only runtime patch（仅虚拟机内存修改，仓库源码完全不变）
         run: |
           cd aerial/undergraduate
+          # 修复Windows换行符CRLF
           sed -i 's/\r$//' hutbthesis.cls
           sed -i 's/\r$//' hutbthesis_main.tex
-          sed -i 's/fontset=windows/fontset=fandol/g' hutbthesis_main.tex
+          # 临时替换Times New Roman为tex‑live自带开源替代字体TeX Gyre Termes
+          sed -i 's/Times New Roman/TeX Gyre Termes/g' hutbthesis.cls
 
       - name: Compile LaTeX Thesis
         uses: xu-cheng/latex-action@v3
