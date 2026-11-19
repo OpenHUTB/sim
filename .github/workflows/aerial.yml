@@ -20,8 +20,16 @@ jobs:
           # 修复Windows换行符CRLF
           sed -i 's/\r$//' hutbthesis.cls
           sed -i 's/\r$//' hutbthesis_main.tex
-          # 临时替换Times New Roman为tex‑live自带开源替代字体TeX Gyre Termes
+          # 英文衬线：Times New Roman → TeX Gyre Termes
           sed -i 's/Times New Roman/TeX Gyre Termes/g' hutbthesis.cls
+          # 英文无衬线：Arial → Liberation Sans
+          sed -i 's/Arial/Liberation Sans/g' hutbthesis.cls
+          # 中文黑体：SimHei → Noto Sans CJK SC
+          sed -i 's/SimHei/Noto Sans CJK SC/g' hutbthesis.cls
+          # 微软雅黑：Microsoft YaHei → Noto Sans CJK SC
+          sed -i 's/Microsoft YaHei/Noto Sans CJK SC/g' hutbthesis.cls
+          # 中文宋体：SimSun → Noto Serif CJK SC
+          sed -i 's/SimSun/Noto Serif CJK SC/g' hutbthesis.cls
 
       - name: Compile LaTeX Thesis
         uses: xu-cheng/latex-action@v3
