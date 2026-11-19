@@ -15,14 +15,18 @@ jobs:
       - name: Checkout source
         uses: actions/checkout@v4
         with:
-          submodules: true
           fetch-depth: 0
+      # ===== 新增：手动强制拉取子模块 =====
+      - name: Fetch submodules manually
+        run: |
+          git submodule sync
+          git submodule update --init --recursive
       - name: Fix line endings (CRLF → LF)
         run: |
           cd aerial/undergraduate
           sed -i 's/\r$//' hutbthesis.cls
           sed -i 's/\r$//' hutbthesis_main.tex
-      - name: Replace Windows font names with Fandol for CI environment
+      - name: Replace Windows font names with Fandol for CI
         run: |
           cd aerial/undergraduate
           sed -i 's/SimSun/FandolSong/g' hutbthesis.cls
