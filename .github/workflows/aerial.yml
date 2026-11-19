@@ -8,18 +8,19 @@ on:
     paths:
       - 'aerial/undergraduate/**'
       - '.github/workflows/aerial.yml'
-
 jobs:
   build:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout source
         uses: actions/checkout@v4
+
       - name: Fix line endings (CRLF → LF)
         run: |
           cd aerial/undergraduate
           sed -i 's/\r$//' hutbthesis.cls
           sed -i 's/\r$//' hutbthesis_main.tex
+
       - name: Compile LaTeX Thesis
         uses: xu-cheng/latex-action@v3
         with:
@@ -27,10 +28,12 @@ jobs:
           latexmk_use_xelatex: true
           args: "-shell-escape"
           pre_compile: |
-      sed -i 's/SimSun/FandolSong/g' hutbthesis.cls
-      sed -i 's/SimHei/FandolHei/g' hutbthesis.cls
-      sed -i 's/KaiTi/FandolKai/g' hutbthesis.cls
-      sed -i 's/FangSong/FandolFang/g' hutbthesis.cls
+            cd aerial/undergraduate
+            sed -i 's/SimSun/FandolSong/g' hutbthesis.cls
+            sed -i 's/SimHei/FandolHei/g' hutbthesis.cls
+            sed -i 's/KaiTi/FandolKai/g' hutbthesis.cls
+            sed -i 's/FangSong/FandolFang/g' hutbthesis.cls
+
       - name: Upload compiled PDF
         uses: actions/upload-artifact@v4
         with:
