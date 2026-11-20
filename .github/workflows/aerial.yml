@@ -1,5 +1,6 @@
 name: Build Aerial Thesis
 on:
+  workflow_dispatch:
   push:
     paths:
       - 'aerial/undergraduate/**'
@@ -17,9 +18,8 @@ jobs:
         uses: actions/checkout@v4
       - name: Fix line endings (CRLF → LF)
         run: |
-          cd aerial/undergraduate
-          sed -i 's/\r$//' hutbthesis.cls
-          sed -i 's/\r$//' hutbthesis_main.tex
+          sed -i 's/\r$//' aerial/undergraduate/hutbthesis.cls
+          sed -i 's/\r$//' aerial/undergraduate/hutbthesis_main.tex
       - name: Compile LaTeX Thesis
         uses: xu-cheng/latex-action@v3
         with:
