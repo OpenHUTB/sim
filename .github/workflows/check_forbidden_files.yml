@@ -1,0 +1,23 @@
+name: Check Forbidden Files
+
+on: [push, pull_request]
+
+jobs:
+  check-files:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Fail if forbidden file extensions exist
+        run: |
+          # 查找指定后缀的文件，排除 .git 目录
+          FILES=$(find . -path ./.git -prune -o \( -name "*.log" -o -name "*.tmp" -name "*.aux" -name "*.out" -name "hutbthesis_main.pdf" \) -print)
+          
+          if [ -n "$FILES" ]; then
+            echo "❌ 错误：发现不允许的文件："
+            echo "$FILES"
+            exit 1
+          fi
+          
+          echo "✅ 检查通过，未发现违规文件。"

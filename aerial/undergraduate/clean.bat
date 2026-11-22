@@ -1,0 +1,9 @@
+del hutbthesis_main.aux
+del hutbthesis_main.bcf
+del hutbthesis_main.out
+del hutbthesis_main.toc
+del hutbthesis_main.run.xml
+del hutbthesis_main.synctex.gz
+del hutbthesis_main.log
+del hutbthesis_main.blg
+del hutbthesis_main.bbl

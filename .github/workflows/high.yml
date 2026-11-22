@@ -1,11 +1,20 @@
 
-name: Auto test
+name: High latex CI/CD
 
 on: 
+  workflow_dispatch:
   push:
+    branches:
+      - master
+    paths:
+      - 'high/undergraduate/**'
+      - '.github/workflows/high.yml'
   pull_request:
     branches:
       - master
+    paths:
+      - 'high/undergraduate/**'
+      - '.github/workflows/high.yml'
     
 jobs:
   work:
@@ -18,11 +27,10 @@ jobs:
           ref: ${{ github.event.pull_request.head.sha }}
           fetch-depth: 0
 
-      # 触发论文的 action
-      - name: Compile LaTeX document
+      - name: Compile high LaTeX document
         uses: xu-cheng/latex-action@v3
         with:
-          working_directory: .
+          working_directory: high/undergraduate
           root_file: hutbthesis_main.tex
           texlive_version: 2023
           latexmk_use_xelatex: true
@@ -31,3 +39,8 @@ jobs:
             apk add msttcorefonts-installer fontconfig
             update-ms-fonts
             fc-cache -f
+      - uses: actions/upload-artifact@v4
+        with:
+          name: high
+          path: |
+            high/undergraduate/hutbthesis_main.pdf
