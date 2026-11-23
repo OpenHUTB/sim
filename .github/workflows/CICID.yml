@@ -35,6 +35,310 @@ jobs:
         run: python launch.py -t ${{ secrets.GITHUB_TOKEN }} # 执行
 
 
+      - name: Compile vsc LaTeX document
+        uses: xu-cheng/latex-action@v3
+        with:
+          working_directory: vsc/undergraduate
+          root_file: hutbthesis_main.tex
+          texlive_version: 2023
+          latexmk_use_xelatex: true
+          # 下载安装Times New Roman字体
+          pre_compile: |
+            apk add msttcorefonts-installer fontconfig
+            update-ms-fonts
+            fc-cache -f
+      - uses: actions/upload-artifact@v4
+        with:
+          name: vsc
+          path: |
+            vsc/undergraduate/hutbthesis_main.pdf
+
+
+      - name: Compile urlab LaTeX document
+        uses: xu-cheng/latex-action@v3
+        with:
+          working_directory: urlab/undergraduate
+          root_file: hutbthesis_main.tex
+          texlive_version: 2023
+          latexmk_use_xelatex: true
+          # 下载安装Times New Roman字体
+          pre_compile: |
+            apk add msttcorefonts-installer fontconfig
+            update-ms-fonts
+            fc-cache -f
+      - uses: actions/upload-artifact@v4
+        with:
+          name: urlab
+          path: |
+            urlab/undergraduate/hutbthesis_main.pdf
+
+
+      - name: Compile swarm LaTeX document
+        uses: xu-cheng/latex-action@v3
+        with:
+          working_directory: swarm/undergraduate
+          root_file: hutbthesis_main.tex
+          texlive_version: 2023
+          latexmk_use_xelatex: true
+          # 下载安装Times New Roman字体
+          pre_compile: |
+            apk add msttcorefonts-installer fontconfig
+            update-ms-fonts
+            fc-cache -f
+      - uses: actions/upload-artifact@v4
+        with:
+          name: swarm
+          path: |
+            swarm/undergraduate/hutbthesis_main.pdf
+
+
+      - name: Compile phys LaTeX document
+        uses: xu-cheng/latex-action@v3
+        with:
+          working_directory: phys/undergraduate
+          root_file: hutbthesis_main.tex
+          texlive_version: 2023
+          latexmk_use_xelatex: true
+          # 下载安装Times New Roman字体
+          pre_compile: |
+            apk add msttcorefonts-installer fontconfig
+            update-ms-fonts
+            fc-cache -f
+      - uses: actions/upload-artifact@v4
+        with:
+          name: phys
+          path: |
+            phys/undergraduate/hutbthesis_main.pdf
+
+
+      - name: Compile mono LaTeX document
+        uses: xu-cheng/latex-action@v3
+        with:
+          working_directory: mono/undergraduate
+          root_file: hutbthesis_main.tex
+          texlive_version: 2023
+          latexmk_use_xelatex: true
+          # 下载安装Times New Roman字体
+          pre_compile: |
+            apk add msttcorefonts-installer fontconfig
+            update-ms-fonts
+            fc-cache -f
+      - uses: actions/upload-artifact@v4
+        with:
+          name: mono
+          path: |
+            mono/undergraduate/hutbthesis_main.pdf
+
+
+      - name: Compile mcp LaTeX document
+        uses: xu-cheng/latex-action@v3
+        with:
+          working_directory: mcp/undergraduate
+          root_file: hutbthesis_main.tex
+          texlive_version: 2023
+          latexmk_use_xelatex: true
+          # 下载安装Times New Roman字体
+          pre_compile: |
+            apk add msttcorefonts-installer fontconfig
+            update-ms-fonts
+            fc-cache -f
+      - uses: actions/upload-artifact@v4
+        with:
+          name: mcp
+          path: |
+            mcp/undergraduate/hutbthesis_main.pdf
+
+
+      - name: Compile landing LaTeX document
+        uses: xu-cheng/latex-action@v3
+        with:
+          working_directory: landing/undergraduate
+          root_file: hutbthesis_main.tex
+          texlive_version: 2023
+          latexmk_use_xelatex: true
+          # 下载安装Times New Roman字体
+          pre_compile: |
+            apk add msttcorefonts-installer fontconfig
+            update-ms-fonts
+            fc-cache -f
+      - uses: actions/upload-artifact@v4
+        with:
+          name: landing
+          path: |
+            landing/undergraduate/hutbthesis_main.pdf
+
+
+      - name: Compile kinesis LaTeX document
+        uses: xu-cheng/latex-action@v3
+        with:
+          working_directory: kinesis/undergraduate
+          root_file: hutbthesis_main.tex
+          texlive_version: 2023
+          latexmk_use_xelatex: true
+          # 下载安装Times New Roman字体
+          pre_compile: |
+            apk add msttcorefonts-installer fontconfig
+            update-ms-fonts
+            fc-cache -f
+      - uses: actions/upload-artifact@v4
+        with:
+          name: kinesis
+          path: |
+            kinesis/undergraduate/hutbthesis_main.pdf
+
+
+      - name: Compile job LaTeX document
+        uses: xu-cheng/latex-action@v3
+        with:
+          working_directory: job/undergraduate
+          root_file: hutbthesis_main.tex
+          texlive_version: 2023
+          latexmk_use_xelatex: true
+          # 下载安装Times New Roman字体
+          pre_compile: |
+            apk add msttcorefonts-installer fontconfig
+            update-ms-fonts
+            fc-cache -f
+      - uses: actions/upload-artifact@v4
+        with:
+          name: job
+          path: |
+            job/undergraduate/hutbthesis_main.pdf
+
+
+      - name: Compile high LaTeX document
+        uses: xu-cheng/latex-action@v3
+        with:
+          working_directory: high/undergraduate
+          root_file: hutbthesis_main.tex
+          texlive_version: 2023
+          latexmk_use_xelatex: true
+          # 下载安装Times New Roman字体
+          pre_compile: |
+            apk add msttcorefonts-installer fontconfig
+            update-ms-fonts
+            fc-cache -f
+      - uses: actions/upload-artifact@v4
+        with:
+          name: high
+          path: |
+            high/undergraduate/hutbthesis_main.pdf
+
+
+      - name: Compile hci LaTeX document
+        uses: xu-cheng/latex-action@v3
+        with:
+          working_directory: hci/undergraduate
+          root_file: hutbthesis_main.tex
+          texlive_version: 2023
+          latexmk_use_xelatex: true
+          # 下载安装Times New Roman字体
+          pre_compile: |
+            apk add msttcorefonts-installer fontconfig
+            update-ms-fonts
+            fc-cache -f
+      - uses: actions/upload-artifact@v4
+        with:
+          name: hci
+          path: |
+            hci/undergraduate/hutbthesis_main.pdf
+
+
+      - name: Compile fault LaTeX document
+        uses: xu-cheng/latex-action@v3
+        with:
+          working_directory: fault/undergraduate
+          root_file: hutbthesis_main.tex
+          texlive_version: 2023
+          latexmk_use_xelatex: true
+          # 下载安装Times New Roman字体
+          pre_compile: |
+            apk add msttcorefonts-installer fontconfig
+            update-ms-fonts
+            fc-cache -f
+      - uses: actions/upload-artifact@v4
+        with:
+          name: fault
+          path: |
+            fault/undergraduate/hutbthesis_main.pdf
+
+
+      - name: Compile ddqn LaTeX document
+        uses: xu-cheng/latex-action@v3
+        with:
+          working_directory: ddqn/undergraduate
+          root_file: hutbthesis_main.tex
+          texlive_version: 2023
+          latexmk_use_xelatex: true
+          # 下载安装Times New Roman字体
+          pre_compile: |
+            apk add msttcorefonts-installer fontconfig
+            update-ms-fonts
+            fc-cache -f
+      - uses: actions/upload-artifact@v4
+        with:
+          name: ddqn
+          path: |
+            ddqn/undergraduate/hutbthesis_main.pdf
+
+
+      - name: Compile comm LaTeX document
+        uses: xu-cheng/latex-action@v3
+        with:
+          working_directory: comm/undergraduate
+          root_file: hutbthesis_main.tex
+          texlive_version: 2023
+          latexmk_use_xelatex: true
+          # 下载安装Times New Roman字体
+          pre_compile: |
+            apk add msttcorefonts-installer fontconfig
+            update-ms-fonts
+            fc-cache -f
+      - uses: actions/upload-artifact@v4
+        with:
+          name: comm
+          path: |
+            comm/undergraduate/hutbthesis_main.pdf
+
+
+      - name: Compile co LaTeX document
+        uses: xu-cheng/latex-action@v3
+        with:
+          working_directory: co/undergraduate
+          root_file: hutbthesis_main.tex
+          texlive_version: 2023
+          latexmk_use_xelatex: true
+          # 下载安装Times New Roman字体
+          pre_compile: |
+            apk add msttcorefonts-installer fontconfig
+            update-ms-fonts
+            fc-cache -f
+      - uses: actions/upload-artifact@v4
+        with:
+          name: co
+          path: |
+            co/undergraduate/hutbthesis_main.pdf
+
+
+      - name: Compile chrono LaTeX document
+        uses: xu-cheng/latex-action@v3
+        with:
+          working_directory: chrono/undergraduate
+          root_file: hutbthesis_main.tex
+          texlive_version: 2023
+          latexmk_use_xelatex: true
+          # 下载安装Times New Roman字体
+          pre_compile: |
+            apk add msttcorefonts-installer fontconfig
+            update-ms-fonts
+            fc-cache -f
+      - uses: actions/upload-artifact@v4
+        with:
+          name: chrono
+          path: |
+            chrono/undergraduate/hutbthesis_main.pdf
+
+
       - name: Compile tactile LaTeX document
         uses: xu-cheng/latex-action@v3
         with:
@@ -114,7 +418,7 @@ jobs:
 
 
       # 触发面向智慧交通场景的多目标跟踪算法和评测论文的 action
-      - name: Compile MOT LaTeX document
+      - name: Compile mot LaTeX document
         uses: xu-cheng/latex-action@v3
         with:
           working_directory: mot/undergraduate
@@ -154,7 +458,7 @@ jobs:
 
 
       # 触发面向自动驾驶的视觉目标跟踪和意图分析算法论文的 action
-      - name: Compile SOT LaTeX document
+      - name: Compile sot LaTeX document
         uses: xu-cheng/latex-action@v3
         with:
           working_directory: sot/undergraduate
