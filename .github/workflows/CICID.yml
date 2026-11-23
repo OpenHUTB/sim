@@ -134,7 +134,7 @@ jobs:
 
 
       # 触发Cornet类脑论文的 action
-      - name: Compile Pedestrian LaTeX document
+      - name: Compile recognition LaTeX document
         uses: xu-cheng/latex-action@v3
         with:
           working_directory: recognition/undergraduate
