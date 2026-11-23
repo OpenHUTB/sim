@@ -149,25 +149,6 @@ jobs:
             mcp/undergraduate/hutbthesis_main.pdf
 
 
-      - name: Compile landing LaTeX document
-        uses: xu-cheng/latex-action@v3
-        with:
-          working_directory: landing/undergraduate
-          root_file: hutbthesis_main.tex
-          texlive_version: 2023
-          latexmk_use_xelatex: true
-          # 下载安装Times New Roman字体
-          pre_compile: |
-            apk add msttcorefonts-installer fontconfig
-            update-ms-fonts
-            fc-cache -f
-      - uses: actions/upload-artifact@v4
-        with:
-          name: landing
-          path: |
-            landing/undergraduate/hutbthesis_main.pdf
-
-
       - name: Compile kinesis LaTeX document
         uses: xu-cheng/latex-action@v3
         with:
