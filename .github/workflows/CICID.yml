@@ -244,25 +244,6 @@ jobs:
             fault/undergraduate/hutbthesis_main.pdf
 
 
-      - name: Compile ddqn LaTeX document
-        uses: xu-cheng/latex-action@v3
-        with:
-          working_directory: ddqn/undergraduate
-          root_file: hutbthesis_main.tex
-          texlive_version: 2023
-          latexmk_use_xelatex: true
-          # 下载安装Times New Roman字体
-          pre_compile: |
-            apk add msttcorefonts-installer fontconfig
-            update-ms-fonts
-            fc-cache -f
-      - uses: actions/upload-artifact@v4
-        with:
-          name: ddqn
-          path: |
-            ddqn/undergraduate/hutbthesis_main.pdf
-
-
       - name: Compile comm LaTeX document
         uses: xu-cheng/latex-action@v3
         with:
