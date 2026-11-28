@@ -1,0 +1,8 @@
+%!TEX root = ../csuthesis_main.tex
+\keywordsen{UAV aerial imagery\ \ object detection\ \ monocular localization\ \ YOLO}
+\begin{abstracten}
+
+With the rapid development of unmanned aerial vehicle (UAV) technology, UAVs have gradually entered various industries, and their applications have become increasingly widespread. In particular, object detection and ground localization in aerial imagery have become key capabilities for UAV operations. To address the problems of large object-scale variation in aerial images, pronounced imaging differences between nadir and oblique views, and the difficulty of mapping detection results to ground coordinates, this paper constructs an aerial dataset covering three altitude levels and two viewing angles based on the OpenHUTB platform, and proposes a lightweight detection and monocular localization method for onboard deployment. Specifically, the YOLO family is adopted as the baseline, the training and test sets are split according to altitude and viewing angle, and the feature representation of small objects is optimized; a pixel-to-ground coordinate transformation model is established based on the camera intrinsics and flight altitude. Experimental results show that mAP@0.5 exceeds 0.80, the inference speed on an RTX 4060 is no less than 30 FPS, and the localization error is less than 1.0 m. In addition, a prototype system integrating detection display and error statistics is implemented based on Qt.
+
+
+\end{abstracten}

@@ -1,0 +1,41 @@
+name: Build Aerial Thesis
+on:
+  workflow_dispatch:
+  push:
+    paths:
+      - 'aerial/undergraduate/**'
+      - '.github/workflows/aerial.yml'
+  pull_request:
+    paths:
+      - 'aerial/undergraduate/**'
+      - '.github/workflows/aerial.yml'
+jobs:
+  work:
+    runs-on: ubuntu-latest
+    steps:
+
+      - uses: actions/checkout@v4
+        with:
+          # github action 默认签出只包含最后一次提交
+          # 解决方案参考：https://stackoverflow.com/questions/62334460/git-history-in-a-github-action
+          ref: ${{ github.event.pull_request.head.sha }}
+          fetch-depth: 0
+
+      - name: Compile aerial LaTeX document
+        uses: xu-cheng/latex-action@v3
+        with:
+          working_directory: aerial/undergraduate
+          root_file: hutbthesis_main.tex
+          texlive_version: 2023
+          latexmk_use_xelatex: true
+
+          # 下载安装Times New Roman字体
+          pre_compile: |
+            apk add msttcorefonts-installer fontconfig
+            update-ms-fonts
+            fc-cache -f
+      - uses: actions/upload-artifact@v4
+        with:
+          name: aerial
+          path: |
+            aerial/undergraduate/hutbthesis_main.pdf
